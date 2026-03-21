@@ -1,0 +1,13 @@
+# cs.yaml
+
+department_id: "CS"
+display_name: "Copmuter Science"
+root_url: "https://computerscience.nmsu.edu/"
+allowed_domains:
+- "cs.newmexicostateuniversity.edu"
+allowed_path_prefixes:
+- "/"
+deny_url_patterns:
+- "/search"
+- "?q="
+fallback_contact_irl: "https://computerscience.nmsu.edu/"

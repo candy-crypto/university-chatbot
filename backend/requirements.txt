@@ -1,0 +1,7 @@
+# Render’s Python deploy flow expects a build step like pip install -r requirements.txt.
+
+fastapi
+uvicorn[standard]
+python-dotenv
+pyyaml
+pydantic
