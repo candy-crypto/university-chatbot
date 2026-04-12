@@ -3,5 +3,10 @@
 fastapi
 uvicorn[standard]
 python-dotenv
+requests
+playwright
 pyyaml
+openai
+weaviate-client
 pydantic
+psycopg[binary]

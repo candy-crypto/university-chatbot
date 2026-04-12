@@ -1,10 +1,11 @@
 # cs.yaml
 
-department_id: "CS"
-display_name: "Copmuter Science"
+department_id: "cs"
+display_name: "Computer Science"
 root_url: "https://computerscience.nmsu.edu/"
 allowed_domains:
-- "cs.newmexicostateuniversity.edu"
+- "computerscience.nmsu.edu"
+- "cs.nmsu.edu"
 allowed_path_prefixes:
 - "/"
 deny_url_patterns:
