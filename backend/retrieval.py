@@ -45,6 +45,27 @@ RETURN_PROPERTIES = [
     "text",
     "chunk_id",
     "crawl_version",
+
+    # Retrieval can only rank and format what it asks Weaviate to return 
+    "content_source",
+    "content_type",
+
+    "catalog_page",
+    "catalog_page_end",
+    "catalog_year",
+    "program_family",
+    "degree_level",
+    "degree_type",
+    "concentration",
+    "degree_full_title",
+    "credits",
+    "dept_prefix",
+    "course_number_level",
+    "has_prerequisites",
+    "policy_topic",
+    "lab_name",
+    "referenced_courses",
+    "is_research_related",
 ]
 
 
@@ -71,9 +92,27 @@ def lexical_document(chunk: Dict[str, Any]) -> List[str]:
         chunk.get("course_number", ""),
         chunk.get("course_title", ""),
         " ".join(chunk.get("tags") or []),
+
+        # Added for catalog retrieval
+        # BM25 needs to see the degree titles, course codes, policy labels, and referenced courses 
+        chunk.get("content_source", ""),
+        chunk.get("content_type", ""),
+        chunk.get("degree_full_title", ""),
+        chunk.get("degree_level", ""),
+        chunk.get("degree_type", ""),
+        chunk.get("concentration", ""),
+        chunk.get("credits", ""),
+        chunk.get("dept_prefix", ""),
+        chunk.get("course_number_level", ""),
+        chunk.get("policy_topic", ""),
+        chunk.get("lab_name", ""),
+        " ".join(chunk.get("program_family") or []),
+        " ".join(chunk.get("referenced_courses") or []),
+
         chunk.get("text", ""),
     ]
     return tokenize(" ".join(fields))
+
 
 
 def bm25_score_documents(query: str, chunks: List[Dict[str, Any]], k1: float = 1.5, b: float = 0.75) -> Dict[str, float]:
@@ -138,11 +177,38 @@ def metadata_boost(query: str, chunk: Dict[str, Any]) -> float:
     if query_tokens.intersection(tokenize(" ".join(chunk.get("tags") or []))):
         boost += 0.03
 
-    course_tokens = tokenize(f"{chunk.get('course_number', '')} {chunk.get('course_title', '')}")
+    course_tokens = tokenize(
+        f"{chunk.get('course_number', '')} "
+        f"{chunk.get('course_title', '')} "
+        f"{chunk.get('dept_prefix', '')}"
+    )
     if query_tokens.intersection(course_tokens):
         boost += 0.10
 
+    degree_tokens = tokenize(
+        f"{chunk.get('degree_full_title', '')} "
+        f"{chunk.get('degree_level', '')} "
+        f"{chunk.get('degree_type', '')} "
+        f"{chunk.get('concentration', '')}"
+    )
+    if query_tokens.intersection(degree_tokens):
+        boost += 0.08
+
+    if query_tokens.intersection(tokenize(chunk.get("policy_topic", ""))):
+        boost += 0.06
+
+    if query_tokens.intersection(tokenize(chunk.get("lab_name", ""))):
+        boost += 0.05
+
+    ref_course_tokens = tokenize(" ".join(chunk.get("referenced_courses") or [])) # helps with requirement questions
+    if query_tokens.intersection(ref_course_tokens):
+        boost += 0.12
+
+    if chunk.get("content_source") == "catalog":
+        boost += 0.02
+
     return boost
+
 
 
 def reciprocal_rank_fusion(bm25_rank: int | None, semantic_rank: int | None, rrf_k: int = RRF_K) -> float:
@@ -160,6 +226,11 @@ def parse_weaviate_objects(objects, score_attr: str | None = None) -> List[Dict[
         props = obj.properties or {}
         result = {key: props.get(key) for key in RETURN_PROPERTIES}
         result["tags"] = result.get("tags") or []
+        
+        # keep mixed-source chunks safe to format and rank
+        result["program_family"] = result.get("program_family") or [] # 
+        result["referenced_courses"] = result.get("referenced_courses") or []
+
         result["rank"] = rank
         if obj.metadata is not None and score_attr:
             result[score_attr] = getattr(obj.metadata, score_attr, None)
@@ -280,23 +351,43 @@ def search_chunks(query: str, department_id: str, top_k: int = TOP_K) -> List[Di
     finally:
         client.close()
 
-
+# catalog chunk are presented well to the model - the model should see page citations for catalog chunks, not blank URLs
 def build_context(chunks: List[Dict[str, Any]]) -> str:
     parts = []
+
     for i, chunk in enumerate(chunks, start=1):
-        parts.append(
-            f"[Source {i}]\n"
-            f"Document ID: {chunk.get('document_id', '')}\n"
-            f"Title: {chunk.get('title', '')}\n"
-            f"Source: {chunk.get('source', '')}\n"
-            f"Section: {chunk.get('section', '')}\n"
-            f"Timestamp: {chunk.get('timestamp', '')}\n"
-            f"Tags: {', '.join(chunk.get('tags') or [])}\n"
-            f"Course: {chunk.get('course_number', '')} {chunk.get('course_title', '')}\n"
-            f"URL: {chunk.get('url', '')}\n"
-            f"Text: {chunk.get('text', '')}\n"
-        )
+        if chunk.get("content_source") == "catalog":
+            parts.append(
+                f"[Source {i}]\n"
+                f"Content Source: catalog\n"
+                f"Chunk Type: {chunk.get('content_type', '')}\n"
+                f"Document ID: {chunk.get('document_id', '')}\n"
+                f"Title: {chunk.get('title', '')}\n"
+                f"Degree: {chunk.get('degree_full_title', '')}\n"
+                f"Course: {chunk.get('course_number', '')} {chunk.get('course_title', '')}\n"
+                f"Department Prefix: {chunk.get('dept_prefix', '')}\n"
+                f"Catalog Year: {chunk.get('catalog_year', '')}\n"
+                f"Catalog Pages: {chunk.get('catalog_page', '')}-{chunk.get('catalog_page_end', '')}\n"
+                f"Referenced Courses: {', '.join(chunk.get('referenced_courses') or [])}\n"
+                f"Text: {chunk.get('text', '')}\n"
+            )
+        else:
+            parts.append(
+                f"[Source {i}]\n"
+                f"Content Source: web\n"
+                f"Document ID: {chunk.get('document_id', '')}\n"
+                f"Title: {chunk.get('title', '')}\n"
+                f"Source: {chunk.get('source', '')}\n"
+                f"Section: {chunk.get('section', '')}\n"
+                f"Timestamp: {chunk.get('timestamp', '')}\n"
+                f"Tags: {', '.join(chunk.get('tags') or [])}\n"
+                f"Course: {chunk.get('course_number', '')} {chunk.get('course_title', '')}\n"
+                f"URL: {chunk.get('url', '')}\n"
+                f"Text: {chunk.get('text', '')}\n"
+            )
+
     return "\n---\n".join(parts)
+
 
 
 def generate_grounded_answer(question: str, department_id: str) -> Dict[str, Any]:
@@ -310,15 +401,17 @@ def generate_grounded_answer(question: str, department_id: str) -> Dict[str, Any
     chunks = search_chunks(question, normalized_department_id)
     context = build_context(chunks)
 
+    # prompt assumes web content and catalog content
     system_prompt = """
 You are a helpful university department assistant.
 
 Answer the user using ONLY the provided context.
+The context may come from the department website and/or the academic catalog.
 If the answer is not in the context, say:
-"I could not find that information on the department website."
+"I could not find that information in the provided department sources."
 Do not make up facts.
 Be concise and factual.
-At the end, list the most relevant source URLs if available.
+At the end, list the most relevant source URLs and/or catalog page citations if available.
 """
 
     user_prompt = f"""
@@ -342,11 +435,21 @@ Retrieved context:
 
     answer = response.output_text
 
+    # catalog chunks need readable citations instead of empty URL fields
     sources = []
     for chunk in chunks:
-        url = chunk.get("url")
-        if url and url not in sources:
-            sources.append(url)
+        if chunk.get("content_source") == "catalog":
+            citation = (
+                f"NMSU Academic Catalog {chunk.get('catalog_year', '')}, "
+                f"pp. {chunk.get('catalog_page', '')}-{chunk.get('catalog_page_end', '')}"
+            )
+            if citation not in sources:
+                sources.append(citation)
+        else:
+            url = chunk.get("url")
+            if url and url not in sources:
+                sources.append(url)
+
 
     return {
         "answer": answer,
