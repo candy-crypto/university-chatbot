@@ -10,3 +10,4 @@ openai
 weaviate-client
 pydantic
 psycopg[binary]
+pdfplumber

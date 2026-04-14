@@ -358,6 +358,28 @@ def upsert_pages_to_weaviate(pages, department_id: str, crawl_version: str):
                         "text": chunk,
                         "chunk_id": f"{page['url']}#chunk-{i}",
                         "crawl_version": crawl_version,
+
+                        "content_source": "web",
+                        "content_type": "web_page",
+
+                        # every chunk now has the same shape
+                        # retrieval can rank mixed chunk types without defensive null logic everywhere 
+                        "catalog_page": 0,
+                        "catalog_page_end": 0,
+                        "catalog_year": "",
+                        "program_family": [],
+                        "degree_level": "",
+                        "degree_type": "",
+                        "concentration": "",
+                        "degree_full_title": "",
+                        "credits": "",
+                        "dept_prefix": "",
+                        "course_number_level": "",
+                        "has_prerequisites": False,
+                        "policy_topic": "",
+                        "lab_name": "",
+                        "referenced_courses": [],
+                        "is_research_related": False,
                     },
                     vector=emb,
                 )
