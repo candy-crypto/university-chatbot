@@ -1,14 +1,166 @@
-# cs.yaml
+# cs.yaml — CS Department crawl configuration and page classification
+#
+# page_types:       chunk_type assigned to each URL
+# page_levels:      "undergraduate", "graduate", or "" (both/neither)
+# page_degree_types: "bs", "ba", "ms", "phd", "minor", or "" (not degree-specific)
+#
+# Pages not listed in page_types get chunk_type: "general" by default.
+# Pages not listed in page_levels / page_degree_types get "" by default.
 
 department_id: "cs"
 display_name: "Computer Science"
+campus: "las_cruces"
+
 root_url: "https://computerscience.nmsu.edu/"
+
 allowed_domains:
-- "computerscience.nmsu.edu"
-- "cs.nmsu.edu"
+  - "computerscience.nmsu.edu"
+  - "cs.nmsu.edu"
+  - "advising.nmsu.edu"
+  - "gradschool.nmsu.edu"
+  - "dataanalytics.nmsu.edu"
+  - "tpal.nmsu.edu"
+  - "ece.nmsu.edu"
+  - "www.nmsu.edu"
+  - "miniapps.nmsu.edu"
+
 allowed_path_prefixes:
-- "/"
+  - "/"
+
 deny_url_patterns:
-- "/search"
-- "?q="
-fallback_contact_irl: "https://computerscience.nmsu.edu/"
+  - "/search"
+  - "?q="
+  - "/department/newsletters-new"
+  - "/department/job-openings"
+  - "/news-events/open-positions"
+  - "/news-events/news"
+  - "dataanalytics.nmsu.edu/facultydirectory"
+  - "dataanalytics.nmsu.edu/courses/index"
+
+fallback_contact_url: "https://computerscience.nmsu.edu/"
+
+
+# ── Page type classification ───────────────────────────────────────────────────
+# Chunk types used here:
+#   general          — informational pages that don't fit a narrower type
+#   faculty          — faculty/staff directory pages
+#   research         — research groups, software, technical reports, awards
+#   policy           — department policies and procedures
+#   advising         — advising, FAQs, prospective student guidance
+#   financial_aid    — scholarships, assistantships, financial aid listings
+#   enrollment       — registration, admissions, transfer, calendars
+#   degree_overview  — program descriptions (what the degree is, who it's for)
+#   course_schedule  — multi-semester course offering schedule (kept as single chunk)
+
+page_types:
+
+  # ── Department / General ────────────────────────────────────────────────────
+  "https://computerscience.nmsu.edu/":                                       general
+  "https://computerscience.nmsu.edu/department/mission-and-vision.html":     general
+  "https://computerscience.nmsu.edu/department/enrollment-and-graduation-data.html": general
+  "https://computerscience.nmsu.edu/department/committees.html":             general
+  "https://computerscience.nmsu.edu/department/endowed-professorship.html":  general
+  "https://computerscience.nmsu.edu/department/facilities.html":             general
+  "https://computerscience.nmsu.edu/facultydirectory/computer-operations-group.html": general
+  "https://computerscience.nmsu.edu/department/room-reservations.html":      general
+  "https://computerscience.nmsu.edu/department/contact-information.html":    general
+  "https://computerscience.nmsu.edu/department/internal-documents.html":     policy
+
+  # ── Undergraduate ───────────────────────────────────────────────────────────
+  "https://computerscience.nmsu.edu/majors/why-cs-at-nmsu.html":            general
+  "https://computerscience.nmsu.edu/majors/prospective-undergraduates.html": advising
+  "https://computerscience.nmsu.edu/majors/undergraduate-degrees.html":      degree_overview
+  "https://computerscience.nmsu.edu/majors/undergraduate-advising.html":     advising
+  "https://computerscience.nmsu.edu/majors/undergraduate-financial-aid.html": financial_aid
+  "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html": course_schedule
+
+  # ── Non-majors ──────────────────────────────────────────────────────────────
+  "https://computerscience.nmsu.edu/non-majors/gen-ed.html":                general
+  "https://computerscience.nmsu.edu/non-majors/learn-to-code.html":         general
+  "https://computerscience.nmsu.edu/non-majors/minors.html":                degree_overview
+
+  # ── Graduate ────────────────────────────────────────────────────────────────
+  "https://computerscience.nmsu.edu/grad-students/prospective-graduates.html": advising
+  "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html":  advising
+  "https://computerscience.nmsu.edu/grad-students/graduate-degrees.html":      degree_overview
+  "https://computerscience.nmsu.edu/grad-students/graduate-financial-aid.html": financial_aid
+  "https://computerscience.nmsu.edu/grad-students/master-in-bioinformatics.html": degree_overview
+
+  # ── Faculty & Community ─────────────────────────────────────────────────────
+  "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html": faculty
+  "https://computerscience.nmsu.edu/facultydirectory/student-organizations.html":   general
+  "https://computerscience.nmsu.edu/facultydirectory/distinguished-alumni.html":    general
+  "https://computerscience.nmsu.edu/facultydirectory/board-of-advisors.html":       general
+
+  # ── Research ────────────────────────────────────────────────────────────────
+  "https://computerscience.nmsu.edu/research/groups-labs.html":             research
+  "https://computerscience.nmsu.edu/research/awards.html":                  research
+  "https://computerscience.nmsu.edu/research/software.html":                research
+  "https://computerscience.nmsu.edu/research/technical-reports.html":       research
+
+  # ── Advising (external) ─────────────────────────────────────────────────────
+  "https://advising.nmsu.edu/":                                              advising
+
+  # ── Graduate School (external) ──────────────────────────────────────────────
+  "https://gradschool.nmsu.edu/":                                            general
+  "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html": enrollment
+
+  # ── MS Data Analytics (external — CS-administered program) ──────────────────
+  # Homepage and faculty directory are redundant to catalog — denied above.
+  # Courses index is redundant to catalog — denied above.
+  "https://dataanalytics.nmsu.edu/application-admission.html":               enrollment
+  "https://dataanalytics.nmsu.edu/courses/roadmap-fall.html":                study_plan
+  "https://dataanalytics.nmsu.edu/courses/roadmap-spring.html":              study_plan
+
+  # ── Financial aid & assistantships (external) ───────────────────────────────
+  "https://tpal.nmsu.edu/degree-programs/assistantships.html":              financial_aid
+  "https://ece.nmsu.edu/grad-study/teaching-assistants.html":               financial_aid
+
+  # ── NMSU main site (external) ───────────────────────────────────────────────
+  "https://www.nmsu.edu/degree-programs/graduate/computer-science.html":    degree_overview
+  "https://miniapps.nmsu.edu/transfer":                                      enrollment
+
+
+# ── Level classification ───────────────────────────────────────────────────────
+
+page_levels:
+
+  # Undergraduate-specific
+  "https://computerscience.nmsu.edu/majors/prospective-undergraduates.html": undergraduate
+  "https://computerscience.nmsu.edu/majors/undergraduate-degrees.html":      undergraduate
+  "https://computerscience.nmsu.edu/majors/undergraduate-advising.html":     undergraduate
+  "https://computerscience.nmsu.edu/majors/undergraduate-financial-aid.html": undergraduate
+  "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html": undergraduate
+  "https://computerscience.nmsu.edu/non-majors/gen-ed.html":                 undergraduate
+  "https://computerscience.nmsu.edu/non-majors/learn-to-code.html":          undergraduate
+  "https://computerscience.nmsu.edu/non-majors/minors.html":                 undergraduate
+  "https://advising.nmsu.edu/":                                               undergraduate
+
+  # Graduate-specific
+  "https://computerscience.nmsu.edu/grad-students/prospective-graduates.html": graduate
+  "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html":  graduate
+  "https://computerscience.nmsu.edu/grad-students/graduate-degrees.html":      graduate
+  "https://computerscience.nmsu.edu/grad-students/graduate-financial-aid.html": graduate
+  "https://computerscience.nmsu.edu/grad-students/master-in-bioinformatics.html": graduate
+  "https://gradschool.nmsu.edu/":                                               graduate
+  "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html": graduate
+  "https://dataanalytics.nmsu.edu/application-admission.html":                  graduate
+  "https://dataanalytics.nmsu.edu/courses/roadmap-fall.html":                   graduate
+  "https://dataanalytics.nmsu.edu/courses/roadmap-spring.html":                 graduate
+  "https://tpal.nmsu.edu/degree-programs/assistantships.html":                  graduate
+  "https://ece.nmsu.edu/grad-study/teaching-assistants.html":                   graduate
+  "https://www.nmsu.edu/degree-programs/graduate/computer-science.html":        graduate
+
+
+# ── Degree type classification ─────────────────────────────────────────────────
+# Only set when a page is specific to one degree type.
+# Leave blank for pages that cover multiple degrees or apply generally.
+
+page_degree_types:
+
+  "https://computerscience.nmsu.edu/non-majors/minors.html":                    minor
+  "https://computerscience.nmsu.edu/grad-students/master-in-bioinformatics.html": ms
+  "https://dataanalytics.nmsu.edu/application-admission.html":                    ms
+  "https://dataanalytics.nmsu.edu/courses/roadmap-fall.html":                     ms
+  "https://dataanalytics.nmsu.edu/courses/roadmap-spring.html":                   ms
+  "https://www.nmsu.edu/degree-programs/graduate/computer-science.html":          ms
