@@ -37,40 +37,34 @@ def get_weaviate_client():
 
 def _collection_properties():
     return [
-        Property(name="department_id", data_type=DataType.TEXT),
-        Property(name="document_id", data_type=DataType.TEXT),
-        Property(name="url", data_type=DataType.TEXT),
-        Property(name="source", data_type=DataType.TEXT),
-        Property(name="title", data_type=DataType.TEXT),
-        Property(name="section", data_type=DataType.TEXT),
-        Property(name="timestamp", data_type=DataType.DATE),
-        Property(name="tags", data_type=DataType.TEXT_ARRAY),
-        Property(name="course_number", data_type=DataType.TEXT),
-        Property(name="course_title", data_type=DataType.TEXT),
-        Property(name="text", data_type=DataType.TEXT),
-        Property(name="chunk_id", data_type=DataType.TEXT),
-        Property(name="crawl_version", data_type=DataType.TEXT),
-
-        Property(name="content_source", data_type=DataType.TEXT),
-        Property(name="content_type", data_type=DataType.TEXT),
-
-        # Addded for catalog chunking
-        Property(name="catalog_page", data_type=DataType.INT),
-        Property(name="catalog_page_end", data_type=DataType.INT),
-        Property(name="catalog_year", data_type=DataType.TEXT),
-        Property(name="program_family", data_type=DataType.TEXT_ARRAY),
-        Property(name="degree_level", data_type=DataType.TEXT),
-        Property(name="degree_type", data_type=DataType.TEXT),
-        Property(name="concentration", data_type=DataType.TEXT),
-        Property(name="degree_full_title", data_type=DataType.TEXT),
-        Property(name="credits", data_type=DataType.TEXT),
-        Property(name="dept_prefix", data_type=DataType.TEXT),
-        Property(name="course_number_level", data_type=DataType.TEXT),
-        Property(name="has_prerequisites", data_type=DataType.BOOL),
-        Property(name="policy_topic", data_type=DataType.TEXT),
-        Property(name="lab_name", data_type=DataType.TEXT),
+        # ── Core fields — every chunk ─────────────────────────────────────────
+        Property(name="chunk_id",           data_type=DataType.TEXT),
+        Property(name="chunk_type",         data_type=DataType.TEXT),
+        Property(name="department_id",      data_type=DataType.TEXT),
+        Property(name="campus",             data_type=DataType.TEXT),
+        Property(name="text",               data_type=DataType.TEXT),
+        Property(name="heading",            data_type=DataType.TEXT),
+        Property(name="source",             data_type=DataType.TEXT),
+        Property(name="level",              data_type=DataType.TEXT),
+        Property(name="degree_type",        data_type=DataType.TEXT),
+        Property(name="course_code",        data_type=DataType.TEXT),
         Property(name="referenced_courses", data_type=DataType.TEXT_ARRAY),
-        Property(name="is_research_related", data_type=DataType.BOOL),
+        Property(name="content_source",     data_type=DataType.TEXT),
+
+        # ── Catalog-specific fields ───────────────────────────────────────────
+        Property(name="catalog_year",       data_type=DataType.TEXT),
+        Property(name="catalog_page",       data_type=DataType.INT),
+        Property(name="catalog_page_end",   data_type=DataType.INT),
+        Property(name="degree_full_title",  data_type=DataType.TEXT),
+        Property(name="concentration",      data_type=DataType.TEXT),
+        Property(name="credits",            data_type=DataType.TEXT),
+        Property(name="has_prerequisites",  data_type=DataType.BOOL),
+        Property(name="policy_topic",       data_type=DataType.TEXT),
+        Property(name="lab",                data_type=DataType.TEXT),
+        Property(name="research",           data_type=DataType.BOOL),
+
+        # ── Web-specific fields ───────────────────────────────────────────────
+        Property(name="crawl_version",      data_type=DataType.TEXT),
     ]
 
 

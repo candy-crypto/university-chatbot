@@ -2,14 +2,13 @@
 
 """Hybrid retrieval utilities for the university chatbot backend.
 
-This module handles query embedding, semantic search, keyword ranking,
-score fusion, and prompt construction for grounded answer generation.
+This module handles query embedding, Weaviate native hybrid search
+(BM25 + vector via RRF), optional metadata boosting, and prompt
+construction for grounded answer generation.
 """
 
 import os
-import math
 import re
-from collections import Counter
 from typing import List, Dict, Any
 
 from dotenv import load_dotenv
@@ -24,61 +23,52 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_CHAT_MODEL = os.getenv("OPENAI_CHAT_MODEL", "gpt-5-mini")
 OPENAI_EMBED_MODEL = os.getenv("OPENAI_EMBED_MODEL", "text-embedding-3-small")
 
-# Default retrieval limits and scoring weights.
+# Top-K results returned to the caller.
 TOP_K = int(os.getenv("TOP_K", "5"))
-SEMANTIC_TOP_K = int(os.getenv("SEMANTIC_TOP_K", "20"))
-KEYWORD_TOP_K = int(os.getenv("KEYWORD_TOP_K", "20"))
-KEYWORD_CANDIDATE_LIMIT = int(os.getenv("KEYWORD_CANDIDATE_LIMIT", "200"))
-RRF_K = int(os.getenv("RRF_K", "60"))
-WEIGHT_BM25 = float(os.getenv("WEIGHT_BM25", "0.35"))
-WEIGHT_SEMANTIC = float(os.getenv("WEIGHT_SEMANTIC", "0.45"))
-WEIGHT_RRF = float(os.getenv("WEIGHT_RRF", "0.20"))
+
+# Hybrid alpha: 0.0 = pure BM25, 1.0 = pure vector, 0.75 = mostly semantic.
+HYBRID_ALPHA = float(os.getenv("HYBRID_ALPHA", "0.75"))
 
 if not OPENAI_API_KEY:
     raise RuntimeError("OPENAI_API_KEY is not set")
 
 openai_client = OpenAI(api_key=OPENAI_API_KEY)
 
+# Properties fetched from Weaviate for every retrieved chunk.
 RETURN_PROPERTIES = [
-    "department_id",
-    "document_id",
-    "url",
-    "source",
-    "title",
-    "section",
-    "timestamp",
-    "tags",
-    "course_number",
-    "course_title",
-    "text",
+    # ── Core fields ───────────────────────────────────────────────────────────
     "chunk_id",
-    "crawl_version",
-
-    # Retrieval can only rank and format what it asks Weaviate to return 
+    "chunk_type",
+    "department_id",
+    "campus",
+    "text",
+    "heading",
+    "source",
+    "level",
+    "degree_type",
+    "course_code",
+    "referenced_courses",
     "content_source",
-    "content_type",
 
+    # ── Catalog-specific fields ───────────────────────────────────────────────
+    "catalog_year",
     "catalog_page",
     "catalog_page_end",
-    "catalog_year",
-    "program_family",
-    "degree_level",
-    "degree_type",
-    "concentration",
     "degree_full_title",
+    "concentration",
     "credits",
-    "dept_prefix",
-    "course_number_level",
     "has_prerequisites",
     "policy_topic",
-    "lab_name",
-    "referenced_courses",
-    "is_research_related",
+    "lab",
+    "research",
+
+    # ── Web-specific fields ───────────────────────────────────────────────────
+    "crawl_version",
 ]
 
 
 def embed_text(text: str) -> List[float]:
-    """Embed a query or document string using the OpenAI embedding model."""
+    """Embed a query string using the OpenAI embedding model."""
     response = openai_client.embeddings.create(
         model=OPENAI_EMBED_MODEL,
         input=text
@@ -87,121 +77,30 @@ def embed_text(text: str) -> List[float]:
 
 
 def tokenize(text: str) -> List[str]:
-    """Normalize text and extract lowercase term tokens for keyword matching."""
+    """Normalize text and extract lowercase term tokens."""
     return re.findall(r"[a-z0-9]+", (text or "").lower())
 
 
-def lexical_document(chunk: Dict[str, Any]) -> List[str]:
-    """Build a combined token list from chunk metadata and document text."""
-    fields = [
-        chunk.get("title", ""),
-        chunk.get("section", ""),
-        chunk.get("source", ""),
-        chunk.get("course_number", ""),
-        chunk.get("course_title", ""),
-        " ".join(chunk.get("tags") or []),
-
-        # Added for catalog retrieval
-        # BM25 needs to see the degree titles, course codes, policy labels, and referenced courses 
-        chunk.get("content_source", ""),
-        chunk.get("content_type", ""),
-        chunk.get("degree_full_title", ""),
-        chunk.get("degree_level", ""),
-        chunk.get("degree_type", ""),
-        chunk.get("concentration", ""),
-        chunk.get("credits", ""),
-        chunk.get("dept_prefix", ""),
-        chunk.get("course_number_level", ""),
-        chunk.get("policy_topic", ""),
-        chunk.get("lab_name", ""),
-        " ".join(chunk.get("program_family") or []),
-        " ".join(chunk.get("referenced_courses") or []),
-
-        chunk.get("text", ""),
-    ]
-    return tokenize(" ".join(fields))
-
-
-
-def bm25_score_documents(query: str, chunks: List[Dict[str, Any]], k1: float = 1.5, b: float = 0.75) -> Dict[str, float]:
-    """Compute BM25 similarity scores for a list of chunks against the query."""
-    tokenized_query = tokenize(query)
-    if not tokenized_query or not chunks:
-        return {}
-
-    # Tokenize all documents and prepare length statistics.
-    tokenized_docs = [lexical_document(chunk) for chunk in chunks]
-    doc_lengths = [len(doc) for doc in tokenized_docs]
-    avg_doc_len = sum(doc_lengths) / max(len(doc_lengths), 1)
-
-    # Document frequency per token is used in the inverse document frequency term.
-    doc_freq = Counter()
-    for doc in tokenized_docs:
-        for token in set(doc):
-            doc_freq[token] += 1
-
-    total_docs = len(tokenized_docs)
-    scores: Dict[str, float] = {}
-
-    # Score each chunk relative to the query using BM25.
-    for chunk, doc_tokens, doc_len in zip(chunks, tokenized_docs, doc_lengths):
-        term_freq = Counter(doc_tokens)
-        score = 0.0
-        for token in tokenized_query:
-            if token not in term_freq:
-                continue
-            numerator = total_docs - doc_freq[token] + 0.5
-            denominator = doc_freq[token] + 0.5
-            idf = math.log(1 + (numerator / denominator))
-            freq = term_freq[token]
-            denom = freq + k1 * (1 - b + b * (doc_len / max(avg_doc_len, 1)))
-            score += idf * ((freq * (k1 + 1)) / max(denom, 1e-9))
-
-        scores[chunk.get("chunk_id", "")] = score
-
-    return scores
-
-
-def normalize_scores(raw_scores: Dict[str, float]) -> Dict[str, float]:
-    """Scale raw scores to the [0.0, 1.0] range for fair combination."""
-    if not raw_scores:
-        return {}
-
-    values = list(raw_scores.values())
-    low = min(values)
-    high = max(values)
-    if math.isclose(low, high):
-        return {key: 1.0 for key in raw_scores}
-
-    return {
-        key: (value - low) / (high - low)
-        for key, value in raw_scores.items()
-    }
-
-
 def metadata_boost(query: str, chunk: Dict[str, Any]) -> float:
-    """Add a small score boost when query terms appear in chunk metadata."""
+    """Add a small score boost when query terms appear in chunk metadata fields."""
     query_tokens = set(tokenize(query))
     boost = 0.0
 
-    if query_tokens.intersection(tokenize(chunk.get("title", ""))):
+    if query_tokens.intersection(tokenize(chunk.get("heading", ""))):
         boost += 0.08
-    if query_tokens.intersection(tokenize(chunk.get("section", ""))):
-        boost += 0.05
-    if query_tokens.intersection(tokenize(" ".join(chunk.get("tags") or []))):
-        boost += 0.03
 
+    # Course code and referenced courses — important for course-specific queries.
     course_tokens = tokenize(
-        f"{chunk.get('course_number', '')} "
-        f"{chunk.get('course_title', '')} "
-        f"{chunk.get('dept_prefix', '')}"
+        f"{chunk.get('course_code', '')} "
+        f"{' '.join(chunk.get('referenced_courses') or [])}"
     )
     if query_tokens.intersection(course_tokens):
         boost += 0.10
 
+    # Degree metadata — important for program and degree queries.
     degree_tokens = tokenize(
         f"{chunk.get('degree_full_title', '')} "
-        f"{chunk.get('degree_level', '')} "
+        f"{chunk.get('level', '')} "
         f"{chunk.get('degree_type', '')} "
         f"{chunk.get('concentration', '')}"
     )
@@ -211,42 +110,23 @@ def metadata_boost(query: str, chunk: Dict[str, Any]) -> float:
     if query_tokens.intersection(tokenize(chunk.get("policy_topic", ""))):
         boost += 0.06
 
-    if query_tokens.intersection(tokenize(chunk.get("lab_name", ""))):
+    if query_tokens.intersection(tokenize(chunk.get("lab", ""))):
         boost += 0.05
 
-    ref_course_tokens = tokenize(" ".join(chunk.get("referenced_courses") or [])) # helps with requirement questions
-    if query_tokens.intersection(ref_course_tokens):
-        boost += 0.12
-
+    # Slight preference for catalog content, which tends to be more authoritative.
     if chunk.get("content_source") == "catalog":
         boost += 0.02
 
     return boost
 
 
-
-def reciprocal_rank_fusion(bm25_rank: int | None, semantic_rank: int | None, rrf_k: int = RRF_K) -> float:
-    """Combine BM25 and semantic ranks using Reciprocal Rank Fusion (RRF)."""
-    score = 0.0
-    if bm25_rank is not None:
-        score += 1.0 / (rrf_k + bm25_rank)
-    if semantic_rank is not None:
-        score += 1.0 / (rrf_k + semantic_rank)
-    return score
-
-
 def parse_weaviate_objects(objects: Any, score_attr: str | None = None) -> List[Dict[str, Any]]:
-    """Convert Weaviate object results into plain dictionaries for ranking."""
+    """Convert Weaviate object results into plain dictionaries."""
     results = []
     for rank, obj in enumerate(objects, start=1):
         props = obj.properties or {}
         result = {key: props.get(key) for key in RETURN_PROPERTIES}
-        result["tags"] = result.get("tags") or []
-        
-        # keep mixed-source chunks safe to format and rank
-        result["program_family"] = result.get("program_family") or [] # 
         result["referenced_courses"] = result.get("referenced_courses") or []
-
         result["rank"] = rank
         if obj.metadata is not None and score_attr:
             result[score_attr] = getattr(obj.metadata, score_attr, None)
@@ -258,11 +138,11 @@ def parse_weaviate_objects(objects: Any, score_attr: str | None = None) -> List[
 
 def search_chunks(query: str, department_id: str, top_k: int = TOP_K) -> List[Dict[str, Any]]:
     """
-    Hybrid retrieval pipeline for one department.
+    Hybrid retrieval using Weaviate's native hybrid search.
 
-    1. Semantic ranking with OpenAI embeddings and Weaviate near-vector search.
-    2. Local keyword ranking with BM25 over candidate documents.
-    3. Score fusion using normalized semantic scores, BM25 scores, RRF, and metadata boosts.
+    Weaviate fuses BM25 keyword scores and vector similarity scores using
+    Reciprocal Rank Fusion (RRF) internally, then returns results ranked by
+    the combined score. A metadata boost is applied as a final re-ranking step.
     """
     query_vector = embed_text(query)
 
@@ -271,114 +151,34 @@ def search_chunks(query: str, department_id: str, top_k: int = TOP_K) -> List[Di
         ensure_collection(client)
         collection = get_collection(client)
 
-        semantic_response = collection.query.near_vector(
-            near_vector=query_vector,
+        response = collection.query.hybrid(
+            query=query,
+            vector=query_vector,
             filters=Filter.by_property("department_id").equal(department_id),
-            limit=max(top_k, SEMANTIC_TOP_K),
-            return_metadata=MetadataQuery(distance=True),
+            limit=top_k,
+            alpha=HYBRID_ALPHA,
+            return_metadata=MetadataQuery(score=True),
             return_properties=RETURN_PROPERTIES,
         )
 
-        semantic_results = parse_weaviate_objects(semantic_response.objects, "distance")
+        results = parse_weaviate_objects(response.objects, "score")
 
-        # Convert Weaviate distance metadata into a semantic score.
-        # Lower distance means higher semantic similarity.
-        semantic_score_map = {
-            item["chunk_id"]: 1.0 / (1.0 + float(item["distance"]))
-            for item in semantic_results
-            if item.get("chunk_id")
-        }
-
-        # Preserve the semantic ranking position for later RRF fusion.
-        semantic_rank_map = {
-            item["chunk_id"]: item["rank"]
-            for item in semantic_results
-            if item.get("chunk_id")
-        }
-
-        # Start with the semantic candidate pool and optionally expand to a broader keyword candidate set.
-        keyword_candidates = semantic_results
-        try:
-            keyword_response = collection.query.fetch_objects(
-                filters=Filter.by_property("department_id").equal(department_id),
-                limit=KEYWORD_CANDIDATE_LIMIT,
-                return_properties=RETURN_PROPERTIES,
-            )
-            fetched_candidates = parse_weaviate_objects(keyword_response.objects)
-            if fetched_candidates:
-                keyword_candidates = fetched_candidates
-        except Exception:
-            # Fall back to the semantic pool if fetch_objects is unavailable or schema is mid-migration.
-            keyword_candidates = semantic_results
-
-        bm25_raw_scores = bm25_score_documents(query, keyword_candidates)
-        normalized_bm25 = normalize_scores(bm25_raw_scores)
-        normalized_semantic = normalize_scores(semantic_score_map)
-
-        # Build a ranked list of keyword-based candidates.
-        keyword_ranked = sorted(
-            normalized_bm25.items(),
-            key=lambda item: item[1],
-            reverse=True,
-        )[:max(top_k, KEYWORD_TOP_K)]
-        keyword_rank_map = {
-            chunk_id: rank
-            for rank, (chunk_id, _) in enumerate(keyword_ranked, start=1)
-        }
-
-        merged_results = []
-        semantic_chunk_map = {
-            item["chunk_id"]: item
-            for item in semantic_results
-            if item.get("chunk_id")
-        }
-        keyword_chunk_map = {
-            item["chunk_id"]: item
-            for item in keyword_candidates
-            if item.get("chunk_id")
-        }
-
-        # Combine semantic and keyword candidates into one merged result set.
-        for chunk_id in set(keyword_rank_map) | set(semantic_chunk_map):
-            item = semantic_chunk_map.get(chunk_id)
-            if item is None:
-                item = keyword_chunk_map.get(chunk_id)
-            if item is None:
-                continue
-
-            chunk_id = item.get("chunk_id")
-            if not chunk_id:
-                continue
-
-            bm25_score = normalized_bm25.get(chunk_id, 0.0)
-            semantic_score = normalized_semantic.get(chunk_id, 0.0)
-            rrf_score = reciprocal_rank_fusion(
-                keyword_rank_map.get(chunk_id),
-                semantic_rank_map.get(chunk_id),
-            )
+        # Re-rank results by adding a metadata boost to the hybrid score.
+        for item in results:
             boost = metadata_boost(query, item)
-            final_score = (
-                WEIGHT_BM25 * bm25_score
-                + WEIGHT_SEMANTIC * semantic_score
-                + WEIGHT_RRF * rrf_score
-                + boost
-            )
-
-            item["bm25_score"] = bm25_score
-            item["semantic_score"] = semantic_score
-            item["rrf_score"] = rrf_score
             item["metadata_boost"] = boost
-            item["final_score"] = final_score
-            merged_results.append(item)
+            item["hybrid_score"] = item.get("score") or 0.0
+            item["final_score"] = item["hybrid_score"] + boost
 
-        merged_results.sort(key=lambda item: item.get("final_score", 0.0), reverse=True)
-        return merged_results[:top_k]
+        results.sort(key=lambda x: x.get("final_score", 0.0), reverse=True)
+        return results
+
     finally:
         client.close()
 
-# catalog chunk are presented well to the model - the model should see page citations for catalog chunks, not blank URLs
+
 def build_context(chunks: List[Dict[str, Any]]) -> str:
-    """Format retrieved chunks into a single grounded context string for the prompt."""
+    """Format retrieved chunks into a grounded context string for the prompt."""
     parts = []
 
     for i, chunk in enumerate(chunks, start=1):
@@ -386,12 +186,10 @@ def build_context(chunks: List[Dict[str, Any]]) -> str:
             parts.append(
                 f"[Source {i}]\n"
                 f"Content Source: catalog\n"
-                f"Chunk Type: {chunk.get('content_type', '')}\n"
-                f"Document ID: {chunk.get('document_id', '')}\n"
-                f"Title: {chunk.get('title', '')}\n"
+                f"Chunk Type: {chunk.get('chunk_type', '')}\n"
+                f"Heading: {chunk.get('heading', '')}\n"
                 f"Degree: {chunk.get('degree_full_title', '')}\n"
-                f"Course: {chunk.get('course_number', '')} {chunk.get('course_title', '')}\n"
-                f"Department Prefix: {chunk.get('dept_prefix', '')}\n"
+                f"Course: {chunk.get('course_code', '')}\n"
                 f"Catalog Year: {chunk.get('catalog_year', '')}\n"
                 f"Catalog Pages: {chunk.get('catalog_page', '')}-{chunk.get('catalog_page_end', '')}\n"
                 f"Referenced Courses: {', '.join(chunk.get('referenced_courses') or [])}\n"
@@ -401,34 +199,27 @@ def build_context(chunks: List[Dict[str, Any]]) -> str:
             parts.append(
                 f"[Source {i}]\n"
                 f"Content Source: web\n"
-                f"Document ID: {chunk.get('document_id', '')}\n"
-                f"Title: {chunk.get('title', '')}\n"
+                f"Chunk Type: {chunk.get('chunk_type', '')}\n"
+                f"Heading: {chunk.get('heading', '')}\n"
                 f"Source: {chunk.get('source', '')}\n"
-                f"Section: {chunk.get('section', '')}\n"
-                f"Timestamp: {chunk.get('timestamp', '')}\n"
-                f"Tags: {', '.join(chunk.get('tags') or [])}\n"
-                f"Course: {chunk.get('course_number', '')} {chunk.get('course_title', '')}\n"
-                f"URL: {chunk.get('url', '')}\n"
+                f"Course: {chunk.get('course_code', '')}\n"
                 f"Text: {chunk.get('text', '')}\n"
             )
 
     return "\n---\n".join(parts)
 
 
-
 def generate_grounded_answer(question: str, department_id: str) -> Dict[str, Any]:
     """
     RAG flow:
-      1. embed question
-      2. retrieve chunks from Weaviate
-      3. ask OpenAI to answer only from retrieved context
+      1. Embed question with OpenAI.
+      2. Retrieve top-K chunks from Weaviate via hybrid search.
+      3. Ask OpenAI to answer using only the retrieved context.
     """
-    # Normalize department identifiers to ensure consistent filtering in Weaviate.
     normalized_department_id = (department_id or "").strip().lower()
     chunks = search_chunks(question, normalized_department_id)
     context = build_context(chunks)
 
-    # prompt assumes web content and catalog content
     system_prompt = """
 You are a helpful university department assistant.
 
@@ -443,7 +234,6 @@ At the end, list the most relevant source URLs and/or catalog page citations if 
 
     user_prompt = f"""
 Department: {department_id}
-Normalized department: {normalized_department_id}
 
 Question:
 {question}
@@ -462,8 +252,7 @@ Retrieved context:
 
     answer = response.output_text
 
-    # catalog chunks need readable citations instead of empty URL fields
-    # Collect the distinct source URLs referenced by the retrieved chunks.
+    # Build a deduplicated list of source citations for the response.
     sources = []
     for chunk in chunks:
         if chunk.get("content_source") == "catalog":
@@ -474,13 +263,12 @@ Retrieved context:
             if citation not in sources:
                 sources.append(citation)
         else:
-            url = chunk.get("url")
-            if url and url not in sources:
-                sources.append(url)
-
+            src = chunk.get("source")
+            if src and src not in sources:
+                sources.append(src)
 
     return {
         "answer": answer,
         "sources": sources,
-        "chunks": chunks
+        "chunks": chunks,
     }
