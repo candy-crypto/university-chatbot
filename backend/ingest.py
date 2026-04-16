@@ -1,3 +1,11 @@
+"""
+ingest.py — Web crawler and ingestion pipeline for the university chatbot.
+
+Crawls department web pages using Playwright, extracts structured sections,
+chunks content by heading boundaries, embeds with OpenAI, and stores in
+Weaviate under the unified DepartmentChunk schema.
+"""
+
 import os
 import re
 import uuid
@@ -5,7 +13,7 @@ import time
 import yaml
 from datetime import datetime, timezone
 from collections import deque
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urlparse
 
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -26,104 +34,128 @@ if not OPENAI_API_KEY:
 
 openai_client = OpenAI(api_key=OPENAI_API_KEY)
 
+# Chunking guardrails — tunable via environment variables
+CHUNK_MIN_LEN = int(os.getenv("CHUNK_MIN_LEN", "150"))
+CHUNK_MAX_LEN = int(os.getenv("CHUNK_MAX_LEN", "2000"))
 
-def load_department_config(path: str):
+# Course code pattern: supports 4-digit numbers, alphabetic suffixes, space-separated prefixes
+# e.g. CSCI 1115G, MATH 1511G, E E 1110
+COURSE_CODE_RE = re.compile(r'\b([A-Z][A-Z\s]{0,5}\s+\d{3,4}[A-Z]?)\b')
+
+
+# ── Config ────────────────────────────────────────────────────────────────────
+
+def load_department_config(path: str) -> dict:
     with open(path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 
+# ── Text utilities ─────────────────────────────────────────────────────────────
+
 def normalize_text(text: str) -> str:
-    """
-    Collapse repeated whitespace so stored chunks are cleaner.
-    """
     return re.sub(r"\s+", " ", text).strip()
 
 
-def is_allowed_url(url: str, config: dict) -> bool:
-    """
-    Restrict crawling to the configured department site and allowed paths.
-    """
-    parsed = urlparse(url)
+# ── URL filtering ──────────────────────────────────────────────────────────────
 
+def is_allowed_url(url: str, config: dict) -> bool:
+    parsed = urlparse(url)
     if parsed.scheme not in ("http", "https"):
         return False
-
-    allowed_domains = set(config.get("allowed_domains", []))
-    if parsed.netloc not in allowed_domains:
+    if parsed.netloc not in set(config.get("allowed_domains", [])):
         return False
-
     path = parsed.path or "/"
-    allowed_prefixes = config.get("allowed_path_prefixes", ["/"])
-    if not any(path.startswith(prefix) for prefix in allowed_prefixes):
+    if not any(path.startswith(p) for p in config.get("allowed_path_prefixes", ["/"])):
         return False
-
     for pattern in config.get("deny_url_patterns", []):
         if pattern in url:
             return False
-
     return True
 
 
+# ── Page extraction ────────────────────────────────────────────────────────────
+
 def extract_page_data(page, url: str, config: dict) -> dict:
     """
-    Load a page with Playwright, wait for rendering, then extract:
-      - title
-      - visible text from body
-      - discovered links from rendered DOM
+    Render the page with Playwright and extract:
+      - h1: first h1 heading, used as the chunk heading field
+      - text: full visible body text, used for course code scanning
+      - sections: list of {heading, text} dicts split on h2/h3 boundaries, used for chunking
+      - links: discovered hrefs for crawl queue
+      - page_timestamp: last-modified metadata if present
     """
     page.goto(url, wait_until="domcontentloaded", timeout=30000)
-
     try:
         page.wait_for_load_state("networkidle", timeout=5000)
     except PlaywrightTimeoutError:
-        # Some pages never become fully idle; continue anyway.
         pass
 
-    title = page.title().strip() if page.title() else ""
-
-    headings = page.locator("h1, h2").evaluate_all(
-        """
-        elements => elements
-            .map(el => el.innerText && el.innerText.trim())
-            .filter(Boolean)
-        """
+    # h1 for the heading field
+    h1_list = page.locator("h1").evaluate_all(
+        "elements => elements.map(el => el.innerText && el.innerText.trim()).filter(Boolean)"
     )
 
-    meta_timestamp = page.locator("meta[property='article:modified_time'], meta[name='last-modified'], meta[property='article:published_time']").evaluate_all(
-        """
-        elements => {
-            const values = elements
-                .map(el => el.getAttribute('content'))
-                .filter(Boolean);
-            return values.length ? values[0] : null;
+    # Last-modified metadata for provenance
+    page_timestamp = page.locator(
+        "meta[property='article:modified_time'], "
+        "meta[name='last-modified'], "
+        "meta[property='article:published_time']"
+    ).evaluate_all(
+        """elements => {
+            const vals = elements.map(el => el.getAttribute('content')).filter(Boolean);
+            return vals.length ? vals[0] : null;
+        }"""
+    )
+
+    # Full body text for course code regex scanning
+    body_text = normalize_text(page.locator("body").inner_text(timeout=5000))
+
+    # Structured sections split on h2/h3 for chunking
+    sections = page.evaluate("""
+        () => {
+            const SKIP  = new Set(['script','style','nav','footer','header','noscript']);
+            const SPLIT = new Set(['h2','h3']);
+            const root  = document.querySelector('main')
+                       || document.querySelector('article')
+                       || document.querySelector('#content')
+                       || document.body;
+
+            const result = [];
+            let curHeading = '';
+            let curParts   = [];
+
+            function flush() {
+                const t = curParts.join(' ').replace(/\\s+/g, ' ').trim();
+                if (t) result.push({ heading: curHeading, text: t });
+                curParts = [];
+            }
+
+            function walk(node) {
+                if (node.nodeType === 3) {
+                    const t = node.textContent.replace(/\\s+/g, ' ').trim();
+                    if (t) curParts.push(t);
+                } else if (node.nodeType === 1) {
+                    const tag = node.tagName.toLowerCase();
+                    if (SKIP.has(tag)) return;
+                    if (SPLIT.has(tag)) {
+                        flush();
+                        curHeading = node.innerText.replace(/\\s+/g, ' ').trim();
+                        return;
+                    }
+                    for (const child of node.childNodes) walk(child);
+                }
+            }
+
+            for (const child of root.childNodes) walk(child);
+            flush();
+            return result;
         }
-        """
-    )
+    """)
 
-    keyword_tags = page.locator("meta[name='keywords']").evaluate_all(
-        """
-        elements => {
-            const values = elements
-                .map(el => el.getAttribute('content'))
-                .filter(Boolean);
-            return values.length ? values[0] : null;
-        }
-        """
-    )
-
-    # Pull visible text from the rendered page.
-    body_text = page.locator("body").inner_text(timeout=5000)
-    text = normalize_text(body_text)
-
-    # Collect all href values from rendered anchor tags.
+    # Collect allowed links for the crawl queue
     hrefs = page.locator("a[href]").evaluate_all(
-        """
-        elements => elements
-            .map(el => el.href)
-            .filter(Boolean)
-        """
+        "elements => elements.map(el => el.href).filter(Boolean)"
     )
-
     links = set()
     for href in hrefs:
         clean = href.split("#")[0].strip()
@@ -131,141 +163,153 @@ def extract_page_data(page, url: str, config: dict) -> dict:
             links.add(clean)
 
     return {
-        "url": url,
-        "title": title,
-        "text": text,
-        "links": links,
-        "headings": headings,
-        "page_timestamp": meta_timestamp,
-        "keyword_tags": keyword_tags,
+        "url":            url,
+        "h1":             h1_list[0] if h1_list else "",
+        "text":           body_text,
+        "sections":       sections,
+        "links":          links,
+        "page_timestamp": page_timestamp,
     }
 
 
-def chunk_text(text: str, chunk_size: int = 1000, overlap: int = 200):
+# ── Chunking ───────────────────────────────────────────────────────────────────
+
+def chunk_page(sections: list, chunk_type: str,
+               min_len: int = CHUNK_MIN_LEN,
+               max_len: int = CHUNK_MAX_LEN) -> list:
     """
-    Simple character-based chunking.
+    Convert structured sections into chunks respecting min/max length guardrails.
+
+    Strategies by chunk_type:
+      - course_schedule: keep as single chunk if under max_len
+      - all others: split on h2/h3 section boundaries, merge short sections,
+        split long sections at paragraph boundaries
     """
+    if not sections:
+        return []
+
+    # course_schedule: one coherent document, keep whole if possible
+    if chunk_type == "course_schedule":
+        full = " ".join(
+            (f"{s['heading']}\n{s['text']}" if s.get("heading") else s["text"]).strip()
+            for s in sections
+        ).strip()
+        if len(full) <= max_len:
+            return [full] if full else []
+        # Fall through to normal splitting if over max
+
     chunks = []
-    start = 0
-    n = len(text)
+    pending = ""
 
-    while start < n:
-        end = min(start + chunk_size, n)
-        chunk = text[start:end].strip()
-        if chunk:
-            chunks.append(chunk)
-        if end == n:
-            break
-        start = end - overlap
+    for section in sections:
+        heading = section.get("heading", "")
+        text = section.get("text", "").strip()
+        section_text = f"{heading}\n{text}".strip() if heading else text
 
-    return chunks
+        if not section_text:
+            continue
 
+        # Section exceeds max — split at paragraph or sentence boundaries
+        if len(section_text) > max_len:
+            if pending:
+                chunks.append(pending.strip())
+                pending = ""
+            parts = re.split(r'\n\n+|\.\s+', section_text)
+            current = ""
+            for part in parts:
+                part = part.strip()
+                if not part:
+                    continue
+                if current and len(current) + len(part) + 1 > max_len:
+                    chunks.append(current.strip())
+                    current = part
+                else:
+                    current = (current + " " + part).strip() if current else part
+            if current:
+                chunks.append(current.strip())
+            continue
 
-def derive_source(url: str) -> str:
-    parsed = urlparse(url)
-    return parsed.netloc.lower()
+        # Section is too short — merge into pending
+        if len(section_text) < min_len:
+            pending = (pending + "\n\n" + section_text).strip() if pending else section_text
+            if len(pending) >= max_len:
+                chunks.append(pending)
+                pending = ""
+            continue
 
+        # Normal section — flush pending first
+        if pending:
+            combined = (pending + "\n\n" + section_text).strip()
+            if len(combined) <= max_len:
+                chunks.append(combined)
+            else:
+                chunks.append(pending)
+                chunks.append(section_text)
+            pending = ""
+        else:
+            chunks.append(section_text)
 
-def derive_document_id(url: str) -> str:
-    parsed = urlparse(url)
-    path = (parsed.path or "/").strip("/")
-    slug = re.sub(r"[^a-zA-Z0-9]+", "-", path).strip("-").lower() or "home"
-    return f"{parsed.netloc.lower()}::{slug}"
+    if pending:
+        chunks.append(pending.strip())
 
-
-def derive_section(page_title: str, headings: list[str]) -> str:
-    for heading in headings:
-        clean = normalize_text(heading)
-        if clean and clean.lower() != page_title.lower():
-            return clean
-    return page_title
-
-
-def derive_tags(title: str, keyword_tags) -> list[str]:
-    if isinstance(keyword_tags, list):
-        raw_tags = keyword_tags[0] if keyword_tags else ""
-    else:
-        raw_tags = keyword_tags or ""
-
-    tags = [tag.strip().lower() for tag in raw_tags.split(",") if tag.strip()]
-    if tags:
-        return tags[:10]
-
-    title_tags = [
-        token.lower()
-        for token in re.findall(r"[A-Za-z][A-Za-z0-9-]{2,}", title)
-        if token.lower() not in {"nmsu", "university", "department"}
-    ]
-    return title_tags[:6]
-
-
-def derive_course_metadata(title: str, text: str) -> tuple[str, str]:
-    course_match = re.search(r"\b([A-Z]{2,4}\s?-?\d{3}[A-Z]?)\b", f"{title}\n{text[:500]}")
-    if not course_match:
-        return "", ""
-
-    course_number = re.sub(r"\s+", " ", course_match.group(1)).replace("-", " ").strip()
-    title_match = re.search(
-        rf"{re.escape(course_match.group(1))}\s*[:\-]\s*([^\n|]{{3,100}})",
-        title,
-        flags=re.IGNORECASE,
-    )
-    if title_match:
-        course_title = normalize_text(title_match.group(1))
-    else:
-        course_title = ""
-
-    return course_number, course_title
+    return [c for c in chunks if c]
 
 
-def derive_timestamp(page_timestamp, crawl_version: str) -> str:
-    if isinstance(page_timestamp, list):
-        raw_timestamp = page_timestamp[0] if page_timestamp else ""
-    else:
-        raw_timestamp = page_timestamp or ""
+# ── Course code extraction ─────────────────────────────────────────────────────
 
-    if raw_timestamp:
-        return raw_timestamp
-
-    try:
-        parsed = datetime.strptime(crawl_version, "%Y%m%d_%H%M%S").replace(tzinfo=timezone.utc)
-        return parsed.isoformat()
-    except ValueError:
-        return datetime.now(timezone.utc).isoformat()
+def extract_course_code(heading: str, text: str) -> str:
+    """Extract the primary course code from the page heading or top of body text."""
+    match = COURSE_CODE_RE.search(f"{heading}\n{text[:500]}")
+    if not match:
+        return ""
+    return re.sub(r'\s+', ' ', match.group(1)).strip()
 
 
-def embed_batch(texts):
-    """
-    Batch embed chunks with OpenAI.
-    """
+def extract_referenced_courses(text: str) -> list:
+    """Extract all unique course codes mentioned in the text."""
+    return sorted({
+        re.sub(r'\s+', ' ', m.group(1)).strip()
+        for m in COURSE_CODE_RE.finditer(text)
+    })
+
+
+# ── Embedding ──────────────────────────────────────────────────────────────────
+
+def embed_batch(texts: list) -> list:
     response = openai_client.embeddings.create(
         model=OPENAI_EMBED_MODEL,
-        input=texts
+        input=texts,
     )
     return [item.embedding for item in response.data]
 
 
-def crawl_site(config: dict, max_pages: int = 30):
+# ── Crawl ──────────────────────────────────────────────────────────────────────
+
+def crawl_site(config: dict, max_pages: int = 60) -> list:
     """
-    Breadth-first crawl of the configured department site using Playwright.
+    Breadth-first crawl of the configured department site.
+    Reads chunk_type, level, degree_type, and campus from the YAML config
+    for each page URL. Falls back to 'general' for unlisted pages.
     """
-    root_url = config["root_url"]
+    root_url          = config["root_url"]
+    campus            = config.get("campus", "")
+    page_types        = config.get("page_types", {})
+    page_levels       = config.get("page_levels", {})
+    page_degree_types = config.get("page_degree_types", {})
+
     visited = set()
-    queued = {root_url}
-    queue = deque([root_url])
-    pages = []
+    queued  = {root_url}
+    queue   = deque([root_url])
+    pages   = []
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
-        context = browser.new_context(
-            user_agent="UniversityChatbotBot/1.0"
-        )
-        page = context.new_page()
+        context = browser.new_context(user_agent="UniversityChatbotBot/1.0")
+        page    = context.new_page()
 
         try:
             while queue and len(visited) < max_pages:
                 url = queue.popleft()
-
                 if url in visited:
                     continue
 
@@ -274,20 +318,18 @@ def crawl_site(config: dict, max_pages: int = 30):
                     visited.add(url)
 
                     if len(data["text"]) > 100:
-                        section = derive_section(data["title"], data.get("headings", []))
-                        tags = derive_tags(data["title"], data.get("keyword_tags"))
-                        course_number, course_title = derive_course_metadata(data["title"], data["text"])
                         pages.append({
-                            "url": data["url"],
-                            "title": data["title"],
-                            "document_id": derive_document_id(data["url"]),
-                            "source": derive_source(data["url"]),
-                            "section": section,
-                            "page_timestamp": data.get("page_timestamp"),
-                            "tags": tags,
-                            "course_number": course_number,
-                            "course_title": course_title,
-                            "text": data["text"],
+                            "url":                url,
+                            "heading":            data["h1"],
+                            "text":               data["text"],
+                            "sections":           data["sections"],
+                            "page_timestamp":     data.get("page_timestamp"),
+                            "chunk_type":         page_types.get(url, "general"),
+                            "level":              page_levels.get(url, ""),
+                            "degree_type":        page_degree_types.get(url, ""),
+                            "campus":             campus,
+                            "course_code":        extract_course_code(data["h1"], data["text"]),
+                            "referenced_courses": extract_referenced_courses(data["text"]),
                         })
 
                     for link in data["links"]:
@@ -295,7 +337,6 @@ def crawl_site(config: dict, max_pages: int = 30):
                             queue.append(link)
                             queued.add(link)
 
-                    # Be polite to the site.
                     time.sleep(0.3)
 
                 except Exception as e:
@@ -309,19 +350,22 @@ def crawl_site(config: dict, max_pages: int = 30):
     return pages
 
 
+# ── Weaviate upsert ────────────────────────────────────────────────────────────
+
 def delete_department_chunks(collection, department_id: str):
-    """
-    Optional cleanup before reindexing a department.
-    Keeps week 2 simple by replacing old chunks.
-    """
+    """Remove all existing web chunks for this department before re-ingesting."""
     collection.data.delete_many(
-        where=Filter.by_property("department_id").equal(department_id)
+        where=(
+            Filter.by_property("department_id").equal(department_id)
+            & Filter.by_property("content_source").equal("web")
+        )
     )
 
 
-def upsert_pages_to_weaviate(pages, department_id: str, crawl_version: str):
+def upsert_pages_to_weaviate(pages: list, department_id: str, crawl_version: str) -> int:
     """
-    Chunk pages, embed them, and insert into Weaviate.
+    Chunk pages by section boundaries, embed with OpenAI, and store in Weaviate.
+    Falls back to full-text single chunk if structured chunking yields nothing.
     """
     normalized_department_id = (department_id or "").strip().lower()
 
@@ -335,51 +379,51 @@ def upsert_pages_to_weaviate(pages, department_id: str, crawl_version: str):
         objects = []
 
         for page in pages:
-            chunks = chunk_text(page["text"])
+            chunks = chunk_page(page["sections"], page["chunk_type"])
+
+            # Fallback: if section-based chunking yields nothing, use full text
+            if not chunks:
+                text = page.get("text", "").strip()
+                if text:
+                    chunks = [text[:CHUNK_MAX_LEN]]
+
             if not chunks:
                 continue
 
             embeddings = embed_batch(chunks)
 
-            for i, (chunk, emb) in enumerate(zip(chunks, embeddings)):
+            for i, (chunk_text, emb) in enumerate(zip(chunks, embeddings)):
                 obj = DataObject(
                     uuid=str(uuid.uuid4()),
                     properties={
-                        "department_id": normalized_department_id,
-                        "document_id": page.get("document_id", page["url"]),
-                        "url": page["url"],
-                        "source": page.get("source", ""),
-                        "title": page["title"],
-                        "section": page.get("section", page["title"]),
-                        "timestamp": derive_timestamp(page.get("page_timestamp"), crawl_version),
-                        "tags": page.get("tags", []),
-                        "course_number": page.get("course_number", ""),
-                        "course_title": page.get("course_title", ""),
-                        "text": chunk,
-                        "chunk_id": f"{page['url']}#chunk-{i}",
-                        "crawl_version": crawl_version,
+                        # ── Core fields ───────────────────────────────────────
+                        "chunk_id":            f"{page['url']}#chunk-{i}",
+                        "chunk_type":          page["chunk_type"],
+                        "department_id":       normalized_department_id,
+                        "campus":              page.get("campus", ""),
+                        "text":                chunk_text,
+                        "heading":             page.get("heading", ""),
+                        "source":              page["url"],
+                        "level":               page.get("level", ""),
+                        "degree_type":         page.get("degree_type", ""),
+                        "course_code":         page.get("course_code", ""),
+                        "referenced_courses":  page.get("referenced_courses", []),
+                        "content_source":      "web",
 
-                        "content_source": "web",
-                        "content_type": "web_page",
+                        # ── Catalog-specific — empty for web ──────────────────
+                        "catalog_year":        "",
+                        "catalog_page":        0,
+                        "catalog_page_end":    0,
+                        "degree_full_title":   "",
+                        "concentration":       "",
+                        "credits":             "",
+                        "has_prerequisites":   False,
+                        "policy_topic":        "",
+                        "lab":                 "",
+                        "research":            False,
 
-                        # every chunk now has the same shape
-                        # retrieval can rank mixed chunk types without defensive null logic everywhere 
-                        "catalog_page": 0,
-                        "catalog_page_end": 0,
-                        "catalog_year": "",
-                        "program_family": [],
-                        "degree_level": "",
-                        "degree_type": "",
-                        "concentration": "",
-                        "degree_full_title": "",
-                        "credits": "",
-                        "dept_prefix": "",
-                        "course_number_level": "",
-                        "has_prerequisites": False,
-                        "policy_topic": "",
-                        "lab_name": "",
-                        "referenced_courses": [],
-                        "is_research_related": False,
+                        # ── Web-specific ──────────────────────────────────────
+                        "crawl_version":       crawl_version,
                     },
                     vector=emb,
                 )
@@ -394,29 +438,30 @@ def upsert_pages_to_weaviate(pages, department_id: str, crawl_version: str):
         client.close()
 
 
+# ── Entry point ────────────────────────────────────────────────────────────────
+
 def main():
     config_path = "configs/departments/cs.yaml"
-    config = load_department_config(config_path)
+    config      = load_department_config(config_path)
 
     department_id = config["department_id"]
     crawl_version = time.strftime("%Y%m%d_%H%M%S")
 
-    # Ensure relational tables exist when running ingestion directly.
     init_db()
 
-    pages = crawl_site(config, max_pages=30)
+    pages = crawl_site(config, max_pages=60)
 
     chunks_indexed = upsert_pages_to_weaviate(
         pages=pages,
         department_id=department_id,
-        crawl_version=crawl_version
+        crawl_version=crawl_version,
     )
 
     log_crawl_run(
         department_id=department_id,
         crawl_version=crawl_version,
         pages_scraped=len(pages),
-        chunks_indexed=chunks_indexed
+        chunks_indexed=chunks_indexed,
     )
 
     print(f"Scraped {len(pages)} pages")

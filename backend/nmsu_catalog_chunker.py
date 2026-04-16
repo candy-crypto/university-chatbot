@@ -751,7 +751,22 @@ def chunk_degree_section(
                             cur_lines.append(txt)
                     else:
                         if not post_conc_skip:
-                            cur_lines.append(txt)
+                            # "A Suggested Plan of Study" sometimes prints at
+                            # sub-heading font size and is not routed through
+                            # dispatch_hbuf(). Catch it here so the chunk type
+                            # still transitions from degree_requirement to study_plan.
+                            if STUDY_PLAN_RE.match(txt) and cur_type != "study_plan":
+                                flush()
+                                cur_lines      = [txt]
+                                cur_type       = "study_plan"
+                                cur_page       = pg
+                                post_conc_skip = False
+                            elif STUDY_PLAN_RE.match(txt) and cur_type == "study_plan":
+                                # Second study plan heading (e.g. Bioinformatics two-track)
+                                # — merge into current chunk as dispatch_hbuf() would.
+                                cur_lines.append(txt)
+                            else:
+                                cur_lines.append(txt)
 
     if hbuf:
         dispatch_hbuf()

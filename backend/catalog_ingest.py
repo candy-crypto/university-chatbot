@@ -25,10 +25,7 @@ OPENAI_EMBED_MODEL = os.getenv("OPENAI_EMBED_MODEL", "text-embedding-3-small")
 CATALOG_PDF_PATH = os.getenv("CATALOG_PDF_PATH", "25-26_New_Mexico_State_University_-_Las_Cruces.pdf")
 CATALOG_YEAR = os.getenv("CATALOG_YEAR", "2025-2026")
 CATALOG_DEPARTMENT_ID = os.getenv("CATALOG_DEPARTMENT_ID", "cs")
-EXTERNAL_SCRIPTS_DIR = os.getenv(
-    "CATALOG_SCRIPTS_DIR",
-    r"C:\Users\Candy\OneDrive - New Mexico State University\Documents\AI_2"
-)
+EXTERNAL_SCRIPTS_DIR = os.getenv("CATALOG_SCRIPTS_DIR", ".")
 
 if not OPENAI_API_KEY:
     raise RuntimeError("OPENAI_API_KEY is not set")
@@ -90,24 +87,6 @@ def iso_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def safe_tags(chunk) -> list[str]:
-    tags = []
-
-    if getattr(chunk, "chunk_type", ""):
-        tags.append(getattr(chunk, "chunk_type"))
-
-    if getattr(chunk, "dept_name", ""):
-        tags.append(getattr(chunk, "dept_name").lower().replace(" ", "_"))
-
-    if getattr(chunk, "degree_type", ""):
-        tags.append(getattr(chunk, "degree_type"))
-
-    if getattr(chunk, "degree_level", ""):
-        tags.append(getattr(chunk, "degree_level"))
-
-    return tags[:10]
-
-
 def make_document_id(chunk) -> str:
     if getattr(chunk, "course_code", ""):
         code = re.sub(r"[^A-Za-z0-9]+", "-", chunk.course_code.strip()).strip("-").lower()
@@ -120,9 +99,10 @@ def make_document_id(chunk) -> str:
     return f"catalog::{CATALOG_YEAR}::{chunk.chunk_type}::p{chunk.catalog_page}"
 
 
-def make_title(chunk) -> str:
+def make_heading(chunk) -> str:
+    """Derive a human-readable heading based on chunk type."""
     if getattr(chunk, "course_code", "") and getattr(chunk, "course_title", ""):
-        return f"{chunk.course_code} - {chunk.course_title}"
+        return f"{chunk.course_code} — {chunk.course_title}"
     if getattr(chunk, "degree_full_title", ""):
         return chunk.degree_full_title
     if getattr(chunk, "policy_topic", ""):
@@ -130,12 +110,6 @@ def make_title(chunk) -> str:
     if getattr(chunk, "lab_name", ""):
         return chunk.lab_name
     return getattr(chunk, "chunk_type", "catalog")
-
-
-def make_section(chunk) -> str:
-    if getattr(chunk, "chunk_type", ""):
-        return chunk.chunk_type
-    return "catalog"
 
 
 def delete_catalog_chunks(collection, department_id: str, catalog_year: str):
@@ -148,43 +122,56 @@ def delete_catalog_chunks(collection, department_id: str, catalog_year: str):
     )
 
 
+def make_level(chunk) -> str:
+    # Consolidate degree_level and course_number_level into a single level field.
+    # course_number_level takes priority for course_description chunks.
+    course_level = getattr(chunk, "course_number_level", "")
+    if course_level:
+        return "graduate" if course_level == "graduate" else "undergraduate"
+    degree_level = getattr(chunk, "degree_level", "")
+    if degree_level in ("ms", "phd"):
+        return "graduate"
+    return degree_level or ""
+
+
+def make_source(chunk) -> str:
+    page = getattr(chunk, "catalog_page", 0)
+    year = getattr(chunk, "catalog_year", CATALOG_YEAR)
+    return f"NMSU Academic Catalog {year}, p.{page}"
+
+
 def map_catalog_chunk(chunk, crawl_version: str):
     text = normalize_text(chunk.text)
 
     return {
-        "department_id": CATALOG_DEPARTMENT_ID,
-        "document_id": make_document_id(chunk),
-        "url": "",
-        "source": "nmsu_catalog",
-        "title": make_title(chunk),
-        "section": make_section(chunk),
-        "timestamp": iso_now(),
-        "tags": safe_tags(chunk),
-        "course_number": getattr(chunk, "course_code", ""),
-        "course_title": getattr(chunk, "course_title", ""),
-        "text": text,
-        "chunk_id": getattr(chunk, "chunk_id", str(uuid.uuid4())),
-        "crawl_version": crawl_version,
+        # Core fields
+        "chunk_id":            getattr(chunk, "chunk_id", str(uuid.uuid4())),
+        "chunk_type":          getattr(chunk, "chunk_type", ""),
+        "department_id":       CATALOG_DEPARTMENT_ID,
+        "campus":              "las_cruces",
+        "text":                text,
+        "heading":             make_heading(chunk),
+        "source":              make_source(chunk),
+        "level":               make_level(chunk),
+        "degree_type":         getattr(chunk, "degree_type", ""),
+        "course_code":         getattr(chunk, "course_code", ""),
+        "referenced_courses":  getattr(chunk, "referenced_courses", []),
+        "content_source":      "catalog",
 
-        "content_source": "catalog",
-        "content_type": getattr(chunk, "chunk_type", ""),
+        # Catalog-specific fields
+        "catalog_year":        getattr(chunk, "catalog_year", CATALOG_YEAR),
+        "catalog_page":        getattr(chunk, "catalog_page", 0),
+        "catalog_page_end":    getattr(chunk, "catalog_page_end", 0),
+        "degree_full_title":   getattr(chunk, "degree_full_title", ""),
+        "concentration":       getattr(chunk, "concentration", ""),
+        "credits":             getattr(chunk, "credits", ""),
+        "has_prerequisites":   getattr(chunk, "has_prerequisites", False),
+        "policy_topic":        getattr(chunk, "policy_topic", ""),
+        "lab":                 getattr(chunk, "lab_name", ""),
+        "research":            getattr(chunk, "is_research_related", False),
 
-        "catalog_page": getattr(chunk, "catalog_page", 0),
-        "catalog_page_end": getattr(chunk, "catalog_page_end", 0),
-        "catalog_year": getattr(chunk, "catalog_year", CATALOG_YEAR),
-        "program_family": getattr(chunk, "program_family", []),
-        "degree_level": getattr(chunk, "degree_level", ""),
-        "degree_type": getattr(chunk, "degree_type", ""),
-        "concentration": getattr(chunk, "concentration", ""),
-        "degree_full_title": getattr(chunk, "degree_full_title", ""),
-        "credits": getattr(chunk, "credits", ""),
-        "dept_prefix": getattr(chunk, "dept_prefix", ""),
-        "course_number_level": getattr(chunk, "course_number_level", ""),
-        "has_prerequisites": getattr(chunk, "has_prerequisites", False),
-        "policy_topic": getattr(chunk, "policy_topic", ""),
-        "lab_name": getattr(chunk, "lab_name", ""),
-        "referenced_courses": getattr(chunk, "referenced_courses", []),
-        "is_research_related": getattr(chunk, "is_research_related", False),
+        # Web-specific fields — empty for catalog
+        "crawl_version":       "",
     }
 
 
@@ -225,7 +212,7 @@ def main():
 
     chunks = run_catalog_pipeline(
         pdf_path=CATALOG_PDF_PATH,
-        dry_run=True,
+        dry_run=False,
         include_courses=True,
     )
 
