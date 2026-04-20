@@ -62,7 +62,7 @@
   question: "What CS courses are commonly offered during summer sessions?"
   key_facts:
     - "Cannot be answered from department sources"
-    - "Must check Banner for each summer session when it becomes available mid-late Spring semester"
+    - "Must check NMSU's course search for each summer session when it becomes available mid-late Spring semester"
   expected_chunk_ids: []
   expected_source_type: "redirect"
   banner_redirect_expected: true
@@ -73,11 +73,11 @@
   key_facts:
     - "Three-year course rotation available at three-year-course-rotation.html lists anticipated offerings"
     - "Fall 2027 anticipated CSCI courses include: 1110, 1115G, 1720/4540, 2210/4545, 2220/4550, 2230/4555, 2310/4560, 2410, 3410, 3710/4575, 3720/5110, 3730/4580, 3790/4590, 4120, 4130, 4140/5140, 4215/5215, 4225/5225, 4240/5240, 4250/5250, 4255/5255, 4310/5310, 4415/5415"
-    - "Verify actual availability and open sections via Banner once registration opens"
+    - "Verify actual availability and open sections via NMSU's course search once registration opens"
   expected_chunk_ids: []
   expected_source_type: "web"
   banner_redirect_expected: true
-  notes: "Partial answer from course rotation page; Banner redirect required to confirm seats and schedule"
+  notes: "Partial answer from course rotation page; course search redirect required to confirm seats and schedule"
 
 - question_id: "avail_003"
   category: "course_availability"
@@ -125,7 +125,7 @@
   question: "On what schedule will CHEM 1215G be offered this Summer?"
   key_facts:
     - "Cannot be answered from department sources"
-    - "Must check Banner for summer session availability"
+    - "Must check NMSU's course search for summer session availability"
   expected_chunk_ids: []
   expected_source_type: "redirect"
   banner_redirect_expected: true
@@ -135,7 +135,7 @@
   question: "I would like to take Calculus based Physics this Fall. Are seats still available?"
   key_facts:
     - "Cannot be answered from department sources"
-    - "Must check Banner for current seat availability"
+    - "Must check NMSU's course search for current seat availability"
   expected_chunk_ids: []
   expected_source_type: "redirect"
   banner_redirect_expected: true
@@ -145,7 +145,7 @@
   question: "Is COMM 115G offered every semester?"
   key_facts:
     - "Cannot be answered from department sources"
-    - "Must check Banner for course availability"
+    - "Must check NMSU's course search for course availability"
   expected_chunk_ids: []
   expected_source_type: "redirect"
   banner_redirect_expected: true
@@ -291,13 +291,13 @@
   key_facts:
     - "ENGL 1110G Composition I is the recommended English gen ed course for CS majors"
     - "ENGL 2210G Professional and Technical Communication is the other required English gen ed course for CS majors"
-    - "Check Banner for current semester availability of these courses"
+    - "Check NMSU's course search for current semester availability of these courses"
   expected_chunk_ids: []
   expected_source_type: "either"
   applicable_groups:
     - "current_undergrad"
   banner_redirect_expected: true
-  notes: "Catalog identifies which courses satisfy requirement; Banner needed to confirm availability"
+  notes: "Catalog identifies which courses satisfy requirement; course search needed to confirm availability"
 
 # ── Course Descriptions ───────────────────────────────────────────────────────
 
