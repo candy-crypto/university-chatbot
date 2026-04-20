@@ -297,9 +297,12 @@ def crawl_site(config: dict, max_pages: int = 60) -> list:
     page_levels       = config.get("page_levels", {})
     page_degree_types = config.get("page_degree_types", {})
 
+    # Seed queue from root_url plus any extra seed_urls listed in the config.
+    seed_urls = [root_url] + [u for u in config.get("seed_urls", []) if u != root_url]
+
     visited = set()
-    queued  = {root_url}
-    queue   = deque([root_url])
+    queued  = set(seed_urls)
+    queue   = deque(seed_urls)
     pages   = []
 
     with sync_playwright() as p:

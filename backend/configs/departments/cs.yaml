@@ -13,6 +13,11 @@ campus: "las_cruces"
 
 root_url: "https://computerscience.nmsu.edu/"
 
+# Additional starting URLs that are not reachable by following links from root_url.
+# These are added to the crawl queue before the BFS begins.
+seed_urls:
+  - "https://apply.nmsu.edu/apply/"
+
 allowed_domains:
   - "computerscience.nmsu.edu"
   - "cs.nmsu.edu"
@@ -23,6 +28,7 @@ allowed_domains:
   - "ece.nmsu.edu"
   - "www.nmsu.edu"
   - "miniapps.nmsu.edu"
+  - "apply.nmsu.edu"
 
 allowed_path_prefixes:
   - "/"
@@ -36,6 +42,10 @@ deny_url_patterns:
   - "/news-events/news"
   - "dataanalytics.nmsu.edu/facultydirectory"
   - "dataanalytics.nmsu.edu/courses/index"
+  # apply.nmsu.edu — block login/registration forms and internal Slate paths
+  - "apply.nmsu.edu/account/"
+  - "apply.nmsu.edu/ping"
+  - "apply.nmsu.edu/apply/base.js"
 
 fallback_contact_url: "https://computerscience.nmsu.edu/"
 
@@ -119,6 +129,11 @@ page_types:
   # ── NMSU main site (external) ───────────────────────────────────────────────
   "https://www.nmsu.edu/degree-programs/graduate/computer-science.html":    degree_overview
   "https://miniapps.nmsu.edu/transfer":                                      enrollment
+
+  # ── Admissions application portal (external) ────────────────────────────────
+  # Single page — apply.nmsu.edu/account/* is blocked in deny_url_patterns
+  # Content: how to apply (undergrad/grad/returning), campus contacts
+  "https://apply.nmsu.edu/apply/":                                            enrollment
 
 
 # ── Level classification ───────────────────────────────────────────────────────
