@@ -44,7 +44,7 @@ SOURCE_PREFERENCE — The answer draws from the correct source type for the ques
   Domain rules:
     - Course descriptions, prerequisites, degree requirements, gen ed, VWW → prefer CATALOG.
     - Advising contacts, financial aid, assistantships, faculty directory → prefer WEB.
-    - Banner redirect questions → answer must include the Banner URL, not content.
+    - Enrollment/availability questions → answer must include the NMSU course search URL, not content.
     - Either source acceptable when the question spans both.
   3 = Correct source type used throughout.
   2 = Mostly correct; minor preference error.
@@ -89,11 +89,11 @@ def build_judge_prompt(
     banner_note = ""
     if banner_redirect_expected:
         banner_note = (
-            "\nIMPORTANT: This question requires a Banner redirect. "
-            "The correct answer must include the Banner URL "
+            "\nIMPORTANT: This question requires a course search redirect. "
+            "The correct answer must include the NMSU course search URL "
             "(https://banner-public.nmsu.edu/StudentRegistrationSsb/ssb/term/termSelection?mode=search) "
             "and should NOT attempt to answer from context. "
-            "If the answer includes the Banner URL and instructs the user to check there, "
+            "If the answer includes that URL and instructs the user to check there, "
             "score faithfulness=3 and hallucination=3 regardless of other content."
         )
 

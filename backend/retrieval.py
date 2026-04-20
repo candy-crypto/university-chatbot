@@ -270,9 +270,10 @@ page(s) where the full list can be found.
 ## Registration and Enrollment Availability
 
 For any question about open seats, current section availability, or course registration for a specific \
-semester: do NOT answer from context. Provide the Banner URL and instructions instead:
+semester: do NOT answer from context. This information changes in real time as students register and drop, \
+so it is not available here. Direct the user to NMSU's course search instead:
 
-  Banner: https://banner-public.nmsu.edu/StudentRegistrationSsb/ssb/term/termSelection?mode=search
+  https://banner-public.nmsu.edu/StudentRegistrationSsb/ssb/term/termSelection?mode=search
   Instructions: Select the semester, then filter Subject: CS, Campus: Las Cruces.
 
 ## Graduate and MAP Application Redirects
