@@ -212,7 +212,7 @@ def main():
 
     chunks = run_catalog_pipeline(
         pdf_path=CATALOG_PDF_PATH,
-        dry_run=False,
+        dry_run=True,
         include_courses=True,
     )
 

@@ -19,9 +19,15 @@ from weaviate_client import get_weaviate_client, ensure_collection, get_collecti
 
 load_dotenv()
 
+# Function to turn off/on the OpenAI calls
+def env_flag(name: str, default: str = "false") -> bool:
+    """Parse common truthy environment variable values."""
+    return os.getenv(name, default).strip().lower() in {"1", "true", "yes", "on"}
+
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_CHAT_MODEL = os.getenv("OPENAI_CHAT_MODEL", "gpt-5-mini")
 OPENAI_EMBED_MODEL = os.getenv("OPENAI_EMBED_MODEL", "text-embedding-3-small")
+MOCK_OPENAI = env_flag("MOCK_OPENAI") 
 
 # Top-K results returned to the caller.
 TOP_K = int(os.getenv("TOP_K", "5"))
@@ -29,10 +35,11 @@ TOP_K = int(os.getenv("TOP_K", "5"))
 # Hybrid alpha: 0.0 = pure BM25, 1.0 = pure vector, 0.75 = mostly semantic.
 HYBRID_ALPHA = float(os.getenv("HYBRID_ALPHA", "0.75"))
 
-if not OPENAI_API_KEY:
+# Code to turn on/off OpenAI calls
+if not MOCK_OPENAI and not OPENAI_API_KEY:
     raise RuntimeError("OPENAI_API_KEY is not set")
 
-openai_client = OpenAI(api_key=OPENAI_API_KEY)
+openai_client = None if MOCK_OPENAI else OpenAI(api_key=OPENAI_API_KEY)
 
 # Properties fetched from Weaviate for every retrieved chunk.
 RETURN_PROPERTIES = [
@@ -69,6 +76,10 @@ RETURN_PROPERTIES = [
 
 def embed_text(text: str) -> List[float]:
     """Embed a query string using the OpenAI embedding model."""
+    # Added code to turn on/off OpenAI calls
+    if MOCK_OPENAI:
+        raise RuntimeError("embed_text() should not be called when MOCK_OPENAI is enabled")
+
     response = openai_client.embeddings.create(
         model=OPENAI_EMBED_MODEL,
         input=text
@@ -217,6 +228,53 @@ def generate_grounded_answer(question: str, department_id: str) -> Dict[str, Any
       3. Ask OpenAI to answer using only the retrieved context.
     """
     normalized_department_id = (department_id or "").strip().lower()
+
+    # Added code to use mock code instead of OpenAI calls
+    if MOCK_OPENAI:
+        mock_source = "mock://openai-disabled"
+        mock_chunk = {
+            "chunk_id": "mock-chunk-1",
+            "chunk_type": "mock",
+            "department_id": normalized_department_id,
+            "campus": "",
+            "text": (
+                "Mock mode is enabled. No OpenAI embedding or response request was sent. "
+                "This response is intended for local UI and API testing only."
+            ),
+            "heading": "Mock Mode Response",
+            "source": mock_source,
+            "level": "",
+            "degree_type": "",
+            "course_code": "",
+            "referenced_courses": [],
+            "content_source": "mock",
+            "catalog_year": "",
+            "catalog_page": "",
+            "catalog_page_end": "",
+            "degree_full_title": "",
+            "concentration": "",
+            "credits": "",
+            "has_prerequisites": False,
+            "policy_topic": "",
+            "lab": "",
+            "research": "",
+            "crawl_version": "",
+            "rank": 1,
+            "score": None,
+            "metadata_boost": 0.0,
+            "hybrid_score": 0.0,
+            "final_score": 0.0,
+        }
+        return {
+            "answer": (
+                f"Mock mode is enabled for department '{normalized_department_id or 'unknown'}'. "
+                f"No OpenAI tokens were used. Test question received: {question}"
+            ),
+            "sources": [mock_source],
+            "chunks": [mock_chunk],
+            "prompt_context": build_context([mock_chunk]),
+        }
+
     chunks = search_chunks(question, normalized_department_id)
     context = build_context(chunks)
 
@@ -271,4 +329,5 @@ Retrieved context:
         "answer": answer,
         "sources": sources,
         "chunks": chunks,
+        "prompt_context": context,
     }
