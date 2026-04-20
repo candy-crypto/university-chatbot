@@ -13,3 +13,19 @@ node_modules/
 
 docker-compose.yml
 docker-compose.*.yml
+
+# macOS
+.DS_Store
+
+# Large data files — catalog PDFs live in Weaviate, not the repo
+Data/
+
+# Office documents — use shared drive, not git
+*.xlsx
+*.docx
+*.xls
+*.doc
+
+# Eval run outputs — generated, not source
+backend/eval/results/
+

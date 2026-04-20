@@ -1,0 +1,955 @@
+# ground_truth.yaml
+# Phase 1 — Human-verified ground truth for CS department chatbot evaluation
+# expected_chunk_ids: leave empty until verified against live Weaviate collection
+# Run search_chunks() for each question to find candidate chunk IDs, then verify they exist.
+
+# ── Advising ──────────────────────────────────────────────────────────────────
+
+- question_id: "adv_001"
+  category: "advising"
+  question: "What is CAASS?"
+  key_facts:
+    - "CAASS = Center for Academic Advising and Student Support"
+    - "Provides advising for students during their first year of enrollment"
+    - "Located in Educational Services, Suite 200"
+    - "Students can change majors through CAASS or on CAASS webpages"
+    - "Undeclared students in College of Engineering may be advised by CAASS"
+  expected_chunk_ids: []
+  expected_source_type: "web"
+  applicable_groups:
+    - "prospective_undergrad"
+    - "current_undergrad"
+    - "transfer_student"
+  banner_redirect_expected: false
+
+- question_id: "adv_002"
+  category: "advising"
+  question: "How do I get an advisor?"
+  key_facts:
+    - "Undergrads receive an email each semester indicating their departmental mentor"
+    - "Transfer students from NMSU community colleges must email advising@nmsu.edu to find their advisor"
+    - "Graduate advisor is Dr. Mingzhou (Joe) Song (joemsong@nmsu.edu)"
+  expected_chunk_ids: []
+  expected_source_type: "web"
+  applicable_groups:
+    - "current_undergrad"
+    - "transfer_student"
+    - "prospective_ms"
+    - "current_ms_coursework"
+    - "current_ms_thesis"
+    - "prospective_phd"
+    - "current_phd"
+  banner_redirect_expected: false
+
+- question_id: "adv_003"
+  category: "advising"
+  question: "As a Computer Science major, what advising am I required to get?"
+  key_facts:
+    - "Required if student has an AV or DM hold on their account, or receives an email assigning a mentor"
+    - "If AV hold: access CAASS"
+    - "Designated Advising Period: April 1-30 for Fall registration; November 1-30 for Spring registration"
+    - "Before meeting with mentor: develop CS Plan to Graduation, run updated StarAudit, prepare preliminary course plan for next semester"
+  expected_chunk_ids: []
+  expected_source_type: "web"
+  applicable_groups:
+    - "current_undergrad"
+  banner_redirect_expected: false
+
+# ── Course Availability ───────────────────────────────────────────────────────
+
+- question_id: "avail_001"
+  category: "course_availability"
+  question: "What CS courses are commonly offered during summer sessions?"
+  key_facts:
+    - "Cannot be answered from department sources"
+    - "Must check Banner for each summer session when it becomes available mid-late Spring semester"
+  expected_chunk_ids: []
+  expected_source_type: "redirect"
+  banner_redirect_expected: true
+
+- question_id: "avail_002"
+  category: "course_availability"
+  question: "What CS courses will be offered next semester?"
+  key_facts:
+    - "Three-year course rotation available at three-year-course-rotation.html lists anticipated offerings"
+    - "Fall 2027 anticipated CSCI courses include: 1110, 1115G, 1720/4540, 2210/4545, 2220/4550, 2230/4555, 2310/4560, 2410, 3410, 3710/4575, 3720/5110, 3730/4580, 3790/4590, 4120, 4130, 4140/5140, 4215/5215, 4225/5225, 4240/5240, 4250/5250, 4255/5255, 4310/5310, 4415/5415"
+    - "Verify actual availability and open sections via Banner once registration opens"
+  expected_chunk_ids: []
+  expected_source_type: "web"
+  banner_redirect_expected: true
+  notes: "Partial answer from course rotation page; Banner redirect required to confirm seats and schedule"
+
+- question_id: "avail_003"
+  category: "course_availability"
+  question: "When is the next time Algorithm Design & Implementation will be offered?"
+  key_facts:
+    - "CSCI 3790/4590 Algorithm Design & Implementation"
+    - "Offered every third semester, excluding Summer sessions"
+    - "Next offering: Fall 2027"
+  expected_chunk_ids: []
+  expected_source_type: "web"
+  banner_redirect_expected: false
+
+- question_id: "avail_004"
+  category: "course_availability"
+  question: "When is the next time CSCI 4120 will be offered?"
+  key_facts:
+    - "CSCI 4120 Operating Systems I is offered Fall semesters only"
+    - "Next offering: Fall 2026"
+  expected_chunk_ids: []
+  expected_source_type: "web"
+  banner_redirect_expected: false
+
+- question_id: "avail_005"
+  category: "course_availability"
+  question: "When is the next opportunity to take Algorithm Design and Implementation?"
+  key_facts:
+    - "CSCI 3790/4590 Algorithm Design & Implementation"
+    - "Next offering: Fall 2027"
+  expected_chunk_ids: []
+  expected_source_type: "web"
+  banner_redirect_expected: false
+  notes: "Duplicate of avail_003 with different phrasing — useful for retrieval robustness testing"
+
+- question_id: "avail_006"
+  category: "course_availability"
+  question: "Is the Operating Systems course offered every semester?"
+  key_facts:
+    - "CSCI 4120 Operating Systems I is offered Fall semesters only, not every semester"
+  expected_chunk_ids: []
+  expected_source_type: "web"
+  banner_redirect_expected: false
+
+- question_id: "avail_007"
+  category: "course_availability"
+  question: "On what schedule will CHEM 1215G be offered this Summer?"
+  key_facts:
+    - "Cannot be answered from department sources"
+    - "Must check Banner for summer session availability"
+  expected_chunk_ids: []
+  expected_source_type: "redirect"
+  banner_redirect_expected: true
+
+- question_id: "avail_008"
+  category: "course_availability"
+  question: "I would like to take Calculus based Physics this Fall. Are seats still available?"
+  key_facts:
+    - "Cannot be answered from department sources"
+    - "Must check Banner for current seat availability"
+  expected_chunk_ids: []
+  expected_source_type: "redirect"
+  banner_redirect_expected: true
+
+- question_id: "avail_009"
+  category: "course_availability"
+  question: "Is COMM 115G offered every semester?"
+  key_facts:
+    - "Cannot be answered from department sources"
+    - "Must check Banner for course availability"
+  expected_chunk_ids: []
+  expected_source_type: "redirect"
+  banner_redirect_expected: true
+
+# ── Course Requirements ───────────────────────────────────────────────────────
+
+- question_id: "req_001"
+  category: "course_requirement"
+  question: "What are Viewing a Wider World Requirements?"
+  key_facts:
+    - "VWW courses are identified by the 'V' suffix in the course code"
+    - "Students must take two VWW courses from separate colleges before graduating"
+    - "Both courses must be upper-division (300/400 level)"
+    - "One course must be from a college other than the student's own"
+    - "Should be taken in junior and/or senior year"
+    - "Study Abroad (4+ weeks in foreign country) or Military Experience (4+ weeks in foreign country) can replace 3 VWW credits"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  applicable_groups:
+    - "prospective_undergrad"
+    - "current_undergrad"
+  banner_redirect_expected: false
+
+- question_id: "req_002"
+  category: "course_requirement"
+  question: "Does the History of Food course contribute to my general education requirements?"
+  key_facts:
+    - "HIST 308V History of Food contributes to Viewing a Wider World Requirements, NOT General Education Requirements"
+    - "The 'V' suffix indicates VWW, not Gen Ed (Gen Ed courses carry 'G' suffix)"
+    - "Exception: 9 or more credits in Humanities may satisfy the Gen Ed Humanities requirement as an alternative even without 'G' suffix"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  applicable_groups:
+    - "current_undergrad"
+  banner_redirect_expected: false
+
+- question_id: "req_003"
+  category: "course_requirement"
+  question: "Can I take the course about death and dying to get credits toward my VWW requirements?"
+  key_facts:
+    - "No, SOCI 2261 Issues in Death and Dying cannot be used for VWW requirements"
+    - "VWW courses must be upper-division (300/400 level) and carry a 'V' suffix"
+    - "SOCI 2261 has no 'V' suffix and is a 2000-level course"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  applicable_groups:
+    - "current_undergrad"
+  banner_redirect_expected: false
+
+- question_id: "req_004"
+  category: "course_requirement"
+  question: "What are the General Education requirements for undergraduates?"
+  key_facts:
+    - "Gen Ed courses are identified by the 'G' suffix in the course code"
+    - "Students must select courses from 4 of 6 content areas for 12-14 total credits"
+    - "Content areas: Communications, Creative and Fine Arts, Humanities, Laboratory Sciences, Mathematics, Social/Behavioral Sciences"
+    - "Nine credits of institutional-level electives are included in the Gen Ed model"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  applicable_groups:
+    - "prospective_undergrad"
+    - "current_undergrad"
+  banner_redirect_expected: false
+
+- question_id: "req_005"
+  category: "course_requirement"
+  question: "In which year of my studies should I be taking courses to meet the Viewing the Wider World requirements?"
+  key_facts:
+    - "VWW courses are all upper-division (300/400 level)"
+    - "Should be taken in junior and/or senior year"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  applicable_groups:
+    - "current_undergrad"
+  banner_redirect_expected: false
+
+- question_id: "req_006"
+  category: "course_requirement"
+  question: "What math courses can I take to meet my VWW requirements?"
+  key_facts:
+    - "MATH 4110V Great Theorems in Mathematics is the only Math course that contributes to VWW requirements"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  applicable_groups:
+    - "current_undergrad"
+  banner_redirect_expected: false
+
+- question_id: "req_007"
+  category: "course_requirement"
+  question: "What is the difference between the BS in Cybersecurity and a BS in Human Computer Interaction?"
+  key_facts:
+    - "Human Computer Interaction (HCI) is a concentration within the BS in Computer Science, not a separate degree"
+    - "BS in Cybersecurity is a separate degree from BS in Computer Science"
+    - "Cybersecurity requires CSCI 5205, CSCI 4245, and CSCI 4225 as required courses (these are electives in the CS BS)"
+    - "Cybersecurity also requires 2 of 3: CSCI 4230, CSCI 4250, CSCI 4220"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  banner_redirect_expected: false
+
+- question_id: "req_008"
+  category: "course_requirement"
+  question: "Is Computer Security/CSCI 4205 required for a CS minor?"
+  key_facts:
+    - "CSCI 4205 Computer Security is not required for any undergraduate or graduate CS minor"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  applicable_groups:
+    - "current_undergrad"
+    - "current_ms_coursework"
+    - "current_ms_thesis"
+    - "current_phd"
+    - "other"
+  banner_redirect_expected: false
+
+- question_id: "req_009"
+  category: "course_requirement"
+  question: "Must I take a course in Biology to get a BS in CS?"
+  key_facts:
+    - "No Biology course is required for a BS in Computer Science"
+    - "Biology courses may be used to fulfill the 11-credit Lab Sciences and Social/Behavioral Sciences requirement"
+    - "Qualifying options: BIOL 2610G and BIOL 2610L (Biodiversity/Ecology/Evolution) or BIOL 2110G and BIOL 2110L (Cellular/Molecular Biology)"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  applicable_groups:
+    - "prospective_undergrad"
+    - "current_undergrad"
+  banner_redirect_expected: false
+
+- question_id: "req_010"
+  category: "course_requirement"
+  question: "Which statistics course is required for Computer Science majors?"
+  key_facts:
+    - "CS majors may satisfy the statistics requirement with any of: A ST 311 Statistical Applications, STAT 3110 Statistics for Engineers and Scientists, or STAT 4210 Probability: Theory and Applications"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  applicable_groups:
+    - "current_undergrad"
+  banner_redirect_expected: false
+
+- question_id: "req_011"
+  category: "course_requirement"
+  question: "I am in my second semester in computer science this Fall. I need to take an English general education course. Which are offered?"
+  key_facts:
+    - "ENGL 1110G Composition I is the recommended English gen ed course for CS majors"
+    - "ENGL 2210G Professional and Technical Communication is the other required English gen ed course for CS majors"
+    - "Check Banner for current semester availability of these courses"
+  expected_chunk_ids: []
+  expected_source_type: "either"
+  applicable_groups:
+    - "current_undergrad"
+  banner_redirect_expected: true
+  notes: "Catalog identifies which courses satisfy requirement; Banner needed to confirm availability"
+
+# ── Course Descriptions ───────────────────────────────────────────────────────
+
+- question_id: "desc_001"
+  category: "course_description"
+  question: "What computer science courses address computing ethics and governance?"
+  key_facts:
+    - "CSCI 3410 Introduction to Intelligent Agents Using Science Fiction: covers AI ethics and multi-agent systems"
+    - "CSCI 4110 Computing Ethics and Social Implications of Computing: 1-credit course restricted to CS majors or consent of instructor"
+    - "CSCI 4245 Computer Networks I: covers Internet governance including IANA, ASes, IXPs, ISPs, CAs, BGP"
+    - "CSCI 4440 Generative Artificial Intelligence: covers ethical consequences of generative AI"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  banner_redirect_expected: false
+
+- question_id: "desc_002"
+  category: "course_description"
+  question: "What undergraduate courses have content related to artificial intelligence?"
+  key_facts:
+    - "CSCI 3410 Introduction to Intelligent Agents Using Science Fiction (3 credits): decision theory, machine learning, multi-agent systems, AI ethics"
+    - "CSCI 4440 Generative Artificial Intelligence (3 credits): LLMs, adversarial neural networks, neural symbolic computing, inductive logic programming; may be repeated up to 3 credits"
+    - "C E 490 Introduction to Artificial Intelligence for Civil Engineers (3 credits): ML methods for civil engineering applications"
+    - "E E 465 Machine Learning I (3 credits): undergraduate-level ML algorithms, supervised and unsupervised learning"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  banner_redirect_expected: false
+
+- question_id: "desc_003"
+  category: "course_description"
+  question: "What is MATH 1521H?"
+  key_facts:
+    - "MATH 1521H Calculus and Analytic Geometry II Honors: advanced treatment of MATH 1521G with additional topics"
+    - "Topics include Riemann sums, definite integrals, Fundamental Theorem of Calculus, integration methods, L'Hopital's Rule, Taylor polynomials, sequences/series, power series, first-order differential equations"
+    - "Consent of Instructor required for enrollment"
+    - "Restricted to Las Cruces campus only"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  applicable_groups:
+    - "current_undergrad"
+  banner_redirect_expected: false
+
+- question_id: "desc_004"
+  category: "course_description"
+  question: "What is the difference between the Practical Programming and Software Development courses?"
+  key_facts:
+    - "CSCI 2410 Practical Programming (3 credits): teaches how to code"
+    - "CSCI 3710/4575 Software Development (4 credits): teaches how to work in teams to build, test, and maintain systems"
+    - "Practical Programming is 2000-level; Software Development is 3000/4000-level"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  applicable_groups:
+    - "current_undergrad"
+  banner_redirect_expected: false
+
+- question_id: "desc_005"
+  category: "course_description"
+  question: "What is covered in CJUS 412?"
+  key_facts:
+    - "CJUS 412 Introduction to Security Technology and Loss Prevention"
+    - "Covers private and public responses to security problems: employee theft, perimeter security, domestic and foreign terrorism"
+    - "Reviews related law and management practices"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  banner_redirect_expected: false
+
+- question_id: "desc_006"
+  category: "course_description"
+  question: "What is the difference between CSCI 1720 and CSCI 1210?"
+  key_facts:
+    - "CSCI 1210: foundations course teaching programming basics — problem solving, writing, organizing, and debugging code"
+    - "CSCI 1720: assumes basics are known; focuses on OOP, recursion, and algorithm design in Java"
+    - "Take 1210 if new to programming or not yet comfortable debugging; go straight to 1720 if already able to write and troubleshoot small programs"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  applicable_groups:
+    - "prospective_undergrad"
+    - "current_undergrad"
+  banner_redirect_expected: false
+
+- question_id: "desc_007"
+  category: "course_description"
+  question: "What courses teach cybersecurity and what are their prerequisites?"
+  key_facts:
+    - "BCIS 480/580 Introduction to Cybersecurity: prerequisite BCIS 338 or consent of instructor"
+    - "CSEC 110 Principles of Cybersecurity: no prerequisites"
+    - "CSEC 283 Ethical Hacking and Penetration Testing: prerequisite E T 153 and E T 156; corequisite E T 283"
+    - "E T 439 Advanced Digital Forensics and Incident Response: C- or better in E T 339 and E T 377"
+    - "E T 539 Advanced Enterprise Security: restricted to M-IT majors"
+    - "POLS 368 Human Security: no prerequisites"
+    - "POLS 568 Advanced Issues in Human Security: no prerequisites"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  banner_redirect_expected: false
+
+# ── Prerequisites ─────────────────────────────────────────────────────────────
+
+- question_id: "prereq_001"
+  category: "prerequisites"
+  question: "What are the prerequisites for Programming Language Structure?"
+  key_facts:
+    - "CSCI 4105 Programming Language Structure requires C- or better in CSCI 3730 Compilers and Automata Theory AND C- or better in CSCI 3710 Software Development"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  banner_redirect_expected: false
+
+- question_id: "prereq_002"
+  category: "prerequisites"
+  question: "What are the prerequisites for CSCI 4110?"
+  key_facts:
+    - "CSCI 4110 Computing Ethics and Social Implications of Computing requires C- or better in CSCI 3710 Software Development"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  banner_redirect_expected: false
+
+- question_id: "prereq_003"
+  category: "prerequisites"
+  question: "What are the prerequisites for CSCI 4130?"
+  key_facts:
+    - "CSCI 4130 Linux System Administration has no prerequisites"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  banner_redirect_expected: false
+
+- question_id: "prereq_004"
+  category: "prerequisites"
+  question: "What are the prerequisites for the Compilers course?"
+  key_facts:
+    - "CSCI 3730 Compilers and Automata Theory requires C- or better in CSCI 2210 Object-Oriented Programming, CSCI 2220 Introduction to Data Structures and Algorithms, AND CSCI 2230 Assembly Language and Machine Organization"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  banner_redirect_expected: false
+
+- question_id: "prereq_005"
+  category: "prerequisites"
+  question: "What are the prerequisites for Practical Programming?"
+  key_facts:
+    - "CSCI 2410 Practical Programming has no prerequisites"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  banner_redirect_expected: false
+
+# ── Degree Choice and Requirements ────────────────────────────────────────────
+
+- question_id: "deg_001"
+  category: "degree_choice"
+  question: "What is the difference between a BS in Computer Science and a BS in Cybersecurity?"
+  key_facts:
+    - "BS CS is broad with 7 optional concentration tracks; BS Cybersecurity has a tighter, specialized required curriculum"
+    - "BS CS is a single-department degree (all CSCI); Cybersecurity is cross-departmental (EE, Engineering Tech, Criminal Justice, BCIS)"
+    - "BS CS requires Calculus I and II plus Linear Algebra plus upper-division math elective plus statistics; Cybersecurity allows MATH 1430G in place of Calculus I and requires no upper-division math elective"
+    - "Both require CSCI 4205 Computer Security and CSCI 4225 Introduction to Cryptography"
+    - "Cybersecurity adds: CSCI 4235, CSCI 4240, CSCI 4130, CSCI 4245, plus cross-departmental courses"
+    - "BS CS is ABET-accredited (Computing Accreditation Commission); BS Cybersecurity does not mention ABET accreditation"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  applicable_groups:
+    - "prospective_undergrad"
+    - "current_undergrad"
+  banner_redirect_expected: false
+
+- question_id: "deg_002"
+  category: "degree_choice"
+  question: "Why would I want a specialty BS in Cybersecurity instead of a standard BS?"
+  key_facts:
+    - "BS in Computer Science is the traditional broad degree; ABET-accredited; recommended for single-major CS students and those planning graduate study"
+    - "BS in Cybersecurity prepares students for professional security work with a tighter, more directed curriculum"
+    - "CS students can add a Cybersecurity concentration without switching degrees"
+    - "Students planning employment at the bachelor level are advised to add a concentration"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  banner_redirect_expected: false
+
+- question_id: "deg_003"
+  category: "degree_choice"
+  question: "When should one consider a BS in Computer Science instead of a BA?"
+  key_facts:
+    - "BA in CS is flexible with extensive open credit hours for other domains; good for double majors"
+    - "BS in CS is the traditional rigorous degree focused on CS fundamentals; ABET-accredited"
+    - "Students planning graduate work in CS are encouraged to pursue the BS over the BA"
+    - "BS is recommended for single-major CS students"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  applicable_groups:
+    - "prospective_undergrad"
+    - "current_undergrad"
+  banner_redirect_expected: false
+
+- question_id: "deg_004"
+  category: "degree_choice"
+  question: "What is the difference between the BS and BA degrees in CS?"
+  key_facts:
+    - "Both degrees require the same CS foundation courses"
+    - "BS requires Calculus I and II (gen ed) plus Linear Algebra plus upper-division math elective plus statistics; BA requires only one math course (Calculus I or Applications of Calculus I)"
+    - "BS requires two lab science courses; BA requires one"
+    - "BA offers more CS elective breadth; BS requires more depth in math and science outside CS"
+    - "BS is ABET-accredited (CAC); BA has no accreditation mention"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  applicable_groups:
+    - "prospective_undergrad"
+    - "current_undergrad"
+  banner_redirect_expected: false
+
+- question_id: "deg_005"
+  category: "degree_requirements"
+  question: "What is the recommended number of credits I should take in a regular semester?"
+  key_facts:
+    - "Undergraduate full-time load: 12-18 credits per regular semester"
+    - "Some scholarships require 15 credits for eligibility"
+    - "Graduate full-time: 9 credits per semester to retain GA eligibility"
+    - "Graduate students in final dissertation semester may petition Graduate School to enroll in fewer credits for that one semester"
+    - "Graduate Academic Probation I: capped at 13 credits; Probation II: capped at 7 credits"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  applicable_groups:
+    - "current_undergrad"
+    - "current_ms_coursework"
+    - "current_ms_thesis"
+    - "current_phd"
+  banner_redirect_expected: false
+
+- question_id: "deg_006"
+  category: "degree_requirements"
+  question: "Explain and compare the different tracks for an M.S.: Coursework only, Project, or Thesis."
+  key_facts:
+    - "Two MS tracks: thesis/project track and coursework-only track"
+    - "All tracks require 12 credits of basic requirements (CSCI 5000+, possibly lower-numbered courses to meet deficiencies)"
+    - "Coursework-only: 24 additional credits of CSCI graduate courses; max 6 credits CSCI 5996 Special Topics; no course above 5888 may count; no final exam"
+    - "Project track (CSCI 5994): 6 credits; implement a solution; write project report; have final exam covering project and coursework; report not sent to Graduate School"
+    - "Thesis track (CSCI 5999): 6 credits; design and implement new ideas; outcome should be submitted for publication; thesis sent to Graduate School; final exam deadline is earlier than project track"
+    - "MAP students may begin either track during junior/senior year; up to 12 credits of dual credit applied to both undergraduate and master's degree"
+  expected_chunk_ids: []
+  expected_source_type: "either"
+  applicable_groups:
+    - "prospective_ms"
+    - "current_ms_coursework"
+    - "current_ms_thesis"
+    - "prospective_map"
+    - "current_map"
+  banner_redirect_expected: false
+  notes: "Question asks about job market value but sources do not address this — key facts cover requirements only"
+
+- question_id: "deg_007"
+  category: "degree_requirements"
+  question: "When must I have a thesis advisor?"
+  key_facts:
+    - "No hard deadline is specified in department sources"
+    - "Must have an advisor to enroll in CSCI 5994 Master's Project or CSCI 5999 Master's Thesis"
+    - "Anticipated in the 3rd or 4th semester"
+  expected_chunk_ids: []
+  expected_source_type: "either"
+  applicable_groups:
+    - "current_ms_thesis"
+  banner_redirect_expected: false
+
+- question_id: "deg_008"
+  category: "degree_requirements"
+  question: "When must I have a Project advisor?"
+  key_facts:
+    - "No hard deadline is specified in department sources"
+    - "Must have an advisor to enroll in CSCI 5994 Master's Project"
+    - "Anticipated in the 3rd or 4th semester"
+  expected_chunk_ids: []
+  expected_source_type: "either"
+  applicable_groups:
+    - "current_ms_coursework"
+  banner_redirect_expected: false
+
+- question_id: "deg_009"
+  category: "degree_requirements"
+  question: "When must I have a dissertation advisor?"
+  key_facts:
+    - "PhD students must have a dissertation advisor within 1 semester of passing the qualifying exam"
+  expected_chunk_ids: []
+  expected_source_type: "either"
+  applicable_groups:
+    - "current_phd"
+  banner_redirect_expected: false
+
+- question_id: "deg_010"
+  category: "degree_choice"
+  question: "What Computer Science graduate degrees are offered at NMSU?"
+  key_facts:
+    - "Ph.D. in Computer Science"
+    - "5-Year Dual B.S. + M.S. in Computer Science (Masters Accelerated Program)"
+    - "M.S. in Computer Science"
+    - "M.S. in Bioinformatics"
+    - "Professional M.S. in Computational Data Analytics"
+    - "Computer Science may be a component in an Interdisciplinary M.S. or Ph.D."
+  expected_chunk_ids: []
+  expected_source_type: "web"
+  banner_redirect_expected: false
+
+- question_id: "deg_011"
+  category: "degree_choice"
+  question: "What computer science minors can I pursue at NMSU?"
+  key_facts:
+    - "Undergraduate minors: Bioinformatics, Computer Systems, Algorithm Theory, Software Development"
+    - "Graduate CS minor: 9 graduate credits, not including CSCI 4540; contact Graduate Committee Chair for course selection guidance"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  banner_redirect_expected: false
+
+- question_id: "deg_012"
+  category: "degree_requirements"
+  question: "What kinds of course credits can I transfer in from another institution?"
+  key_facts:
+    - "NMSU accepts transfer credit from regionally accredited colleges and universities"
+    - "Community/junior college credits always transfer at lower division level"
+    - "Four-year institution credits transfer at lower or upper division depending on the original course level"
+    - "Grade of D or better required for NMSU credit; departments may require C- or higher for program courses"
+    - "Currently enrolled students must obtain prior approval from department head and dean before taking courses elsewhere"
+    - "AP and CLEP scores may be evaluated for transfer credit"
+    - "Transfer Course Equivalency Search tool available at miniapps.nmsu.edu/transfer"
+    - "Graduate certificate students cannot transfer credits from another institution toward the certificate; time limit on transfer credits is 5 years after certificate completion"
+  expected_chunk_ids: []
+  expected_source_type: "either"
+  applicable_groups:
+    - "prospective_undergrad"
+    - "transfer_student"
+    - "prospective_ms"
+  banner_redirect_expected: false
+
+# ── Financial Aid ─────────────────────────────────────────────────────────────
+
+- question_id: "fin_001"
+  category: "financial_aid"
+  question: "What percentage of the current CS MS students receive financial aid?"
+  key_facts:
+    - "Cannot be answered — this information is not available in department sources"
+  expected_chunk_ids: []
+  expected_source_type: "either"
+  banner_redirect_expected: false
+
+- question_id: "fin_002"
+  category: "financial_aid"
+  question: "What types of financial aid are available for Computer Science students?"
+  key_facts:
+    - "Graduate: Teaching Assistantships (TAs) and Research Assistantships (RAs) available during the academic year"
+    - "RA availability is at the discretion of individual research project leaders"
+    - "Graduate School maintains a Fellowship and Grant Information webpage with database of grants and fellowships for graduate students"
+    - "Department offers 10 and 20 hours/week graduate TAs each semester"
+    - "Undergraduates: list of scholarships available on department undergraduate financial aid page"
+  expected_chunk_ids: []
+  expected_source_type: "either"
+  applicable_groups:
+    - "current_undergrad"
+    - "prospective_ms"
+    - "current_ms_coursework"
+    - "current_ms_thesis"
+    - "prospective_phd"
+    - "current_phd"
+  banner_redirect_expected: false
+
+- question_id: "fin_003"
+  category: "financial_aid"
+  question: "When and how can I apply for a Graduate Assistantship?"
+  key_facts:
+    - "GAs are awarded primarily by the student's academic department; inquire with the departmental Graduate Committee"
+    - "TA availability is announced by email with instructions and deadlines"
+    - "Must complete and submit an online application form when announced"
+    - "Department does not accept unsolicited applications or late applications"
+    - "For RAs: contact the managing research faculty member directly"
+    - "GAs are governed by the NMSU and United Electrical, Radio and Machine Workers of America Collective Bargaining Agreement"
+  expected_chunk_ids: []
+  expected_source_type: "web"
+  applicable_groups:
+    - "prospective_ms"
+    - "current_ms_coursework"
+    - "current_ms_thesis"
+    - "prospective_phd"
+    - "current_phd"
+  banner_redirect_expected: false
+
+- question_id: "fin_004"
+  category: "financial_aid"
+  question: "What do Teaching Assistantships involve, e.g., number of hours weekly and types of work required?"
+  key_facts:
+    - "Available as 10 or 20 hours per week"
+    - "Duties include: grading, conducting lab sessions, office hours, tutoring, teaching lectures or full courses, managing online courses"
+    - "20 hr/week TA provides a two-semester stipend of approximately $16,200 and in-state (reduced) tuition eligibility"
+    - "TA student typically teaches 2-3 laboratory courses"
+    - "Generally awarded to PhD students; MS students may also receive TAs"
+    - "PhD students: up to 8 semesters total (exception requires Department Head approval); MS students: limited to 2 semesters and must complete a thesis"
+    - "International students without a US degree must pass NMSU International Teaching Assistant (ITA) screening before receiving a TA"
+  expected_chunk_ids: []
+  expected_source_type: "web"
+  applicable_groups:
+    - "prospective_ms"
+    - "current_ms_thesis"
+    - "prospective_phd"
+    - "current_phd"
+  banner_redirect_expected: false
+
+- question_id: "fin_005"
+  category: "financial_aid"
+  question: "How can I get a Research Assistantship in computer science?"
+  key_facts:
+    - "RAs are limited and awarded by faculty who have external research funding"
+    - "Faculty selects a student with specific skills or subject knowledge relevant to the funded project"
+    - "Annual performance plan agreed upon between faculty member and Research Assistant"
+    - "If objectives are not met or funding runs out, faculty may terminate the RA at their discretion"
+    - "Minimum 3.0 GPA required; must make adequate progress toward graduate degree"
+    - "Contact your advisor for information on available RA positions"
+  expected_chunk_ids: []
+  expected_source_type: "web"
+  applicable_groups:
+    - "prospective_ms"
+    - "current_ms_thesis"
+    - "prospective_phd"
+    - "current_phd"
+  banner_redirect_expected: false
+
+# ── Faculty ───────────────────────────────────────────────────────────────────
+
+- question_id: "fac_001"
+  category: "faculty"
+  question: "Which faculty are affiliated with the data analytics concentration?"
+  key_facts:
+    - "Dr. Huiping Cao and Dr. Tuan Le are affiliated with the Data Analytics concentration"
+  expected_chunk_ids: []
+  expected_source_type: "web"
+  banner_redirect_expected: false
+
+- question_id: "fac_002"
+  category: "faculty"
+  question: "Which computer science faculty focus on statistical computing and what are their email addresses?"
+  key_facts:
+    - "Dr. Joe Song (joemsong@nmsu.edu) focuses on statistical computing"
+  expected_chunk_ids: []
+  expected_source_type: "web"
+  banner_redirect_expected: false
+
+- question_id: "fac_003"
+  category: "faculty"
+  question: "Where is Dr. Wayllace's office?"
+  key_facts:
+    - "Dr. Christabel Wayllace's office is Science Hall 173"
+  expected_chunk_ids: []
+  expected_source_type: "web"
+  banner_redirect_expected: false
+
+- question_id: "fac_004"
+  category: "faculty"
+  question: "Which professors have interests in cryptography?"
+  key_facts:
+    - "Dr. Roopa Vishwanathan: expertise in cryptographic protocol design, applied cryptography for decentralized finance and blockchain applications, redaction in blockchains"
+    - "Dr. Gaurav Panwar: expertise in cryptography"
+  expected_chunk_ids: []
+  expected_source_type: "web"
+  banner_redirect_expected: false
+
+# ── Policy ────────────────────────────────────────────────────────────────────
+
+- question_id: "pol_001"
+  category: "policy"
+  question: "How do I get off academic probation?"
+  key_facts:
+    - "Undergrad: returned to good standing when both cumulative GPA and most recent semester GPA both exceed 2.0"
+    - "Graduate: returned to good standing when both cumulative GPA and most recent semester GPA both exceed 3.0"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  banner_redirect_expected: false
+
+- question_id: "pol_002"
+  category: "policy"
+  question: "What are grounds for dismissal?"
+  key_facts:
+    - "Provisional master's student with less than 3.0 GPA after 9 graduate credit hours is subject to dismissal"
+    - "Doctoral student accumulating 3 'U' (unsatisfactory) grades in courses numbered 598, 599, 600, 699, or 700 will be dismissed from the Graduate School"
+    - "Graduate and undergraduate students may be dismissed for academic misconduct after due process"
+  expected_chunk_ids: []
+  expected_source_type: "catalog"
+  banner_redirect_expected: false
+
+- question_id: "pol_003"
+  category: "policy"
+  question: "How do I apply to the CS graduate program?"
+  key_facts:
+    - "All prospective students must submit an Application for Admission to the Graduate School; apply at apply.nmsu.edu/apply"
+    - "GRE General Test not required for CS, Data Analytics, or Bioinformatics; high scores strengthen application and are valued for GA awards"
+    - "Official transcripts from every institution attended must be sent directly to the Graduate School"
+    - "MAP eligibility: 60 semester hours completed (25+ at NMSU), min 3.25 cumulative GPA, within 48 credits of BS, min 3.3 GPA in CS and Math courses, must have taken 2 of CSCI 3730/3710/3720, faculty recommendations required"
+    - "Bioinformatics MS: BS from accredited institution in computational or life sciences, min 3.2 GPA, Career statement, minimum 3 letters of reference"
+  expected_chunk_ids: []
+  expected_source_type: "either"
+  applicable_groups:
+    - "prospective_ms"
+    - "prospective_phd"
+    - "prospective_map"
+  banner_redirect_expected: false
+
+- question_id: "pol_004"
+  category: "policy"
+  question: "Where can I get information about the required format for the submission of my dissertation?"
+  key_facts:
+    - "Formatting is universal and required by ProQuest"
+    - "Work with your advisor on this requirement"
+    - "Detailed guidelines are available through the Graduate School SharePoint page for Doctoral Dissertation Students"
+    - "The SharePoint page is behind a login and cannot be accessed directly by the chatbot"
+  expected_chunk_ids: []
+  expected_source_type: "web"
+  applicable_groups:
+    - "current_phd"
+    - "current_ms_thesis"
+  banner_redirect_expected: false
+  notes: "System prompt must redirect to advisor and Graduate School SharePoint — do not answer formatting specifics from context"
+
+- question_id: "pol_005"
+  category: "policy"
+  question: "Tell me about PhD qualifying exams. Who takes them and when? What are they like?"
+  key_facts:
+    - "All doctoral students must pass a qualifying examination"
+    - "Purpose: determine areas of strength and weakness; assess readiness to conduct doctoral research"
+    - "Scheduled by student's advisor; administered by the major department"
+    - "Exam committee includes student's advisor and at least two ECE faculty members"
+    - "Should be taken after completing graduate core with B or better in every course, within one year of defending MSEE or entering PhD program"
+    - "Two attempts allowed; failure to demonstrate readiness leads to recommendation to limit studies to master's degree"
+    - "Direct-to-doctorate (no prior graduate experience): take after 12 graduate credits"
+    - "Entering with master's from another institution: take before completing one semester"
+    - "Entering with NMSU master's (same department): department may allow master's final exam to serve as qualifying exam"
+    - "Outcomes: admit to doctorate, limit to master's, re-evaluate after one semester, or discontinue"
+  expected_chunk_ids: []
+  expected_source_type: "web"
+  applicable_groups:
+    - "prospective_phd"
+    - "current_phd"
+  banner_redirect_expected: false
+
+- question_id: "pol_006"
+  category: "policy"
+  question: "I am in my second year as a Cybersecurity major and want to apply for MAP. What is the process?"
+  key_facts:
+    - "NMSU does not offer a graduate degree in Cybersecurity"
+    - "Cybersecurity majors may apply to MAP for the MS in Computer Science"
+    - "Eligible after 60 semester hours with 25 or more credits completed at NMSU"
+    - "Minimum 3.25 cumulative GPA; minimum 3.3 GPA in CS and Math courses"
+    - "Must have taken at least 2 of: CSCI 3730, CSCI 3710, CSCI 3720"
+    - "Faculty recommendations required"
+    - "Submit CS department pre-application form when within 48 credits of earning a BS"
+  expected_chunk_ids: []
+  expected_source_type: "web"
+  applicable_groups:
+    - "prospective_map"
+    - "current_undergrad"
+  banner_redirect_expected: false
+
+- question_id: "pol_007"
+  category: "policy"
+  question: "When is the deadline to apply to get my graduate diploma this summer?"
+  key_facts:
+    - "Deadline to apply for summer graduate diploma: July 6, 2026"
+    - "Check the Graduate School calendar for current deadlines as these change each year"
+  expected_chunk_ids: []
+  expected_source_type: "web"
+  applicable_groups:
+    - "current_ms_coursework"
+    - "current_ms_thesis"
+    - "current_phd"
+  banner_redirect_expected: false
+  notes: "Time-sensitive — will go stale after summer 2026. Re-crawl Graduate School calendar page before each semester."
+
+- question_id: "pol_008"
+  category: "policy"
+  question: "How many faculty references do I need in my MAP application?"
+  key_facts:
+    - "Faculty recommendations are required for MAP; the specific number is not stated in available department sources"
+    - "Contact the CS department directly for this detail"
+  expected_chunk_ids: []
+  expected_source_type: "web"
+  applicable_groups:
+    - "prospective_map"
+  banner_redirect_expected: false
+  notes: "Partially answerable — recommendations required but count not specified in sources. System prompt should state what is known and note the gap."
+
+# ── Minors ────────────────────────────────────────────────────────────────────
+
+- question_id: "minor_001"
+  category: "minors"
+  question: "What are my options for a CS minor, and what are the differences?"
+  key_facts:
+    - "Undergraduate options: Algorithm Theory, Bioinformatics, Computer Systems, Software Development"
+    - "Software Development: most generic minor; good default choice"
+    - "Algorithm Theory: more theoretical; good choice for Math majors"
+    - "Bioinformatics: computation in bio-medical applications; good for biology, biochemistry, or chemistry majors"
+    - "Computer Systems: hardware, OS, networking focus; good for EE/ECE and engineering majors"
+    - "Graduate CS minor: 9 credits of graduate-level CS, excluding CSCI 4540 Computer Science I Transition"
+    - "Graduate Bioinformatics minor: 9 credits (MS) or 12 credits (PhD) including BIOL 550; jointly offered with Molecular Biology; contact Molecular Biology Program for current requirements"
+  expected_chunk_ids: []
+  expected_source_type: "either"
+  applicable_groups:
+    - "current_undergrad"
+    - "current_ms_coursework"
+    - "current_ms_thesis"
+    - "current_phd"
+    - "other"
+  banner_redirect_expected: false
+
+- question_id: "minor_002"
+  category: "minors"
+  question: "I am a graduate studying engineering. What would be the value of my getting a CS minor?"
+  key_facts:
+    - "A CS minor provides significant learning in computer science and programming"
+    - "Will distinguish the student from colleagues when starting their career"
+  expected_chunk_ids: []
+  expected_source_type: "web"
+  applicable_groups:
+    - "current_ms_coursework"
+    - "current_ms_thesis"
+    - "current_phd"
+  banner_redirect_expected: false
+
+# ── Roadmap ───────────────────────────────────────────────────────────────────
+
+- question_id: "road_001"
+  category: "roadmap"
+  question: "What courses should I take in my first semester as an undergraduate in Cybersecurity?"
+  key_facts:
+    - "CSCI 1115G Modern Computing in Practice: recommended first semester; requires MATH 1215, MATH 1130G, or equivalent; offered every semester"
+    - "CSCI 1110 Computer Science Principles: alternative option; requires MATH 1215; is a prerequisite for CSCI 1720"
+    - "If math prerequisites are not met, take the appropriate Math course first and postpone CSCI 1115G"
+  expected_chunk_ids: []
+  expected_source_type: "either"
+  applicable_groups:
+    - "prospective_undergrad"
+  banner_redirect_expected: false
+
+- question_id: "road_002"
+  category: "roadmap"
+  question: "I am beginning my studies for a BS in Computer Science in the Spring of 2027. In what CS courses should I consider enrolling?"
+  key_facts:
+    - "CSCI 1115G Modern Computing in Practice: recommended first; requires MATH 1215, MATH 1130G, or equivalent"
+    - "CSCI 1110 Computer Science Principles: optional; requires MATH 1215; prerequisite for CSCI 1720"
+    - "CSCI 1720 Computer Science I: requires C- in MATH 1250G or MATH 1430G+; or C- in MATH 1220G with CS Placement Test score 1+; or C- in MATH 1220G and C- in CSCI 1110"
+    - "CSCI 2210 Object-Oriented Programming: requires C- in CSCI 1720 or ENGR 140"
+    - "CSCI 2230 Assembly Language and Machine Organization: requires C- in CSCI 1720 or ENGR 140"
+  expected_chunk_ids: []
+  expected_source_type: "either"
+  applicable_groups:
+    - "prospective_undergrad"
+  banner_redirect_expected: false
+
+# ── Other ─────────────────────────────────────────────────────────────────────
+
+- question_id: "other_001"
+  category: "other"
+  question: "What is the difference in job opportunities between a BS in Cybersecurity and one in AI?"
+  key_facts:
+    - "Cannot be answered — this information is not available in department sources"
+  expected_chunk_ids: []
+  expected_source_type: "either"
+  applicable_groups:
+    - "prospective_undergrad"
+    - "current_undergrad"
+  banner_redirect_expected: false
