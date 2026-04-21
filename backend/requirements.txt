@@ -11,3 +11,5 @@ weaviate-client
 pydantic
 psycopg[binary]
 pdfplumber
+packaging
+textstat
