@@ -16,7 +16,7 @@ from openai import OpenAI
 load_dotenv()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-JUDGE_MODEL = os.getenv("OPENAI_CHAT_MODEL", "gpt-5-mini")
+JUDGE_MODEL = os.getenv("JUDGE_MODEL", os.getenv("OPENAI_CHAT_MODEL", "gpt-5-mini"))
 
 if not OPENAI_API_KEY:
     raise RuntimeError("OPENAI_API_KEY is not set")
