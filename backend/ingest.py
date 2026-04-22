@@ -180,6 +180,10 @@ def chunk_page(sections: list, chunk_type: str,
     """
     Convert structured sections into chunks respecting min/max length guardrails.
 
+    Returns a list of dicts: [{"heading": str, "text": str}]
+      - heading: the h2/h3 section heading for this chunk (used as metadata field)
+      - text: section heading prepended to body text (used for BM25 and embedding)
+
     Strategies by chunk_type:
       - course_schedule: keep as single chunk if under max_len
       - all others: split on h2/h3 section boundaries, merge short sections,
@@ -195,11 +199,12 @@ def chunk_page(sections: list, chunk_type: str,
             for s in sections
         ).strip()
         if len(full) <= max_len:
-            return [full] if full else []
+            return [{"heading": sections[0].get("heading", ""), "text": full}] if full else []
         # Fall through to normal splitting if over max
 
     chunks = []
     pending = ""
+    pending_heading = ""
 
     for section in sections:
         heading = section.get("heading", "")
@@ -212,8 +217,9 @@ def chunk_page(sections: list, chunk_type: str,
         # Section exceeds max — split at paragraph or sentence boundaries
         if len(section_text) > max_len:
             if pending:
-                chunks.append(pending.strip())
+                chunks.append({"heading": pending_heading, "text": pending.strip()})
                 pending = ""
+                pending_heading = ""
             parts = re.split(r'\n\n+|\.\s+', section_text)
             current = ""
             for part in parts:
@@ -221,38 +227,42 @@ def chunk_page(sections: list, chunk_type: str,
                 if not part:
                     continue
                 if current and len(current) + len(part) + 1 > max_len:
-                    chunks.append(current.strip())
+                    chunks.append({"heading": heading, "text": current.strip()})
                     current = part
                 else:
                     current = (current + " " + part).strip() if current else part
             if current:
-                chunks.append(current.strip())
+                chunks.append({"heading": heading, "text": current.strip()})
             continue
 
         # Section is too short — merge into pending
         if len(section_text) < min_len:
+            if not pending:
+                pending_heading = heading
             pending = (pending + "\n\n" + section_text).strip() if pending else section_text
             if len(pending) >= max_len:
-                chunks.append(pending)
+                chunks.append({"heading": pending_heading, "text": pending})
                 pending = ""
+                pending_heading = ""
             continue
 
         # Normal section — flush pending first
         if pending:
             combined = (pending + "\n\n" + section_text).strip()
             if len(combined) <= max_len:
-                chunks.append(combined)
+                chunks.append({"heading": pending_heading, "text": combined})
             else:
-                chunks.append(pending)
-                chunks.append(section_text)
+                chunks.append({"heading": pending_heading, "text": pending})
+                chunks.append({"heading": heading, "text": section_text})
             pending = ""
+            pending_heading = ""
         else:
-            chunks.append(section_text)
+            chunks.append({"heading": heading, "text": section_text})
 
     if pending:
-        chunks.append(pending.strip())
+        chunks.append({"heading": pending_heading, "text": pending.strip()})
 
-    return [c for c in chunks if c]
+    return [c for c in chunks if c.get("text")]
 
 
 # ── Course code extraction ─────────────────────────────────────────────────────
@@ -388,14 +398,18 @@ def upsert_pages_to_weaviate(pages: list, department_id: str, crawl_version: str
             if not chunks:
                 text = page.get("text", "").strip()
                 if text:
-                    chunks = [text[:CHUNK_MAX_LEN]]
+                    chunks = [{"heading": page.get("heading", ""), "text": text[:CHUNK_MAX_LEN]}]
 
             if not chunks:
                 continue
 
-            embeddings = embed_batch(chunks)
+            embeddings = embed_batch([c["text"] for c in chunks])
 
-            for i, (chunk_text, emb) in enumerate(zip(chunks, embeddings)):
+            for i, (chunk, emb) in enumerate(zip(chunks, embeddings)):
+                chunk_text = chunk["text"]
+                # Use the section's own h2/h3 heading; fall back to page h1 only
+                # if the section has no heading (e.g. pre-heading content).
+                chunk_heading = chunk.get("heading") or page.get("heading", "")
                 obj = DataObject(
                     uuid=str(uuid.uuid4()),
                     properties={
@@ -405,7 +419,7 @@ def upsert_pages_to_weaviate(pages: list, department_id: str, crawl_version: str
                         "department_id":       normalized_department_id,
                         "campus":              page.get("campus", ""),
                         "text":                chunk_text,
-                        "heading":             page.get("heading", ""),
+                        "heading":             chunk_heading,
                         "source":              page["url"],
                         "level":               page.get("level", ""),
                         "degree_type":         page.get("degree_type", ""),

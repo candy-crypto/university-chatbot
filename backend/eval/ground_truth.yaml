@@ -14,7 +14,10 @@
     - "Located in Educational Services, Suite 200"
     - "Students can change majors through CAASS or on CAASS webpages"
     - "Undeclared students in College of Engineering may be advised by CAASS"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "https://advising.nmsu.edu/#chunk-0"          # full name in page header; retrieval gap — nav boilerplate dilutes ranking
+    - "116b9e42d133cddf"                             # catalog p41 — CAASS mentioned in overload policy text
+    - "TBD_catalog_p447_college_of_arts_sciences"   # catalog p447-449 — College of A&S header contains full CAASS name; re-run ingest to get ID
   expected_source_type: "web"
   applicable_groups:
     - "prospective_undergrad"
@@ -29,7 +32,11 @@
     - "Undergrads receive an email each semester indicating their departmental mentor"
     - "Transfer students from NMSU community colleges must email advising@nmsu.edu to find their advisor"
     - "Graduate advisor is Dr. Mingzhou (Joe) Song (joemsong@nmsu.edu)"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "https://computerscience.nmsu.edu/majors/undergraduate-advising.html#chunk-3"  # undergrad mentor email process
+    - "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-2"  # Dr. Song Q5
+    - "https://advising.nmsu.edu/#chunk-0"  # contains advising@nmsu.edu for transfer students
+  retrieval_note: "all 3 expected chunks missing from top 5; glossary definition ranked #1 due to metadata boost on 'advisor'"
   expected_source_type: "web"
   applicable_groups:
     - "current_undergrad"
@@ -96,7 +103,9 @@
   key_facts:
     - "CSCI 4120 Operating Systems I is offered Fall semesters only"
     - "Next offering: Fall 2026"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-1"  # rotation table showing FA-only pattern
+    - "b6698dedb6cd09ea"  # CSCI 4120 course description — confirms course identity
   expected_source_type: "web"
   banner_redirect_expected: false
 
@@ -106,17 +115,23 @@
   key_facts:
     - "CSCI 3790/4590 Algorithm Design & Implementation"
     - "Next offering: Fall 2027"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-1"  # rotation table — authoritative source for next offering
+    - "ae3b5c5184016f32"  # CSCI 3790 course description — confirms course identity
+  retrieval_note: "rotation table absent from top 5; query uses 'opportunity to take' instead of scheduling vocabulary so _schedule_terms boost does not fire; course description dominates on phrase match — known retrieval gap for non-scheduling vocabulary"
   expected_source_type: "web"
   banner_redirect_expected: false
-  notes: "Duplicate of avail_003 with different phrasing — useful for retrieval robustness testing"
+  notes: "Duplicate of avail_003 with different phrasing — useful for retrieval robustness testing; avail_003 uses course code so rotation ranks; avail_005 uses course title only so rotation is missed"
 
 - question_id: "avail_006"
   category: "course_availability"
   question: "Is the Operating Systems course offered every semester?"
   key_facts:
     - "CSCI 4120 Operating Systems I is offered Fall semesters only, not every semester"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-1"  # rotation table — shows FA-only pattern for CSCI 4120
+    - "b6698dedb6cd09ea"  # CSCI 4120 course description — confirms course identity
+  retrieval_note: "OECS 125 Operating Systems (non-CS course from catalog) ranks #1 on phrase match — false positive; LLM should select CSCI 4120 as the relevant course; rotation ranks #4 currently but will be #1 after course_schedule boost for 'semester'"
   expected_source_type: "web"
   banner_redirect_expected: false
 
@@ -127,6 +142,7 @@
     - "Cannot be answered from department sources"
     - "Must check NMSU's course search for summer session availability"
   expected_chunk_ids: []
+  retrieval_note: "retrieval returns CHEM course descriptions — correct course identified but no summer schedule data exists in any chunk; LLM must redirect via Summer Sessions system prompt rule"
   expected_source_type: "redirect"
   banner_redirect_expected: true
 
@@ -137,6 +153,7 @@
     - "Cannot be answered from department sources"
     - "Must check NMSU's course search for current seat availability"
   expected_chunk_ids: []
+  retrieval_note: "retrieval returns PHYS course descriptions — correct courses identified but real-time seat availability is not in any chunk; LLM must redirect via Registration and Enrollment Availability system prompt rule"
   expected_source_type: "redirect"
   banner_redirect_expected: true
 
@@ -147,6 +164,7 @@
     - "Cannot be answered from department sources"
     - "Must check NMSU's course search for course availability"
   expected_chunk_ids: []
+  retrieval_note: "query uses 'COMM 115G' (3-digit) but course is 'COMM 1115G' (4-digit); retrieval correctly found it at #1 via vector similarity; COMM is not a CS course so the three-year rotation has no data; LLM must redirect via Registration and Enrollment Availability system prompt rule"
   expected_source_type: "redirect"
   banner_redirect_expected: true
 
@@ -176,7 +194,9 @@
     - "HIST 308V History of Food contributes to Viewing a Wider World Requirements, NOT General Education Requirements"
     - "The 'V' suffix indicates VWW, not Gen Ed (Gen Ed courses carry 'G' suffix)"
     - "Exception: 9 or more credits in Humanities may satisfy the Gen Ed Humanities requirement as an alternative even without 'G' suffix"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "11d461f88355b84f"  # HIST 308V course description — heading alone (suffix) answers the question
+  retrieval_note: "retrieval works but is wasteful — this question should be answered by a pre-retrieval course lookup table (title → code → suffix) without a Weaviate query; course description at #1 provides the suffix correctly"
   expected_source_type: "catalog"
   applicable_groups:
     - "current_undergrad"
@@ -190,6 +210,7 @@
     - "VWW courses must be upper-division (300/400 level) and carry a 'V' suffix"
     - "SOCI 2261 has no 'V' suffix and is a 2000-level course"
   expected_chunk_ids: []
+  retrieval_note: "answered by course lookup table — content words 'death dying' match SOCI 2261 via FTS; suffix is '' so answer is No; no Weaviate query needed"
   expected_source_type: "catalog"
   applicable_groups:
     - "current_undergrad"
@@ -203,7 +224,11 @@
     - "Students must select courses from 4 of 6 content areas for 12-14 total credits"
     - "Content areas: Communications, Creative and Fine Arts, Humanities, Laboratory Sciences, Mathematics, Social/Behavioral Sciences"
     - "Nine credits of institutional-level electives are included in the Gen Ed model"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "35b87bcfa4e68b97"  # glossary chunk — Gen Ed definition; ranks #1 currently
+    - "758a8cf629f64251"  # glossary chunk — Gen Ed Certification definition
+    - "TBD_catalog_p241_gen_ed_vww"  # policy chunk pp.241-244 — detailed area requirements; available after catalog re-ingest
+  retrieval_note: "glossary boost working well — two glossary chunks in top 5; pp.241-244 policy chunk not yet ingested; VWW is not defined in glossary (only Gen Ed is)"
   expected_source_type: "catalog"
   applicable_groups:
     - "prospective_undergrad"
@@ -216,7 +241,9 @@
   key_facts:
     - "VWW courses are all upper-division (300/400 level)"
     - "Should be taken in junior and/or senior year"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "TBD_catalog_p241_gen_ed_vww"  # policy chunk pp.241-244 — definitive answer ('junior and/or senior year'); available after catalog re-ingest
+  retrieval_note: "current top 5 are degree_requirement and study_plan chunks with 0.28 metadata boost from degree metadata; policy chunk from pp.241-244 will only get 0.08 boost and may not break into top 5 — policy chunk_type needs a boost for VWW/Gen Ed queries (deferred post-demo); study_plan chunks may show VWW in year 3/4 but don't state the rule explicitly"
   expected_source_type: "catalog"
   applicable_groups:
     - "current_undergrad"
@@ -241,7 +268,10 @@
     - "BS in Cybersecurity is a separate degree from BS in Computer Science"
     - "Cybersecurity requires CSCI 5205, CSCI 4245, and CSCI 4225 as required courses (these are electives in the CS BS)"
     - "Cybersecurity also requires 2 of 3: CSCI 4230, CSCI 4250, CSCI 4220"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "d77f0feecfc6884d"   # HCI concentration_requirement — rank 1
+    - "482e154e99b5dc92"   # Cybersecurity concentration_requirement — rank 2
+  retrieval_note: "top 2 are correct; ranks 4-5 are CSCI 4250/5250 course descriptions pulled in by HCI keyword — noise but not harmful; CSCI 5250 chunk (rank 4) has malformed heading ('SCI 4250') due to two-column PDF parse defect — post-demo fix"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -250,7 +280,11 @@
   question: "Is Computer Security/CSCI 4205 required for a CS minor?"
   key_facts:
     - "CSCI 4205 Computer Security is not required for any undergraduate or graduate CS minor"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "2eb0733f90bc7c3e"   # Computer Systems - Undergraduate Minor — rank 1
+    - "b1a889c06156e3e9"   # Computer Science - Graduate Minor — rank 2
+    - "df872e79162198e8"   # Software Development - Undergraduate Minor — rank 3
+  retrieval_note: "ranks 4-5 are BS concentration/study_plan chunks displacing likely missing CS Undergraduate Minor chunk; soft boost added for minor_requirement when 'minor' in query; hard Weaviate filter planned post-demo"
   expected_source_type: "catalog"
   applicable_groups:
     - "current_undergrad"
@@ -267,7 +301,11 @@
     - "No Biology course is required for a BS in Computer Science"
     - "Biology courses may be used to fulfill the 11-credit Lab Sciences and Social/Behavioral Sciences requirement"
     - "Qualifying options: BIOL 2610G and BIOL 2610L (Biodiversity/Ecology/Evolution) or BIOL 2110G and BIOL 2110L (Cellular/Molecular Biology)"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "16d9f6f83799bfca"   # CS BS degree_requirement — rank 1
+    - "6fb64bffef3e6e90"   # CS BS degree_core_requirement — rank 3
+    - "118ed2b476025933"   # CS BS study_plan — rank 4
+  retrieval_note: "rank 2 is Bioinformatics Undergraduate Minor — spurious match on 'Biology' keyword; reverse of req_008 problem; hard Weaviate filter (exclude minor_requirement when query is about a degree, not a minor) planned post-demo"
   expected_source_type: "catalog"
   applicable_groups:
     - "prospective_undergrad"
@@ -279,7 +317,9 @@
   question: "Which statistics course is required for Computer Science majors?"
   key_facts:
     - "CS majors may satisfy the statistics requirement with any of: A ST 311 Statistical Applications, STAT 3110 Statistics for Engineers and Scientists, or STAT 4210 Probability: Theory and Applications"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "6fb64bffef3e6e90"   # CS BS degree_core_requirement — authoritative source for shared requirements
+  retrieval_note: "top 5 dominated by study_plan chunks from multiple concentrations; degree_core_requirement chunk missing from top 5; degree_requirement boost (+0.10) added for 'required/must/need' queries to surface it; study_plan chunks are roadmaps, not authoritative requirement sources"
   expected_source_type: "catalog"
   applicable_groups:
     - "current_undergrad"
@@ -293,7 +333,9 @@
     - "ENGL 2210G Professional and Technical Communication is the other required English gen ed course for CS majors"
     - "Check NMSU's course search for current semester availability of these courses"
   expected_chunk_ids: []
-  expected_source_type: "either"
+  retrieval_note: "availability question — should short-circuit to Banner redirect before retrieval; try_availability_redirect() added to detect 'offered/available/open/register' + semester signal ('this fall' etc.); no chunks expected"
+  expected_source_type: "redirect"
+  banner_redirect_expected: true
   applicable_groups:
     - "current_undergrad"
   banner_redirect_expected: true
@@ -309,7 +351,12 @@
     - "CSCI 4110 Computing Ethics and Social Implications of Computing: 1-credit course restricted to CS majors or consent of instructor"
     - "CSCI 4245 Computer Networks I: covers Internet governance including IANA, ASes, IXPs, ISPs, CAs, BGP"
     - "CSCI 4440 Generative Artificial Intelligence: covers ethical consequences of generative AI"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "2dd3ef533673839b"   # CSCI 4110 Computing Ethics — confirmed rank 1
+    - "TBD_CSCI_3410"      # Introduction to Intelligent Agents Using Science Fiction — missing from top 5
+    - "TBD_CSCI_4440"      # Generative Artificial Intelligence — missing from top 5
+    - "TBD_CSCI_4245"      # Computer Networks I (covers Internet governance) — missing from top 5
+  retrieval_note: "study_plan chunks (ranks 3-5) displaced 3 of 4 expected course_description chunks; course_description boost (+0.15) added for 'courses + topic verb' queries; re-run retrieval after boost to confirm TBD IDs"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -321,7 +368,12 @@
     - "CSCI 4440 Generative Artificial Intelligence (3 credits): LLMs, adversarial neural networks, neural symbolic computing, inductive logic programming; may be repeated up to 3 credits"
     - "C E 490 Introduction to Artificial Intelligence for Civil Engineers (3 credits): ML methods for civil engineering applications"
     - "E E 465 Machine Learning I (3 credits): undergraduate-level ML algorithms, supervised and unsupervised learning"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "96ed44c75c847eb2"   # CSCI 4440 Generative AI — confirmed rank 5
+    - "TBD_CSCI_3410"      # Intelligent Agents — missing from top 5
+    - "TBD_CE_490"         # C E 490 AI for Civil Engineers — missing from top 5
+    - "TBD_EE_465"         # E E 465 Machine Learning I — missing from top 5
+  retrieval_note: "graduate courses CSCI 5405/5750 and ACCT 558 (500/5000-level) displaced undergrad courses; level penalty (-0.20) added for graduate chunks on undergrad queries; hard Weaviate level filter planned post-demo; LLM system prompt updated with NMSU course numbering convention"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -333,7 +385,9 @@
     - "Topics include Riemann sums, definite integrals, Fundamental Theorem of Calculus, integration methods, L'Hopital's Rule, Taylor polynomials, sequences/series, power series, first-order differential equations"
     - "Consent of Instructor required for enrollment"
     - "Restricted to Las Cruces campus only"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "bbecc6941f192ada"   # MATH 1521H — correct chunk at rank 2
+  retrieval_note: "MATH 1531H ranked 1st over MATH 1521H by 0.01 final score — both matched on 'math' token only; exact course code boost (+0.15) added when all code tokens are a subset of query tokens; heading field is course code + title (as designed); source field holds catalog page citation"
   expected_source_type: "catalog"
   applicable_groups:
     - "current_undergrad"

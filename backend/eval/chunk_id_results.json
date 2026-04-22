@@ -1,0 +1,4211 @@
+[
+  {
+    "question_id": "adv_001",
+    "question": "What is CAASS?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/undergraduate-advising.html#chunk-1",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.8886,
+        "metadata_boost": 0.0,
+        "final_score": 0.8886,
+        "text_preview": "Advising, mentoring, and account holds, oh my!\nNMSU now has centralized advising, CAASS , for all “newish” NMSU students"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/undergraduate-advising.html#chunk-2",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.6248,
+        "metadata_boost": 0.0,
+        "final_score": 0.6248,
+        "text_preview": "What holds require what actions?\nWhen you log into MyNMSU and view your holds, you might have registrar, financial aid, "
+      },
+      {
+        "rank": 3,
+        "chunk_id": "1e6f71fe41cdc386",
+        "heading": "Center for Excellence in Sustainable Food and Agricultural Systems (CESFAS)",
+        "content_source": "catalog",
+        "chunk_type": "research",
+        "hybrid_score": 0.5653,
+        "metadata_boost": 0.02,
+        "final_score": 0.5853,
+        "text_preview": "Center for Excellence in Sustainable Food and Agricultural Systems (CESFAS) The Center for Excellence in Sustainable Foo"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "1f984c7be85100e5",
+        "heading": "MyCAA Spouse Scholarship",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.5226,
+        "metadata_boost": 0.02,
+        "final_score": 0.5426,
+        "text_preview": "MyCAA Spouse Scholarship The My Career Advancement Account (MyCAA) Scholarship Program is a career development and emplo"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "7427a23b4c7c4597",
+        "heading": "AERT 122 — Aerospace Safety and Quality",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.5014,
+        "metadata_boost": 0.02,
+        "final_score": 0.5214,
+        "text_preview": "AERT 122. Aerospace Safety and Quality 3 Credits (2+2P) Covers identiﬁcation of hazards, personal protective equipment, "
+      }
+    ]
+  },
+  {
+    "question_id": "adv_002",
+    "question": "How do I get an advisor?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "b7e78527429f04b0",
+        "heading": "glossary",
+        "content_source": "catalog",
+        "chunk_type": "glossary",
+        "hybrid_score": 0.75,
+        "metadata_boost": 0.08,
+        "final_score": 0.83,
+        "text_preview": "Advisor: A University employee who helps students make informed and responsible decisions in the pursuit of their academ"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/prospective-graduates.html#chunk-5",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.6243,
+        "metadata_boost": 0.0,
+        "final_score": 0.6243,
+        "text_preview": "If you will be much later, you are suggested to defer your admission semester because you may not be able to catch up yo"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/undergraduate-advising.html#chunk-4",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.6096,
+        "metadata_boost": 0.0,
+        "final_score": 0.6096,
+        "text_preview": "How do I complete my departmental mentoring?\nYou must arrange a meeting with your mentor, and then meet with them. Prior"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-3",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.5759,
+        "metadata_boost": 0.0,
+        "final_score": 0.5759,
+        "text_preview": "Decisions about TAs to new students are generally made at (1) the end of November for students that will start their fir"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-1",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.5609,
+        "metadata_boost": 0.0,
+        "final_score": 0.5609,
+        "text_preview": "Questions frequently asked by newly admitted students\nQ1 I am unable to begin my studies in the semester for which I was"
+      }
+    ]
+  },
+  {
+    "question_id": "adv_003",
+    "question": "As a Computer Science major, what advising am I required to get?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "16d9f6f83799bfca",
+        "heading": "Computer Science - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "degree_requirement",
+        "hybrid_score": 0.9142,
+        "metadata_boost": 0.28,
+        "final_score": 1.1942,
+        "text_preview": "The Bachelor of Science in Computer Science is the traditional undergraduate degree in Computer Science. It is rigorousl"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "6fb64bffef3e6e90",
+        "heading": "Computer Science - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "degree_core_requirement",
+        "hybrid_score": 0.8839,
+        "metadata_boost": 0.28,
+        "final_score": 1.1639,
+        "text_preview": "Computer Science - Bachelor of Science The Bachelor of Science in Computer Science is the traditional undergraduate degr"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "202f3d183e743b5d",
+        "heading": "Computer Science - Bachelor of Arts",
+        "content_source": "catalog",
+        "chunk_type": "degree_requirement",
+        "hybrid_score": 0.8838,
+        "metadata_boost": 0.28,
+        "final_score": 1.1638,
+        "text_preview": "The Bachelor of Arts in Computer Science is an open, flexible degree plan that offers the student both a rigorous underg"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "e03e64a89750695b",
+        "heading": "Computer Science (Computer Networking) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.8726,
+        "metadata_boost": 0.28,
+        "final_score": 1.1526,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G and ENGL 1110G . The content"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "ecc0329a35c1aae4",
+        "heading": "Computer Science (Human Computer Interaction) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.8397,
+        "metadata_boost": 0.28,
+        "final_score": 1.1197,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G Calculus and Analytic Geomet"
+      }
+    ]
+  },
+  {
+    "question_id": "avail_001",
+    "question": "What CS courses are commonly offered during summer sessions?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "https://computerscience.nmsu.edu/non-majors/learn-to-code.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "general",
+        "hybrid_score": 0.8135,
+        "metadata_boost": 0.1,
+        "final_score": 0.9135,
+        "text_preview": "We offer a variety of courses for non-majors to learn at least a little bit of programming (coding). Learning some progr"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "https://computerscience.nmsu.edu/non-majors/gen-ed.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "general",
+        "hybrid_score": 0.6494,
+        "metadata_boost": 0.1,
+        "final_score": 0.7494,
+        "text_preview": "Computer Science has one course that satisfies an Area 3 (Lab Sciences) requirement: CS 171G, Introduction to Computer S"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-1",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "course_schedule",
+        "hybrid_score": 0.6046,
+        "metadata_boost": 0.0,
+        "final_score": 0.6046,
+        "text_preview": "Three year course plan Three Year Course Rotation Table Course Title SP26 FA26 SP27 FA27 SP28 FA28 SP29 CSCI 1110 Comput"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "https://dataanalytics.nmsu.edu/courses/roadmap-fall.html#chunk-0",
+        "heading": "",
+        "content_source": "web",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.4833,
+        "metadata_boost": 0.0,
+        "final_score": 0.4833,
+        "text_preview": "Example study plan 1 Year 1 Fall semester (9 credits) C S 453 Python Programming I A ST 511 Statistical Methods for Data"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "course_schedule",
+        "hybrid_score": 0.4708,
+        "metadata_boost": 0.0,
+        "final_score": 0.4708,
+        "text_preview": "The table below is a three-year plan for course offerings, to help you in your course planning It will be updated each a"
+      }
+    ]
+  },
+  {
+    "question_id": "avail_002",
+    "question": "What CS courses will be offered next semester?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "https://computerscience.nmsu.edu/non-majors/learn-to-code.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "general",
+        "hybrid_score": 0.8323,
+        "metadata_boost": 0.1,
+        "final_score": 0.9323,
+        "text_preview": "We offer a variety of courses for non-majors to learn at least a little bit of programming (coding). Learning some progr"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "https://computerscience.nmsu.edu/non-majors/gen-ed.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "general",
+        "hybrid_score": 0.7495,
+        "metadata_boost": 0.1,
+        "final_score": 0.8495,
+        "text_preview": "Computer Science has one course that satisfies an Area 3 (Lab Sciences) requirement: CS 171G, Introduction to Computer S"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-5",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.7139,
+        "metadata_boost": 0.1,
+        "final_score": 0.8139,
+        "text_preview": "Questions frequently asked by current students\nQ101 How can I find my deficiencies ? A Please talk with the department g"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-1",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "course_schedule",
+        "hybrid_score": 0.7362,
+        "metadata_boost": 0.0,
+        "final_score": 0.7362,
+        "text_preview": "Three year course plan Three Year Course Rotation Table Course Title SP26 FA26 SP27 FA27 SP28 FA28 SP29 CSCI 1110 Comput"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "course_schedule",
+        "hybrid_score": 0.6398,
+        "metadata_boost": 0.0,
+        "final_score": 0.6398,
+        "text_preview": "The table below is a three-year plan for course offerings, to help you in your course planning It will be updated each a"
+      }
+    ]
+  },
+  {
+    "question_id": "avail_003",
+    "question": "When is the next time Algorithm Design & Implementation will be offered?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "ae3b5c5184016f32",
+        "heading": "CSCI 3790 — Algorithm Design & Implementation",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.9893,
+        "metadata_boost": 0.1,
+        "final_score": 1.0893,
+        "text_preview": "CSCI 3790. Algorithm Design & Implementation 3 Credits (3) Introduction to efﬁcient data structure and algorithm design."
+      },
+      {
+        "rank": 2,
+        "chunk_id": "903860a10b1cd1b1",
+        "heading": "CSCI 5110 — Data Structure and Algorithms Transition",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.832,
+        "metadata_boost": 0.02,
+        "final_score": 0.852,
+        "text_preview": "CSCI 5110. Data Structure and Algorithms Transition 3 Credits (3) Introduction to efﬁcient data structure and algorithm "
+      },
+      {
+        "rank": 3,
+        "chunk_id": "f42dc2c2db58315e",
+        "heading": "CSCI 3720 — Data Structures and Algorithms",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.7888,
+        "metadata_boost": 0.02,
+        "final_score": 0.8088,
+        "text_preview": "CSCI 3720. Data Structures and Algorithms 4 Credits (3+2P) Introduction to efﬁcient data structure and algorithm design."
+      },
+      {
+        "rank": 4,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-1",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "course_schedule",
+        "hybrid_score": 0.7206,
+        "metadata_boost": 0.0,
+        "final_score": 0.7206,
+        "text_preview": "Three year course plan Three Year Course Rotation Table Course Title SP26 FA26 SP27 FA27 SP28 FA28 SP29 CSCI 1110 Comput"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "2dab29f94b26c843",
+        "heading": "CSCI 5505 — Analysis of Algorithms",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6887,
+        "metadata_boost": 0.02,
+        "final_score": 0.7087,
+        "text_preview": "CSCI 5505. Analysis of Algorithms 3 Credits (3) Techniques for design and analysis of algorithms; time and space complex"
+      }
+    ]
+  },
+  {
+    "question_id": "avail_004",
+    "question": "When is the next time CSCI 4120 will be offered?",
+    "top5": [
+      {
+        "rank": 2,
+        "chunk_id": "b6698dedb6cd09ea",
+        "heading": "CSCI 4120 — Operating Systems I",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.7396,
+        "metadata_boost": 0.2,
+        "final_score": 0.9396,
+        "text_preview": "CSCI 4120. Operating Systems I 3 Credits (3) Operating system principles and structures, and interactions with architect"
+      },
+      {
+        "rank": 1,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-1",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "course_schedule",
+        "hybrid_score": 0.8369,
+        "metadata_boost": 0.1,
+        "final_score": 0.9369,
+        "text_preview": "Three year course plan Three Year Course Rotation Table Course Title SP26 FA26 SP27 FA27 SP28 FA28 SP29 CSCI 1110 Comput"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "34d5d402e6da95fe",
+        "heading": "CSCI 4525 — Python Programming II",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6325,
+        "metadata_boost": 0.2,
+        "final_score": 0.8325,
+        "text_preview": "CSCI 4525. Python Programming II 3 Credits (3) This course covers advanced Python programming, including classes, object"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "903860a10b1cd1b1",
+        "heading": "CSCI 5110 — Data Structure and Algorithms Transition",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6301,
+        "metadata_boost": 0.2,
+        "final_score": 0.8301,
+        "text_preview": "CSCI 5110. Data Structure and Algorithms Transition 3 Credits (3) Introduction to efﬁcient data structure and algorithm "
+      },
+      {
+        "rank": 5,
+        "chunk_id": "af405801c432e912",
+        "heading": "CSCI 4996 — Special Topics",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6007,
+        "metadata_boost": 0.2,
+        "final_score": 0.8007,
+        "text_preview": "CSCI 4996. Special Topics 1,12 Credits Topics announced in the Schedule of Classes. May be repeated up to 12 credits. Le"
+      }
+    ]
+  },
+  {
+    "question_id": "avail_005",
+    "question": "When is the next opportunity to take Algorithm Design and Implementation?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "ae3b5c5184016f32",
+        "heading": "CSCI 3790 — Algorithm Design & Implementation",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.9635,
+        "metadata_boost": 0.1,
+        "final_score": 1.0635,
+        "text_preview": "CSCI 3790. Algorithm Design & Implementation 3 Credits (3) Introduction to efﬁcient data structure and algorithm design."
+      },
+      {
+        "rank": 2,
+        "chunk_id": "903860a10b1cd1b1",
+        "heading": "CSCI 5110 — Data Structure and Algorithms Transition",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.7381,
+        "metadata_boost": 0.1,
+        "final_score": 0.8381,
+        "text_preview": "CSCI 5110. Data Structure and Algorithms Transition 3 Credits (3) Introduction to efﬁcient data structure and algorithm "
+      },
+      {
+        "rank": 3,
+        "chunk_id": "f42dc2c2db58315e",
+        "heading": "CSCI 3720 — Data Structures and Algorithms",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6883,
+        "metadata_boost": 0.1,
+        "final_score": 0.7883,
+        "text_preview": "CSCI 3720. Data Structures and Algorithms 4 Credits (3+2P) Introduction to efﬁcient data structure and algorithm design."
+      },
+      {
+        "rank": 5,
+        "chunk_id": "ea4af725efa52048",
+        "heading": "Computer Science (Algorithm Theory) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "concentration_requirement",
+        "hybrid_score": 0.5799,
+        "metadata_boost": 0.18,
+        "final_score": 0.7599,
+        "text_preview": "Computer Science (Algorithm Theory) - Bachelor of Science The speciﬁc requirements for the concentration in Algorithm Th"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "2dab29f94b26c843",
+        "heading": "CSCI 5505 — Analysis of Algorithms",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6323,
+        "metadata_boost": 0.02,
+        "final_score": 0.6523,
+        "text_preview": "CSCI 5505. Analysis of Algorithms 3 Credits (3) Techniques for design and analysis of algorithms; time and space complex"
+      }
+    ]
+  },
+  {
+    "question_id": "avail_006",
+    "question": "Is the Operating Systems course offered every semester?",
+    "top5": [
+      {
+        "rank": 2,
+        "chunk_id": "3242ba8044c246a3",
+        "heading": "OECS 125 — Operating Systems",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.9128,
+        "metadata_boost": 0.1,
+        "final_score": 1.0128,
+        "text_preview": "OECS 125. Operating Systems 1-3 Credits Installation, conﬁguration and optimization of current operating systems. Restri"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "3edcebc2d7117ae6",
+        "heading": "CSCI 5605 — Operating Systems II",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.841,
+        "metadata_boost": 0.1,
+        "final_score": 0.941,
+        "text_preview": "CSCI 5605. Operating Systems II 3 Credits (3) Advanced topics related to operating system principles, guided by the curr"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "b6698dedb6cd09ea",
+        "heading": "CSCI 4120 — Operating Systems I",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.8365,
+        "metadata_boost": 0.1,
+        "final_score": 0.9365,
+        "text_preview": "CSCI 4120. Operating Systems I 3 Credits (3) Operating system principles and structures, and interactions with architect"
+      },
+      {
+        "rank": 1,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-1",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "course_schedule",
+        "hybrid_score": 0.9307,
+        "metadata_boost": 0.0,
+        "final_score": 0.9307,
+        "text_preview": "Three year course plan Three Year Course Rotation Table Course Title SP26 FA26 SP27 FA27 SP28 FA28 SP29 CSCI 1110 Comput"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "25f48cd085e9007a",
+        "heading": "OECS 204 — Linux Operating System",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6909,
+        "metadata_boost": 0.1,
+        "final_score": 0.7909,
+        "text_preview": "OECS 204. Linux Operating System 1-3 Credits Install and conﬁgure the Linux operating system on X86 systems. Covers issu"
+      }
+    ]
+  },
+  {
+    "question_id": "avail_007",
+    "question": "On what schedule will CHEM 1215G be offered this Summer?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "59d7aef743391091",
+        "heading": "CHEM 1121 — General Supplemental Instruction I",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.9273,
+        "metadata_boost": 0.2,
+        "final_score": 1.1273,
+        "text_preview": "CHEM 1121. General Supplemental Instruction I 1 Credit (1) Collaborative workshop for students in General Chemistry I. C"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "7e332ec4545edf80",
+        "heading": "CHEM 1215G — General Chemistry I Lecture and Laboratory for STEM",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.9169,
+        "metadata_boost": 0.2,
+        "final_score": 1.1169,
+        "text_preview": "CHEM 1215G. General Chemistry I Lecture and Laboratory for STEM Majors 4 Credits (3+3P) This course covers descriptive a"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "59f61038446f7d43",
+        "heading": "CHEM 1225G — General Chemistry II Lecture and Laboratory for STEM",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.8126,
+        "metadata_boost": 0.2,
+        "final_score": 1.0126,
+        "text_preview": "CHEM 1225G. General Chemistry II Lecture and Laboratory for STEM Majors 4 Credits (3+3P) This course is intended to serv"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "5b26204b2cac6336",
+        "heading": "CHEM 1111 — Basic Chemistry",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.7209,
+        "metadata_boost": 0.2,
+        "final_score": 0.9209,
+        "text_preview": "CHEM 1111. Basic Chemistry 3 Credits (3) For students whose preparatory science or math training has been deﬁcient. Does"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "f66399f1c6a0e4a8",
+        "heading": "CHEM 451 — Special Topics",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6959,
+        "metadata_boost": 0.2,
+        "final_score": 0.8959,
+        "text_preview": "CHEM 451. Special Topics 1-3 Credits Speciﬁc subjects to be announced in the Schedule of Classes. May be repeated for a "
+      }
+    ]
+  },
+  {
+    "question_id": "avail_008",
+    "question": "I would like to take Calculus based Physics this Fall. Are seats still available?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "9b70a93a275077ee",
+        "heading": "PHYS 1321 — Problems in Calculus-Based Physics II",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.9311,
+        "metadata_boost": 0.1,
+        "final_score": 1.0311,
+        "text_preview": "PHYS 1321. Problems in Calculus-Based Physics II 0.5-1 Credits (.5-1) This is a supplemental course for Calculus-based P"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "85703cf54e41893f",
+        "heading": "PHYS 1310L — Calculus -Based Physics I Lab",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.9223,
+        "metadata_boost": 0.1,
+        "final_score": 1.0223,
+        "text_preview": "PHYS 1310L. Calculus -Based Physics I Lab 1 Credit (3P) A series of laboratory experiments associated with the material "
+      },
+      {
+        "rank": 3,
+        "chunk_id": "798c215503b3ee87",
+        "heading": "PHYS 1310G — Calculus -Based Physics I",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.9202,
+        "metadata_boost": 0.1,
+        "final_score": 1.0202,
+        "text_preview": "PHYS 1310G. Calculus -Based Physics I 3 Credits (3) A calculus level treatment of classical mechanics and waves, which i"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "95a187786a7d5bc0",
+        "heading": "PHYS 1320L — Calculus -Based Physics II Lab",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.9198,
+        "metadata_boost": 0.1,
+        "final_score": 1.0198,
+        "text_preview": "PHYS 1320L. Calculus -Based Physics II Lab 1 Credit (3P) A series of Laboratory experiments associated with the material"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "b3eb49e5eb41785a",
+        "heading": "PHYS 1311 — Problems in Calculus-Based Physics I",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.8936,
+        "metadata_boost": 0.1,
+        "final_score": 0.9936,
+        "text_preview": "PHYS 1311. Problems in Calculus-Based Physics I 0.5-1 Credits (.5-1) This is a supplemental course for Calculus-based Ph"
+      }
+    ]
+  },
+  {
+    "question_id": "avail_009",
+    "question": "Is COMM 115G offered every semester?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "e13dce243b5ea199",
+        "heading": "COMM 1115G — Introduction to Communication",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.9327,
+        "metadata_boost": 0.2,
+        "final_score": 1.1327,
+        "text_preview": "COMM 1115G. Introduction to Communication 3 Credits (1+2P) This survey course introduces the principles of communication"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "a5f2485805225ee4",
+        "heading": "COMM 2997 — Independent Study",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.5751,
+        "metadata_boost": 0.2,
+        "final_score": 0.7751,
+        "text_preview": "COMM 2997. Independent Study 1-3 Credits (1-3) Individualized, self-paced projects for students with a special interest "
+      },
+      {
+        "rank": 3,
+        "chunk_id": "dc45334ef1e78314",
+        "heading": "COMM 4520 — Small Group Communication",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.5484,
+        "metadata_boost": 0.2,
+        "final_score": 0.7484,
+        "text_preview": "COMM 4520. Small Group Communication 3 Credits (3) Principles and methods of modern group discussion with emphasis on th"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "1ebbed47f61d0ea8",
+        "heading": "COMM 4997 — Independent Study",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.5475,
+        "metadata_boost": 0.2,
+        "final_score": 0.7475,
+        "text_preview": "COMM 4997. Independent Study 1-3 Credits (1-3) Individualized, self-paced projects for advanced students. Students must "
+      },
+      {
+        "rank": 5,
+        "chunk_id": "85c8b02a12ae8eb2",
+        "heading": "COMM 1130G — Public Speaking",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.5073,
+        "metadata_boost": 0.2,
+        "final_score": 0.7073,
+        "text_preview": "COMM 1130G. Public Speaking 3 Credits (3) This course introduces the theory and fundamental principles of public speakin"
+      }
+    ]
+  },
+  {
+    "question_id": "req_001",
+    "question": "What are Viewing a Wider World Requirements?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "14f0a41f77e90fb4",
+        "heading": "Cybersecurity - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "degree_requirement",
+        "hybrid_score": 0.9595,
+        "metadata_boost": 0.02,
+        "final_score": 0.9795,
+        "text_preview": "Students must complete all University degree requirements, which include: General Education requirements, Viewing a Wide"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "e838183b8675f8ce",
+        "heading": "HNRS 318V — The World of Cinema",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6852,
+        "metadata_boost": 0.1,
+        "final_score": 0.7852,
+        "text_preview": "HNRS 318V. The World of Cinema 3 Credits (3) Appreciation of the art of motion pictures as world-wide medium speciﬁc to "
+      },
+      {
+        "rank": 3,
+        "chunk_id": "6adb8ef2428a006b",
+        "heading": "Military Experience Waiver",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.5108,
+        "metadata_boost": 0.02,
+        "final_score": 0.5308,
+        "text_preview": "Military Experience Waiver Before graduating, during the student's junior and/or senior year, NMSU students are required"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "d8064a2445b71a83",
+        "heading": "Computer Science (Secondary Education) - Bachelor of Arts",
+        "content_source": "catalog",
+        "chunk_type": "degree_requirement",
+        "hybrid_score": 0.4023,
+        "metadata_boost": 0.12,
+        "final_score": 0.5223,
+        "text_preview": "The Bachelor of Arts in Computer Science is an open, flexible degree plan that offers the student both a rigorous underg"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "3b7ea913edbaf8f6",
+        "heading": "Second Baccalaureate Degree (Bachelor's Degree)",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.41,
+        "metadata_boost": 0.02,
+        "final_score": 0.43,
+        "text_preview": "Second Baccalaureate Degree (Bachelor's Degree) Students seeking a second bachelor’s degree must complete all college, d"
+      }
+    ]
+  },
+  {
+    "question_id": "req_002",
+    "question": "Does the History of Food course contribute to my general education requirements?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "11d461f88355b84f",
+        "heading": "HIST 308V — The History of Food",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.9254,
+        "metadata_boost": 0.1,
+        "final_score": 1.0254,
+        "text_preview": "HIST 308V. The History of Food 3 Credits (3) From the earliest uses of ﬁre for cooking up through our modern age of fast"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "8bd020f0229b2747",
+        "heading": "AEEC 3110V — World Agriculture and Food Problems",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6309,
+        "metadata_boost": 0.1,
+        "final_score": 0.7309,
+        "text_preview": "AEEC 3110V. World Agriculture and Food Problems 3 Credits (3) This course examines key concepts and issues relevant to t"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "359eef9827eec06b",
+        "heading": "HIST 523 — The History of Food",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6163,
+        "metadata_boost": 0.1,
+        "final_score": 0.7163,
+        "text_preview": "HIST 523. The History of Food 3 Credits (3) Considers the history of the production and consumption of food in the West "
+      },
+      {
+        "rank": 4,
+        "chunk_id": "aaf3744c705bb910",
+        "heading": "SOCI 3635V — Food and Society",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.5108,
+        "metadata_boost": 0.1,
+        "final_score": 0.6108,
+        "text_preview": "SOCI 3635V. Food and Society 3 Credits (3) This course explores how food and food products are produced, prepared, and c"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "fd9612a1c4061d47",
+        "heading": "AEEC 5140 — Agricultural Policy",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.4159,
+        "metadata_boost": 0.02,
+        "final_score": 0.4359,
+        "text_preview": "AEEC 5140. Agricultural Policy 3 Credits (3) Historical and cultural background of food and agricultural policy in the U"
+      }
+    ]
+  },
+  {
+    "question_id": "req_003",
+    "question": "Can I take the course about death and dying to get credits toward my VWW requirements?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "b0c68a3e33ff70b2",
+        "heading": "SOCI 2261 — Issues in Death and Dying",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 1.0,
+        "metadata_boost": 0.1,
+        "final_score": 1.1,
+        "text_preview": "SOCI 2261. Issues in Death and Dying 3 Credits (3) Major personal and social issues related to the process of dying in o"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "0890848590a16aae",
+        "heading": "PHLS 4650 — Coping with Loss and Grief: A Cross-Cultural Perspective",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.5192,
+        "metadata_boost": 0.1,
+        "final_score": 0.6192,
+        "text_preview": "PHLS 4650. Coping with Loss and Grief: A Cross-Cultural Perspective 3 Credits (3) A cross-cultural perspective to death,"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "6fdbd4edfae77aa7",
+        "heading": "PHLS 5650 — Coping with Loss and Grief: A Cross-Cultural Perspective",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.4831,
+        "metadata_boost": 0.1,
+        "final_score": 0.5831,
+        "text_preview": "PHLS 5650. Coping with Loss and Grief: A Cross-Cultural Perspective 3 Credits (3) A cross-cultural perspective to death,"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "fd685d8a940401fd",
+        "heading": "SOWK 5994 — Final Exit Project",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.4301,
+        "metadata_boost": 0.02,
+        "final_score": 0.4501,
+        "text_preview": "SOWK 5994. Final Exit Project 1 Credit (1) Final Exit Project. This 1-credit course is the School of Social Work’s compe"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "470704c783793ab5",
+        "heading": "CEPY 5150 — The Art & Science of Mindfulness for Helping Professionals",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.2508,
+        "metadata_boost": 0.1,
+        "final_score": 0.3508,
+        "text_preview": "CEPY 5150. The Art & Science of Mindfulness for Helping Professionals 1-3 Credits (1-3) In this course students will lea"
+      }
+    ]
+  },
+  {
+    "question_id": "req_004",
+    "question": "What are the General Education requirements for undergraduates?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "35b87bcfa4e68b97",
+        "heading": "glossary",
+        "content_source": "catalog",
+        "chunk_type": "glossary",
+        "hybrid_score": 0.7996,
+        "metadata_boost": 0.08,
+        "final_score": 0.8796,
+        "text_preview": "G General Education (GE): A program of courses that provides students with a broad educational experience. Courses are t"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "d8064a2445b71a83",
+        "heading": "Computer Science (Secondary Education) - Bachelor of Arts",
+        "content_source": "catalog",
+        "chunk_type": "degree_requirement",
+        "hybrid_score": 0.578,
+        "metadata_boost": 0.18,
+        "final_score": 0.758,
+        "text_preview": "The Bachelor of Arts in Computer Science is an open, flexible degree plan that offers the student both a rigorous underg"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "758a8cf629f64251",
+        "heading": "glossary",
+        "content_source": "catalog",
+        "chunk_type": "glossary",
+        "hybrid_score": 0.5958,
+        "metadata_boost": 0.08,
+        "final_score": 0.6758,
+        "text_preview": "General Education (GE) Certiﬁcation: An ofﬁcial transcript notation verifying that a student has completed courses satis"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "14f0a41f77e90fb4",
+        "heading": "Cybersecurity - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "degree_requirement",
+        "hybrid_score": 0.5601,
+        "metadata_boost": 0.1,
+        "final_score": 0.6601,
+        "text_preview": "Students must complete all University degree requirements, which include: General Education requirements, Viewing a Wide"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "6dab9a83dbf6179c",
+        "heading": "Basic Academic Skills",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.6151,
+        "metadata_boost": 0.02,
+        "final_score": 0.6351,
+        "text_preview": "Basic Academic Skills All undergraduate students must demonstrate Basic Academic Skills in both English and mathematics "
+      }
+    ]
+  },
+  {
+    "question_id": "req_005",
+    "question": "In which year of my studies should I be taking courses to meet the Viewing the Wider World requirements?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "14f0a41f77e90fb4",
+        "heading": "Cybersecurity - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "degree_requirement",
+        "hybrid_score": 0.9403,
+        "metadata_boost": 0.28,
+        "final_score": 1.2203,
+        "text_preview": "Students must complete all University degree requirements, which include: General Education requirements, Viewing a Wide"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "80a28b47eeacb905",
+        "heading": "Cybersecurity - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.7032,
+        "metadata_boost": 0.28,
+        "final_score": 0.9832,
+        "text_preview": "A Suggested Plan of Study For Students This roadmap assumes student placement in MATH 1511G Calculus and Analytic Geomet"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "46ca071638ec0fc8",
+        "heading": "Computer Science (Software Development) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.5379,
+        "metadata_boost": 0.18,
+        "final_score": 0.7179,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G Calculus and Analytic Geomet"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "38523fd8f6fa217f",
+        "heading": "Computer Science (Cybersecurity) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.5178,
+        "metadata_boost": 0.18,
+        "final_score": 0.6978,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G Calculus and Analytic Geomet"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "ecc0329a35c1aae4",
+        "heading": "Computer Science (Human Computer Interaction) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.5169,
+        "metadata_boost": 0.18,
+        "final_score": 0.6969,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G Calculus and Analytic Geomet"
+      }
+    ]
+  },
+  {
+    "question_id": "req_006",
+    "question": "What math courses can I take to meet my VWW requirements?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "14f0a41f77e90fb4",
+        "heading": "Cybersecurity - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "degree_requirement",
+        "hybrid_score": 0.8558,
+        "metadata_boost": 0.12,
+        "final_score": 0.9758,
+        "text_preview": "Students must complete all University degree requirements, which include: General Education requirements, Viewing a Wide"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "80a28b47eeacb905",
+        "heading": "Cybersecurity - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.8448,
+        "metadata_boost": 0.12,
+        "final_score": 0.9648,
+        "text_preview": "A Suggested Plan of Study For Students This roadmap assumes student placement in MATH 1511G Calculus and Analytic Geomet"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "46ca071638ec0fc8",
+        "heading": "Computer Science (Software Development) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.6822,
+        "metadata_boost": 0.12,
+        "final_score": 0.8022,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G Calculus and Analytic Geomet"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "38523fd8f6fa217f",
+        "heading": "Computer Science (Cybersecurity) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.6771,
+        "metadata_boost": 0.12,
+        "final_score": 0.7971,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G Calculus and Analytic Geomet"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "ecc0329a35c1aae4",
+        "heading": "Computer Science (Human Computer Interaction) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.6765,
+        "metadata_boost": 0.12,
+        "final_score": 0.7965,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G Calculus and Analytic Geomet"
+      }
+    ]
+  },
+  {
+    "question_id": "req_007",
+    "question": "What is the difference between the BS in Cybersecurity and a BS in Human Computer Interaction?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "d77f0feecfc6884d",
+        "heading": "Computer Science (Human Computer Interaction) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "concentration_requirement",
+        "hybrid_score": 1.0,
+        "metadata_boost": 0.18,
+        "final_score": 1.18,
+        "text_preview": "Computer Science (Human Computer Interaction) - Bachelor of Science The speciﬁc requirements for the concentration in Hu"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "482e154e99b5dc92",
+        "heading": "Computer Science (Cybersecurity) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "concentration_requirement",
+        "hybrid_score": 0.6868,
+        "metadata_boost": 0.18,
+        "final_score": 0.8668,
+        "text_preview": "Computer Science (Cybersecurity) - Bachelor of Science The speciﬁc requirements for the concentration in Cybersecurity 8"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/undergraduate-degrees.html#chunk-1",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "degree_overview",
+        "hybrid_score": 0.6427,
+        "metadata_boost": 0.0,
+        "final_score": 0.6427,
+        "text_preview": "How to Select Between the B.S and B.A.?\nThe B.S in Computer Science is the traditional computer science degree program, "
+      },
+      {
+        "rank": 5,
+        "chunk_id": "39d90ff368d0d0dc",
+        "heading": "CSCI 4250 — Human-Centered Computing",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.5394,
+        "metadata_boost": 0.1,
+        "final_score": 0.6394,
+        "text_preview": "CSCI 4250. Human-Centered Computing 3 Credits (3) Covers iterative, human-centered interface design, including prototypi"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "0fe5a3b38b294532",
+        "heading": "SCI 4250 — Requires more advanced graduate work than CSCI 4250 with",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.5966,
+        "metadata_boost": 0.02,
+        "final_score": 0.6166,
+        "text_preview": "SCI 4250. Requires more advanced graduate work than CSCI 4250 with an emphasis on studying recent research in human-comp"
+      }
+    ]
+  },
+  {
+    "question_id": "req_008",
+    "question": "Is Computer Security/CSCI 4205 required for a CS minor?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "2eb0733f90bc7c3e",
+        "heading": "Computer Systems - Undergraduate Minor",
+        "content_source": "catalog",
+        "chunk_type": "minor_requirement",
+        "hybrid_score": 1.0,
+        "metadata_boost": 0.28,
+        "final_score": 1.28,
+        "text_preview": "Computer Systems - Undergraduate Minor Preﬁx Title Credits Required Courses CSCI 1720 Computer Science I 0,4 CSCI 2210 O"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "b1a889c06156e3e9",
+        "heading": "Computer Science - Graduate Minor",
+        "content_source": "catalog",
+        "chunk_type": "minor_requirement",
+        "hybrid_score": 0.8275,
+        "metadata_boost": 0.28,
+        "final_score": 1.1075,
+        "text_preview": "Computer Science - Graduate Minor Students who wish to take a minor in Computer Science will need to accumulate a minimu"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "df872e79162198e8",
+        "heading": "Software Development - Undergraduate Minor",
+        "content_source": "catalog",
+        "chunk_type": "minor_requirement",
+        "hybrid_score": 0.8048,
+        "metadata_boost": 0.28,
+        "final_score": 1.0848,
+        "text_preview": "Software Development - Undergraduate Minor Preﬁx Title Credits Required Courses CSCI 1720 Computer Science I 0,4 CSCI 22"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "482e154e99b5dc92",
+        "heading": "Computer Science (Cybersecurity) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "concentration_requirement",
+        "hybrid_score": 0.7782,
+        "metadata_boost": 0.28,
+        "final_score": 1.0582,
+        "text_preview": "Computer Science (Cybersecurity) - Bachelor of Science The speciﬁc requirements for the concentration in Cybersecurity 8"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "e03e64a89750695b",
+        "heading": "Computer Science (Computer Networking) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.6048,
+        "metadata_boost": 0.28,
+        "final_score": 0.8848,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G and ENGL 1110G . The content"
+      }
+    ]
+  },
+  {
+    "question_id": "req_009",
+    "question": "Must I take a course in Biology to get a BS in CS?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "16d9f6f83799bfca",
+        "heading": "Computer Science - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "degree_requirement",
+        "hybrid_score": 0.9293,
+        "metadata_boost": 0.2,
+        "final_score": 1.1293,
+        "text_preview": "The Bachelor of Science in Computer Science is the traditional undergraduate degree in Computer Science. It is rigorousl"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "6fb64bffef3e6e90",
+        "heading": "Computer Science - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "degree_core_requirement",
+        "hybrid_score": 0.8541,
+        "metadata_boost": 0.2,
+        "final_score": 1.0541,
+        "text_preview": "Computer Science - Bachelor of Science The Bachelor of Science in Computer Science is the traditional undergraduate degr"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "61024f0564e7f4cb",
+        "heading": "Bioinformatics - Undergraduate Minor",
+        "content_source": "catalog",
+        "chunk_type": "minor_requirement",
+        "hybrid_score": 0.8677,
+        "metadata_boost": 0.12,
+        "final_score": 0.9877,
+        "text_preview": "Bioinformatics - Undergraduate Minor Preﬁx Title Credits Required Courses BIOL 2110G Principles of Biology: Cellular and"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "118ed2b476025933",
+        "heading": "Computer Science - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.703,
+        "metadata_boost": 0.2,
+        "final_score": 0.903,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G Calculus and Analytic Geomet"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "https://computerscience.nmsu.edu/non-majors/gen-ed.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "general",
+        "hybrid_score": 0.6991,
+        "metadata_boost": 0.1,
+        "final_score": 0.7991,
+        "text_preview": "Computer Science has one course that satisfies an Area 3 (Lab Sciences) requirement: CS 171G, Introduction to Computer S"
+      }
+    ]
+  },
+  {
+    "question_id": "req_010",
+    "question": "Which statistics course is required for Computer Science majors?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "e03e64a89750695b",
+        "heading": "Computer Science (Computer Networking) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.9635,
+        "metadata_boost": 0.18,
+        "final_score": 1.1435,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G and ENGL 1110G . The content"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "ecc0329a35c1aae4",
+        "heading": "Computer Science (Human Computer Interaction) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.961,
+        "metadata_boost": 0.18,
+        "final_score": 1.141,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G Calculus and Analytic Geomet"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "16d9f6f83799bfca",
+        "heading": "Computer Science - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "degree_requirement",
+        "hybrid_score": 0.9401,
+        "metadata_boost": 0.18,
+        "final_score": 1.1201,
+        "text_preview": "The Bachelor of Science in Computer Science is the traditional undergraduate degree in Computer Science. It is rigorousl"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "38523fd8f6fa217f",
+        "heading": "Computer Science (Cybersecurity) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.9308,
+        "metadata_boost": 0.18,
+        "final_score": 1.1108,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G Calculus and Analytic Geomet"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "46ca071638ec0fc8",
+        "heading": "Computer Science (Software Development) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.9184,
+        "metadata_boost": 0.18,
+        "final_score": 1.0984,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G Calculus and Analytic Geomet"
+      }
+    ]
+  },
+  {
+    "question_id": "req_011",
+    "question": "I am in my second semester in computer science this Fall. I need to take an English general education course. Which are offered?",
+    "top5": [
+      {
+        "rank": 5,
+        "chunk_id": "d8064a2445b71a83",
+        "heading": "Computer Science (Secondary Education) - Bachelor of Arts",
+        "content_source": "catalog",
+        "chunk_type": "degree_requirement",
+        "hybrid_score": 0.7972,
+        "metadata_boost": 0.28,
+        "final_score": 1.0772,
+        "text_preview": "The Bachelor of Arts in Computer Science is an open, flexible degree plan that offers the student both a rigorous underg"
+      },
+      {
+        "rank": 1,
+        "chunk_id": "ecc0329a35c1aae4",
+        "heading": "Computer Science (Human Computer Interaction) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.8216,
+        "metadata_boost": 0.18,
+        "final_score": 1.0016,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G Calculus and Analytic Geomet"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "e03e64a89750695b",
+        "heading": "Computer Science (Computer Networking) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.8161,
+        "metadata_boost": 0.18,
+        "final_score": 0.9961,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G and ENGL 1110G . The content"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "38523fd8f6fa217f",
+        "heading": "Computer Science (Cybersecurity) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.8039,
+        "metadata_boost": 0.18,
+        "final_score": 0.9839,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G Calculus and Analytic Geomet"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "46ca071638ec0fc8",
+        "heading": "Computer Science (Software Development) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.8011,
+        "metadata_boost": 0.18,
+        "final_score": 0.9811,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G Calculus and Analytic Geomet"
+      }
+    ]
+  },
+  {
+    "question_id": "desc_001",
+    "question": "What computer science courses address computing ethics and governance?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "2dd3ef533673839b",
+        "heading": "CSCI 4110 — Computing Ethics and Social Implications of Computing",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.8553,
+        "metadata_boost": 0.1,
+        "final_score": 0.9553,
+        "text_preview": "CSCI 4110. Computing Ethics and Social Implications of Computing 1 Credit (1) An overview of ethics for computing majors"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "e03e64a89750695b",
+        "heading": "Computer Science (Computer Networking) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.4048,
+        "metadata_boost": 0.18,
+        "final_score": 0.5848,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G and ENGL 1110G . The content"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "16d9f6f83799bfca",
+        "heading": "Computer Science - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "degree_requirement",
+        "hybrid_score": 0.4037,
+        "metadata_boost": 0.18,
+        "final_score": 0.5837,
+        "text_preview": "The Bachelor of Science in Computer Science is the traditional undergraduate degree in Computer Science. It is rigorousl"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "6fb64bffef3e6e90",
+        "heading": "Computer Science - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "degree_core_requirement",
+        "hybrid_score": 0.3999,
+        "metadata_boost": 0.18,
+        "final_score": 0.5799,
+        "text_preview": "Computer Science - Bachelor of Science The Bachelor of Science in Computer Science is the traditional undergraduate degr"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "https://computerscience.nmsu.edu/non-majors/gen-ed.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "general",
+        "hybrid_score": 0.4115,
+        "metadata_boost": 0.0,
+        "final_score": 0.4115,
+        "text_preview": "Computer Science has one course that satisfies an Area 3 (Lab Sciences) requirement: CS 171G, Introduction to Computer S"
+      }
+    ]
+  },
+  {
+    "question_id": "desc_002",
+    "question": "What undergraduate courses have content related to artificial intelligence?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "2a0530dddd6f6cec",
+        "heading": "Computer Science (Artificial Intelligence) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "concentration_requirement",
+        "hybrid_score": 0.9928,
+        "metadata_boost": 0.18,
+        "final_score": 1.1728,
+        "text_preview": "Computer Science (Artificial Intelligence) - Bachelor of Science The speciﬁc requirements for the concentration in Artiﬁ"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "76e4efb6262255a4",
+        "heading": "ACCT 558 — Artiﬁcial Intelligence in Accounting",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.778,
+        "metadata_boost": 0.18,
+        "final_score": 0.958,
+        "text_preview": "ACCT 558. Artiﬁcial Intelligence in Accounting 3 Credits (3) This course covers the concepts and applications of artiﬁci"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "44937f92bc9fa4e3",
+        "heading": "CSCI 5405 — Artiﬁcial Intelligence I",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.7461,
+        "metadata_boost": 0.1,
+        "final_score": 0.8461,
+        "text_preview": "CSCI 5405. Artiﬁcial Intelligence I 3 Credits (3) Fundamental principles and techniques in artiﬁcial intelligence system"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "2303438dd0ecb518",
+        "heading": "CSCI 5750 — Artiﬁcial Intelligence II",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.7185,
+        "metadata_boost": 0.1,
+        "final_score": 0.8185,
+        "text_preview": "CSCI 5750. Artiﬁcial Intelligence II 3 Credits (3) Covers advanced theory and application of artiﬁcial intelligence. Con"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "96ed44c75c847eb2",
+        "heading": "CSCI 4440 — Generative Artiﬁcial Intelligence",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.5808,
+        "metadata_boost": 0.18,
+        "final_score": 0.7608,
+        "text_preview": "CSCI 4440. Generative Artiﬁcial Intelligence 3 Credits (3) Covers the theory and applications of generative artiﬁcial in"
+      }
+    ]
+  },
+  {
+    "question_id": "desc_003",
+    "question": "What is MATH 1521H?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "98136436c2e9d589",
+        "heading": "MATH 1531H — Introduction to Higher Mathematics Honors",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.8883,
+        "metadata_boost": 0.2,
+        "final_score": 1.0883,
+        "text_preview": "MATH 1531H. Introduction to Higher Mathematics Honors 3 Credits (3) Logic; sets, relations, and functions; introduction "
+      },
+      {
+        "rank": 2,
+        "chunk_id": "bbecc6941f192ada",
+        "heading": "MATH 1521H — Calculus and Analytic Geometry II Honors",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.8786,
+        "metadata_boost": 0.2,
+        "final_score": 1.0786,
+        "text_preview": "MATH 1521H. Calculus and Analytic Geometry II Honors 4 Credits (4) A more advanced treatment of the material of MATH 152"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "41dc17123b095ec3",
+        "heading": "MATH 1531 — Introduction to Higher Mathematics",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.7867,
+        "metadata_boost": 0.2,
+        "final_score": 0.9867,
+        "text_preview": "MATH 1531. Introduction to Higher Mathematics 3 Credits (3) Logic; sets, relations, and functions; introduction to mathe"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "e364e0dd2bc81c34",
+        "heading": "MATH 2415 — Introduction to Linear Algebra",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.5835,
+        "metadata_boost": 0.2,
+        "final_score": 0.7835,
+        "text_preview": "MATH 2415. Introduction to Linear Algebra 3 Credits (3) Systems of equations, matrices, vector spaces and linear transfo"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "fa6b9a0ac5fafa88",
+        "heading": "MATH 1511H — Calculus and Analytic Geometry I Honors",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.5832,
+        "metadata_boost": 0.2,
+        "final_score": 0.7832,
+        "text_preview": "MATH 1511H. Calculus and Analytic Geometry I Honors 4 Credits (4) Limits and continuity, theory and computation of deriv"
+      }
+    ]
+  },
+  {
+    "question_id": "desc_004",
+    "question": "What is the difference between the Practical Programming and Software Development courses?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "d15a83ecc9c69fc0",
+        "heading": "CSCI 2410 — Practical Programming",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.9076,
+        "metadata_boost": 0.1,
+        "final_score": 1.0076,
+        "text_preview": "CSCI 2410. Practical Programming 2 Credits (1+1P) A hands-on dive into practical programming skills development. Student"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "df872e79162198e8",
+        "heading": "Software Development - Undergraduate Minor",
+        "content_source": "catalog",
+        "chunk_type": "minor_requirement",
+        "hybrid_score": 0.6666,
+        "metadata_boost": 0.18,
+        "final_score": 0.8466,
+        "text_preview": "Software Development - Undergraduate Minor Preﬁx Title Credits Required Courses CSCI 1720 Computer Science I 0,4 CSCI 22"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "59c0aab961329a69",
+        "heading": "CSCI 4575 — Software Development Transition",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.713,
+        "metadata_boost": 0.1,
+        "final_score": 0.813,
+        "text_preview": "CSCI 4575. Software Development Transition 3 Credits (3) Software speciﬁcation, design, testing, maintenance, documentat"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "eeaf6086e70999b1",
+        "heading": "CSCI 3710 — Software Development",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6911,
+        "metadata_boost": 0.1,
+        "final_score": 0.7911,
+        "text_preview": "CSCI 3710. Software Development 4 Credits (3+2P) Software speciﬁcation, design, testing, maintenance, documentation; inf"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "b6b8908b227df7c3",
+        "heading": "Computer Science (Software Development) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "concentration_requirement",
+        "hybrid_score": 0.568,
+        "metadata_boost": 0.18,
+        "final_score": 0.748,
+        "text_preview": "Computer Science (Software Development) - Bachelor of Science The speciﬁc requirements for the concentration in Software"
+      }
+    ]
+  },
+  {
+    "question_id": "desc_005",
+    "question": "What is covered in CJUS 412?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "760f02a7ec228643",
+        "heading": "CJUS 2140 — Criminal Investigations",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.8521,
+        "metadata_boost": 0.2,
+        "final_score": 1.0521,
+        "text_preview": "CJUS 2140. Criminal Investigations 3 Credits (3) This course introduces criminal investigations with in the various loca"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "2646447e27a95400",
+        "heading": "CJUS 412 — Introduction to Security Technology and Loss Prevention",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.7881,
+        "metadata_boost": 0.2,
+        "final_score": 0.9881,
+        "text_preview": "CJUS 412. Introduction to Security Technology and Loss Prevention 3 Credits (3) Private and public responses to security"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "5c949c1e25e9db9b",
+        "heading": "CJUS 432 — Issues in Criminal Justice",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.7649,
+        "metadata_boost": 0.2,
+        "final_score": 0.9649,
+        "text_preview": "CJUS 432. Issues in Criminal Justice 3 Credits (3) Seminar on problems and conflicts encountered in major criminal justi"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "abe0fcf83536b97c",
+        "heading": "CJUS 393 — Internship in Criminal Justice",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.757,
+        "metadata_boost": 0.2,
+        "final_score": 0.957,
+        "text_preview": "CJUS 393. Internship in Criminal Justice 1-12 Credits Field experience in a local, state, or federal criminal justice or"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "6b7bf113cc94fa1e",
+        "heading": "CJUS 425 — Issues in Ethics, Law, and Criminal Justice",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.7513,
+        "metadata_boost": 0.2,
+        "final_score": 0.9513,
+        "text_preview": "CJUS 425. Issues in Ethics, Law, and Criminal Justice 3 Credits (3) Examination of the key ethical and decision-making d"
+      }
+    ]
+  },
+  {
+    "question_id": "desc_006",
+    "question": "What is the difference between CSCI 1720 and CSCI 1210?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "07590040f97b54a3",
+        "heading": "CSCI 1720 — Computer Science I",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 1.0,
+        "metadata_boost": 0.2,
+        "final_score": 1.2,
+        "text_preview": "CSCI 1720. Computer Science I 4 Credits (3+2P) Computational problem solving; problem analysis; implementation of algori"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "5070df1ddcf69f22",
+        "heading": "CSCI 1210 — Computer Programming Fundamentals",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6204,
+        "metadata_boost": 0.2,
+        "final_score": 0.8204,
+        "text_preview": "CSCI 1210. Computer Programming Fundamentals 3 Credits (2+2P) This course is an introduction to problem-solving methods "
+      },
+      {
+        "rank": 3,
+        "chunk_id": "c8d7c5d373a331ca",
+        "heading": "CSCI 1225 — Python Programming II",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.5662,
+        "metadata_boost": 0.2,
+        "final_score": 0.7662,
+        "text_preview": "CSCI 1225. Python Programming II 3 Credits (3) This course covers advanced Python programming, including classes, object"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "e87cb80e84945788",
+        "heading": "CSCI 2310 — Discrete Mathematics for Computer Science",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.5599,
+        "metadata_boost": 0.2,
+        "final_score": 0.7599,
+        "text_preview": "CSCI 2310. Discrete Mathematics for Computer Science 4 Credits (3+2P) Discrete mathematics required for Computer Science"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "e2dc5f632fd25e2c",
+        "heading": "CSCI 2210 — Object-Oriented Programming",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.5534,
+        "metadata_boost": 0.2,
+        "final_score": 0.7534,
+        "text_preview": "CSCI 2210. Object-Oriented Programming 4 Credits (3+2P) This course is an introduction to object-oriented programming. I"
+      }
+    ]
+  },
+  {
+    "question_id": "desc_007",
+    "question": "What courses teach cybersecurity and what are their prerequisites?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "482e154e99b5dc92",
+        "heading": "Computer Science (Cybersecurity) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "concentration_requirement",
+        "hybrid_score": 0.9171,
+        "metadata_boost": 0.18,
+        "final_score": 1.0971,
+        "text_preview": "Computer Science (Cybersecurity) - Bachelor of Science The speciﬁc requirements for the concentration in Cybersecurity 8"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "b47cdb41eb55db41",
+        "heading": "CSEC 110 — Principles of Cybersecurity",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.8569,
+        "metadata_boost": 0.1,
+        "final_score": 0.9569,
+        "text_preview": "CSEC 110. Principles of Cybersecurity 3 Credits (3) Course covers contemporary trends in cybersecurity including underst"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "e1114ca8e2808ded",
+        "heading": "CSEC 295 — Cybersecurity Capstone",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6708,
+        "metadata_boost": 0.1,
+        "final_score": 0.7708,
+        "text_preview": "CSEC 295. Cybersecurity Capstone 3-4 Credits (3-4) Experiential hands-on learning applying skills and knowledge gained i"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "ec3fff454254af61",
+        "heading": "BCIS 480 — Introduction to Cybersecurity: Exploring Computer, Network,",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.5678,
+        "metadata_boost": 0.1,
+        "final_score": 0.6678,
+        "text_preview": "BCIS 480. Introduction to Cybersecurity: Exploring Computer, Network, and Data Security Principles 3 Credits (3) This co"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "58c9e2e46d2d91e1",
+        "heading": "CSEC 280 — Introduction to Cyber Defense",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.591,
+        "metadata_boost": 0.02,
+        "final_score": 0.611,
+        "text_preview": "CSEC 280. Introduction to Cyber Defense 3 Credits (3) Introduction to the foundation of cryptography, principles behind "
+      }
+    ]
+  },
+  {
+    "question_id": "prereq_001",
+    "question": "What are the prerequisites for Programming Language Structure?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "9c4865bbd0fc6235",
+        "heading": "CSCI 4105 — Programming Language Structure I",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 1.0,
+        "metadata_boost": 0.1,
+        "final_score": 1.1,
+        "text_preview": "CSCI 4105. Programming Language Structure I 3 Credits (3) Syntax, semantics, implementation, and application of programm"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "5070df1ddcf69f22",
+        "heading": "CSCI 1210 — Computer Programming Fundamentals",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.4024,
+        "metadata_boost": 0.1,
+        "final_score": 0.5024,
+        "text_preview": "CSCI 1210. Computer Programming Fundamentals 3 Credits (2+2P) This course is an introduction to problem-solving methods "
+      },
+      {
+        "rank": 5,
+        "chunk_id": "17b8a948b74d6520",
+        "heading": "CSCI 1220 — Computer Programming Fundamentals: Python",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.3632,
+        "metadata_boost": 0.1,
+        "final_score": 0.4632,
+        "text_preview": "CSCI 1220. Computer Programming Fundamentals: Python 3 Credits (3) This course is an introduction to fundamental program"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "c5fa84003468a908",
+        "heading": "CSCI 3730 — Compilers and Automata Theory",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.4196,
+        "metadata_boost": 0.02,
+        "final_score": 0.4396,
+        "text_preview": "CSCI 3730. Compilers and Automata Theory 4 Credits (3+2P) Methods, principles, and tools for programming language proces"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "d99180d421095bf6",
+        "heading": "CSCI 4580 — Compilers and Automata Transition",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.3906,
+        "metadata_boost": 0.02,
+        "final_score": 0.4106,
+        "text_preview": "CSCI 4580. Compilers and Automata Transition 3 Credits (3) Methods, principles, and tools for programming language proce"
+      }
+    ]
+  },
+  {
+    "question_id": "prereq_002",
+    "question": "What are the prerequisites for CSCI 4110?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "2dd3ef533673839b",
+        "heading": "CSCI 4110 — Computing Ethics and Social Implications of Computing",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 1.0,
+        "metadata_boost": 0.2,
+        "final_score": 1.2,
+        "text_preview": "CSCI 4110. Computing Ethics and Social Implications of Computing 1 Credit (1) An overview of ethics for computing majors"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "bcb5cd6f96360d74",
+        "heading": "CSCI 4140 — Database Management Systems I",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.7012,
+        "metadata_boost": 0.2,
+        "final_score": 0.9012,
+        "text_preview": "CSCI 4140. Database Management Systems I 3 Credits (3) Database design and implementation; models of database management"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "b6698dedb6cd09ea",
+        "heading": "CSCI 4120 — Operating Systems I",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6767,
+        "metadata_boost": 0.2,
+        "final_score": 0.8767,
+        "text_preview": "CSCI 4120. Operating Systems I 3 Credits (3) Operating system principles and structures, and interactions with architect"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "3f0313a3729afd07",
+        "heading": "CSCI 1110 — Computer Science Principles",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.5943,
+        "metadata_boost": 0.2,
+        "final_score": 0.7943,
+        "text_preview": "CSCI 1110. Computer Science Principles 4 Credits (3+2P) This course provides a broad and exciting introduction to the ﬁe"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "2eb0733f90bc7c3e",
+        "heading": "Computer Systems - Undergraduate Minor",
+        "content_source": "catalog",
+        "chunk_type": "minor_requirement",
+        "hybrid_score": 0.6057,
+        "metadata_boost": 0.12,
+        "final_score": 0.7257,
+        "text_preview": "Computer Systems - Undergraduate Minor Preﬁx Title Credits Required Courses CSCI 1720 Computer Science I 0,4 CSCI 2210 O"
+      }
+    ]
+  },
+  {
+    "question_id": "prereq_003",
+    "question": "What are the prerequisites for CSCI 4130?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "b6698dedb6cd09ea",
+        "heading": "CSCI 4120 — Operating Systems I",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.8176,
+        "metadata_boost": 0.2,
+        "final_score": 1.0176,
+        "text_preview": "CSCI 4120. Operating Systems I 3 Credits (3) Operating system principles and structures, and interactions with architect"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "bcb5cd6f96360d74",
+        "heading": "CSCI 4140 — Database Management Systems I",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.7716,
+        "metadata_boost": 0.2,
+        "final_score": 0.9716,
+        "text_preview": "CSCI 4140. Database Management Systems I 3 Credits (3) Database design and implementation; models of database management"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "7d8174865ca59a05",
+        "heading": "CSCI 4130 — Linux System Administration",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.7135,
+        "metadata_boost": 0.2,
+        "final_score": 0.9135,
+        "text_preview": "CSCI 4130. Linux System Administration 3 Credits (3) Basic system administration for Linux environments. Topics include "
+      },
+      {
+        "rank": 3,
+        "chunk_id": "2eb0733f90bc7c3e",
+        "heading": "Computer Systems - Undergraduate Minor",
+        "content_source": "catalog",
+        "chunk_type": "minor_requirement",
+        "hybrid_score": 0.753,
+        "metadata_boost": 0.12,
+        "final_score": 0.873,
+        "text_preview": "Computer Systems - Undergraduate Minor Preﬁx Title Credits Required Courses CSCI 1720 Computer Science I 0,4 CSCI 2210 O"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "2dd3ef533673839b",
+        "heading": "CSCI 4110 — Computing Ethics and Social Implications of Computing",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6574,
+        "metadata_boost": 0.2,
+        "final_score": 0.8574,
+        "text_preview": "CSCI 4110. Computing Ethics and Social Implications of Computing 1 Credit (1) An overview of ethics for computing majors"
+      }
+    ]
+  },
+  {
+    "question_id": "prereq_004",
+    "question": "What are the prerequisites for the Compilers course?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "3f7ae0672b481bea",
+        "heading": "Prerequisites and Corequisites",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.8663,
+        "metadata_boost": 0.16,
+        "final_score": 1.0263,
+        "text_preview": "Prerequisites and Corequisites Some courses require advance or concurrently acquired speciﬁc knowledge and skills. Prere"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "242e599c7cc8599c",
+        "heading": "Prerequisites and Corequisites",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.8425,
+        "metadata_boost": 0.16,
+        "final_score": 1.0025,
+        "text_preview": "Prerequisites and Corequisites Some courses require advance or concurrently acquired speciﬁc knowledge and skills. Prere"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "d99180d421095bf6",
+        "heading": "CSCI 4580 — Compilers and Automata Transition",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.75,
+        "metadata_boost": 0.1,
+        "final_score": 0.85,
+        "text_preview": "CSCI 4580. Compilers and Automata Transition 3 Credits (3) Methods, principles, and tools for programming language proce"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "c5fa84003468a908",
+        "heading": "CSCI 3730 — Compilers and Automata Theory",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6848,
+        "metadata_boost": 0.1,
+        "final_score": 0.7848,
+        "text_preview": "CSCI 3730. Compilers and Automata Theory 4 Credits (3+2P) Methods, principles, and tools for programming language proces"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "2eb0733f90bc7c3e",
+        "heading": "Computer Systems - Undergraduate Minor",
+        "content_source": "catalog",
+        "chunk_type": "minor_requirement",
+        "hybrid_score": 0.601,
+        "metadata_boost": 0.02,
+        "final_score": 0.621,
+        "text_preview": "Computer Systems - Undergraduate Minor Preﬁx Title Credits Required Courses CSCI 1720 Computer Science I 0,4 CSCI 2210 O"
+      }
+    ]
+  },
+  {
+    "question_id": "prereq_005",
+    "question": "What are the prerequisites for Practical Programming?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "d15a83ecc9c69fc0",
+        "heading": "CSCI 2410 — Practical Programming",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 1.0,
+        "metadata_boost": 0.1,
+        "final_score": 1.1,
+        "text_preview": "CSCI 2410. Practical Programming 2 Credits (1+1P) A hands-on dive into practical programming skills development. Student"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "17b8a948b74d6520",
+        "heading": "CSCI 1220 — Computer Programming Fundamentals: Python",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.7167,
+        "metadata_boost": 0.1,
+        "final_score": 0.8167,
+        "text_preview": "CSCI 1220. Computer Programming Fundamentals: Python 3 Credits (3) This course is an introduction to fundamental program"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "5070df1ddcf69f22",
+        "heading": "CSCI 1210 — Computer Programming Fundamentals",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6679,
+        "metadata_boost": 0.1,
+        "final_score": 0.7679,
+        "text_preview": "CSCI 1210. Computer Programming Fundamentals 3 Credits (2+2P) This course is an introduction to problem-solving methods "
+      },
+      {
+        "rank": 4,
+        "chunk_id": "9c4865bbd0fc6235",
+        "heading": "CSCI 4105 — Programming Language Structure I",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6489,
+        "metadata_boost": 0.1,
+        "final_score": 0.7489,
+        "text_preview": "CSCI 4105. Programming Language Structure I 3 Credits (3) Syntax, semantics, implementation, and application of programm"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "9920fc4bef23be59",
+        "heading": "CSCI 4545 — Object Oriented Programming Transition",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.5123,
+        "metadata_boost": 0.1,
+        "final_score": 0.6123,
+        "text_preview": "CSCI 4545. Object Oriented Programming Transition 3 Credits (3) Introduction to problem analysis and problem solving in "
+      }
+    ]
+  },
+  {
+    "question_id": "deg_001",
+    "question": "What is the difference between a BS in Computer Science and a BS in Cybersecurity?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "482e154e99b5dc92",
+        "heading": "Computer Science (Cybersecurity) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "concentration_requirement",
+        "hybrid_score": 0.8346,
+        "metadata_boost": 0.18,
+        "final_score": 1.0146,
+        "text_preview": "Computer Science (Cybersecurity) - Bachelor of Science The speciﬁc requirements for the concentration in Cybersecurity 8"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/undergraduate-degrees.html#chunk-1",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "degree_overview",
+        "hybrid_score": 0.7888,
+        "metadata_boost": 0.0,
+        "final_score": 0.7888,
+        "text_preview": "How to Select Between the B.S and B.A.?\nThe B.S in Computer Science is the traditional computer science degree program, "
+      },
+      {
+        "rank": 3,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/undergraduate-degrees.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "degree_overview",
+        "hybrid_score": 0.7027,
+        "metadata_boost": 0.0,
+        "final_score": 0.7027,
+        "text_preview": "We offer the following undergraduate majors: Bachelor of Science (B.S.) in Computer Science ( ABET - CAC accredited), Ba"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "https://computerscience.nmsu.edu/department/program-level-learning-outcomes-cs-programs.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "general",
+        "hybrid_score": 0.5138,
+        "metadata_boost": 0.0,
+        "final_score": 0.5138,
+        "text_preview": "Programs:\nBA in CS Program-Level Learning Outcomes BS in CS Program-Level Learning Outcomes BS in Cybersecurity Program-"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "f972441e411a698b",
+        "heading": "program_index",
+        "content_source": "catalog",
+        "chunk_type": "program_index",
+        "hybrid_score": 0.475,
+        "metadata_boost": 0.02,
+        "final_score": 0.495,
+        "text_preview": "Bachelor Degree(s) & Dual Degree(s) • Computer Science (Algorithm Theory) - Bachelor of Science (p. 586) • Computer Scie"
+      }
+    ]
+  },
+  {
+    "question_id": "deg_002",
+    "question": "Why would I want a specialty BS in Cybersecurity instead of a standard BS?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "482e154e99b5dc92",
+        "heading": "Computer Science (Cybersecurity) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "concentration_requirement",
+        "hybrid_score": 0.8661,
+        "metadata_boost": 0.28,
+        "final_score": 1.1461,
+        "text_preview": "Computer Science (Cybersecurity) - Bachelor of Science The speciﬁc requirements for the concentration in Cybersecurity 8"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/undergraduate-degrees.html#chunk-1",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "degree_overview",
+        "hybrid_score": 0.7676,
+        "metadata_boost": 0.0,
+        "final_score": 0.7676,
+        "text_preview": "How to Select Between the B.S and B.A.?\nThe B.S in Computer Science is the traditional computer science degree program, "
+      },
+      {
+        "rank": 4,
+        "chunk_id": "b47cdb41eb55db41",
+        "heading": "CSEC 110 — Principles of Cybersecurity",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.5468,
+        "metadata_boost": 0.1,
+        "final_score": 0.6468,
+        "text_preview": "CSEC 110. Principles of Cybersecurity 3 Credits (3) Course covers contemporary trends in cybersecurity including underst"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/undergraduate-degrees.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "degree_overview",
+        "hybrid_score": 0.5598,
+        "metadata_boost": 0.0,
+        "final_score": 0.5598,
+        "text_preview": "We offer the following undergraduate majors: Bachelor of Science (B.S.) in Computer Science ( ABET - CAC accredited), Ba"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "https://computerscience.nmsu.edu/department/program-level-learning-outcomes-cs-programs.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "general",
+        "hybrid_score": 0.533,
+        "metadata_boost": 0.0,
+        "final_score": 0.533,
+        "text_preview": "Programs:\nBA in CS Program-Level Learning Outcomes BS in CS Program-Level Learning Outcomes BS in Cybersecurity Program-"
+      }
+    ]
+  },
+  {
+    "question_id": "deg_003",
+    "question": "When should one consider a BS in Computer Science instead of a BA?",
+    "top5": [
+      {
+        "rank": 2,
+        "chunk_id": "16d9f6f83799bfca",
+        "heading": "Computer Science - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "degree_requirement",
+        "hybrid_score": 0.6894,
+        "metadata_boost": 0.28,
+        "final_score": 0.9694,
+        "text_preview": "The Bachelor of Science in Computer Science is the traditional undergraduate degree in Computer Science. It is rigorousl"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "202f3d183e743b5d",
+        "heading": "Computer Science - Bachelor of Arts",
+        "content_source": "catalog",
+        "chunk_type": "degree_requirement",
+        "hybrid_score": 0.655,
+        "metadata_boost": 0.28,
+        "final_score": 0.935,
+        "text_preview": "The Bachelor of Arts in Computer Science is an open, flexible degree plan that offers the student both a rigorous underg"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "6fb64bffef3e6e90",
+        "heading": "Computer Science - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "degree_core_requirement",
+        "hybrid_score": 0.648,
+        "metadata_boost": 0.28,
+        "final_score": 0.928,
+        "text_preview": "Computer Science - Bachelor of Science The Bachelor of Science in Computer Science is the traditional undergraduate degr"
+      },
+      {
+        "rank": 1,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/undergraduate-degrees.html#chunk-1",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "degree_overview",
+        "hybrid_score": 0.7993,
+        "metadata_boost": 0.0,
+        "final_score": 0.7993,
+        "text_preview": "How to Select Between the B.S and B.A.?\nThe B.S in Computer Science is the traditional computer science degree program, "
+      },
+      {
+        "rank": 5,
+        "chunk_id": "3fd443758d042e53",
+        "heading": "Computer Science - Bachelor of Arts",
+        "content_source": "catalog",
+        "chunk_type": "second_language",
+        "hybrid_score": 0.6036,
+        "metadata_boost": 0.18,
+        "final_score": 0.7836,
+        "text_preview": "Second Language Requirement For the Bachelor of Arts with a major in Computer Science, there is no second language requi"
+      }
+    ]
+  },
+  {
+    "question_id": "deg_004",
+    "question": "What is the difference between the BS and BA degrees in CS?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/undergraduate-degrees.html#chunk-1",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "degree_overview",
+        "hybrid_score": 0.8076,
+        "metadata_boost": 0.1,
+        "final_score": 0.9076,
+        "text_preview": "How to Select Between the B.S and B.A.?\nThe B.S in Computer Science is the traditional computer science degree program, "
+      },
+      {
+        "rank": 3,
+        "chunk_id": "fec71a16882655c0",
+        "heading": "glossary",
+        "content_source": "catalog",
+        "chunk_type": "glossary",
+        "hybrid_score": 0.632,
+        "metadata_boost": 0.08,
+        "final_score": 0.712,
+        "text_preview": "B Bachelor's (Baccalaureate) Degree (BA/BS): A level of education marked by the completion of the equivalent of four or "
+      },
+      {
+        "rank": 4,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/undergraduate-degrees.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "degree_overview",
+        "hybrid_score": 0.6041,
+        "metadata_boost": 0.1,
+        "final_score": 0.7041,
+        "text_preview": "We offer the following undergraduate majors: Bachelor of Science (B.S.) in Computer Science ( ABET - CAC accredited), Ba"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "https://computerscience.nmsu.edu/department/program-level-learning-outcomes-cs-programs.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "general",
+        "hybrid_score": 0.6952,
+        "metadata_boost": 0.0,
+        "final_score": 0.6952,
+        "text_preview": "Programs:\nBA in CS Program-Level Learning Outcomes BS in CS Program-Level Learning Outcomes BS in Cybersecurity Program-"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/undergraduate-advising.html#chunk-6",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.5653,
+        "metadata_boost": 0.1,
+        "final_score": 0.6653,
+        "text_preview": "What are the B.S. degree concentrations and how do I choose one?\nThe B.S. degree recently added seven areas of concentra"
+      }
+    ]
+  },
+  {
+    "question_id": "deg_005",
+    "question": "What is the recommended number of credits I should take in a regular semester?",
+    "top5": [
+      {
+        "rank": 5,
+        "chunk_id": "80a28b47eeacb905",
+        "heading": "Cybersecurity - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.5532,
+        "metadata_boost": 0.28,
+        "final_score": 0.8332,
+        "text_preview": "A Suggested Plan of Study For Students This roadmap assumes student placement in MATH 1511G Calculus and Analytic Geomet"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "3e04f7a6977ac11f",
+        "heading": "glossary",
+        "content_source": "catalog",
+        "chunk_type": "glossary",
+        "hybrid_score": 0.75,
+        "metadata_boost": 0.08,
+        "final_score": 0.83,
+        "text_preview": "Full-time: A schedule of 12 or more credit hours per semester for undergraduate students, and 9 or more credit hours per"
+      },
+      {
+        "rank": 1,
+        "chunk_id": "fc4d628e13bcb208",
+        "heading": "Course Load for Graduate Students",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.7969,
+        "metadata_boost": 0.02,
+        "final_score": 0.8169,
+        "text_preview": "Course Load for Graduate Students A full-time course load in a regular semester (fall or spring) is 9 credits, with a ma"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "6d790719055293ab",
+        "heading": "University Credits",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.6449,
+        "metadata_boost": 0.16,
+        "final_score": 0.8049,
+        "text_preview": "University Credits The unit of university credit is the semester hour, which is based upon one hour of lecture class or "
+      },
+      {
+        "rank": 4,
+        "chunk_id": "8be931ca2fd6489a",
+        "heading": "Course Load for Undergraduate Students",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.5885,
+        "metadata_boost": 0.02,
+        "final_score": 0.6085,
+        "text_preview": "Course Load for Undergraduate Students The full-time course load in a regular semester (fall or spring) for a main campu"
+      }
+    ]
+  },
+  {
+    "question_id": "deg_006",
+    "question": "Explain and compare the different tracks for an M.S.: Coursework only, Project, or Thesis.",
+    "top5": [
+      {
+        "rank": 2,
+        "chunk_id": "75c17c60c834c027",
+        "heading": "M E 599 — Master's Thesis",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6809,
+        "metadata_boost": 0.2,
+        "final_score": 0.8809,
+        "text_preview": "M E 599. Master's Thesis 15 Credits Thesis."
+      },
+      {
+        "rank": 1,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-7",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.8665,
+        "metadata_boost": 0.0,
+        "final_score": 0.8665,
+        "text_preview": "Fill in the “program of study” form, which can be downloaded from this link; ask you advisor, the department head, and t"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "aafaec28d13c3441",
+        "heading": "EDUC 5990 — Master's Thesis",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6064,
+        "metadata_boost": 0.1,
+        "final_score": 0.7064,
+        "text_preview": "EDUC 5990. Master's Thesis 1-6 Credits (1-6) Thesis. A minimum of four credits and a maximum of six credits (thesis hour"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "https://www.nmsu.edu/degree-programs/graduate/computer-science.html#chunk-1",
+        "heading": "Computer Science (M.S.)",
+        "content_source": "web",
+        "chunk_type": "degree_overview",
+        "hybrid_score": 0.6044,
+        "metadata_boost": 0.08,
+        "final_score": 0.6844,
+        "text_preview": "Admission Deadlines\nFebruary 1 (fall), October 1 (spring) Total credits: 33 Tracks: Thesis or Coursework Only\n\nDelivery "
+      },
+      {
+        "rank": 5,
+        "chunk_id": "19f72325dc27bb92",
+        "heading": "A E 599 — Master's Thesis",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.5406,
+        "metadata_boost": 0.1,
+        "final_score": 0.6406,
+        "text_preview": "A E 599. Master's Thesis 1-15 Credits (1-15) Thesis. Graded: Thesis/Dissertation."
+      }
+    ]
+  },
+  {
+    "question_id": "deg_007",
+    "question": "When must I have a thesis advisor?",
+    "top5": [
+      {
+        "rank": 2,
+        "chunk_id": "a8b378e771f11762",
+        "heading": "RGSC 599 — Master's Thesis",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.8178,
+        "metadata_boost": 0.1,
+        "final_score": 0.9178,
+        "text_preview": "RGSC 599. Master's Thesis 15 Credits Thesis. Consent of Instructor required. Thesis/Dissertation Grading."
+      },
+      {
+        "rank": 3,
+        "chunk_id": "10ecc940c88544de",
+        "heading": "ASTR 601 — Thesis Proposal Preparation",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.7939,
+        "metadata_boost": 0.1,
+        "final_score": 0.8939,
+        "text_preview": "ASTR 601. Thesis Proposal Preparation 1 Credit (1) This is a one-credit course that introduces students to Departmental "
+      },
+      {
+        "rank": 1,
+        "chunk_id": "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html#chunk-4",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "enrollment",
+        "hybrid_score": 0.8654,
+        "metadata_boost": 0.0,
+        "final_score": 0.8654,
+        "text_preview": "November 7th Deadline to hold a thesis, dissertation, or doctoral final oral or written exam To sit for the exam, enroll"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-7",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.7788,
+        "metadata_boost": 0.0,
+        "final_score": 0.7788,
+        "text_preview": "Fill in the “program of study” form, which can be downloaded from this link; ask you advisor, the department head, and t"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html#chunk-1",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "enrollment",
+        "hybrid_score": 0.71,
+        "metadata_boost": 0.0,
+        "final_score": 0.71,
+        "text_preview": "May 14, 2025 - August 6, 2025\nDate Action Item June 27th Deadline to turn in the Final Exam Form for Thesis, Dissertatio"
+      }
+    ]
+  },
+  {
+    "question_id": "deg_008",
+    "question": "When must I have a Project advisor?",
+    "top5": [
+      {
+        "rank": 2,
+        "chunk_id": "b7e78527429f04b0",
+        "heading": "glossary",
+        "content_source": "catalog",
+        "chunk_type": "glossary",
+        "hybrid_score": 0.75,
+        "metadata_boost": 0.08,
+        "final_score": 0.83,
+        "text_preview": "Advisor: A University employee who helps students make informed and responsible decisions in the pursuit of their academ"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "d6e8e84a1b5f14ae",
+        "heading": "E T 421 — Senior Project",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.7053,
+        "metadata_boost": 0.1,
+        "final_score": 0.8053,
+        "text_preview": "E T 421. Senior Project 3 Credits (3) Project in an area of civil engineering technology conducted under the direction o"
+      },
+      {
+        "rank": 1,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/undergraduate-advising.html#chunk-4",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.7602,
+        "metadata_boost": 0.0,
+        "final_score": 0.7602,
+        "text_preview": "How do I complete my departmental mentoring?\nYou must arrange a meeting with your mentor, and then meet with them. Prior"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-7",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.7249,
+        "metadata_boost": 0.0,
+        "final_score": 0.7249,
+        "text_preview": "Fill in the “program of study” form, which can be downloaded from this link; ask you advisor, the department head, and t"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "b96aa0987fdb443e",
+        "heading": "PHYS 420 — Capstone Project I",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.5814,
+        "metadata_boost": 0.1,
+        "final_score": 0.6814,
+        "text_preview": "PHYS 420. Capstone Project I 3 Credits (3P) Application of engineering physics principles to a signiﬁcant design project"
+      }
+    ]
+  },
+  {
+    "question_id": "deg_009",
+    "question": "When must I have a dissertation advisor?",
+    "top5": [
+      {
+        "rank": 2,
+        "chunk_id": "b7cb24eac2d84e3a",
+        "heading": "ELAD 7000 — Doctoral Dissertation",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.7973,
+        "metadata_boost": 0.1,
+        "final_score": 0.8973,
+        "text_preview": "ELAD 7000. Doctoral Dissertation 1-9 Credits (1-9) Dissertation. Minimum of 3 credits per regular semester. May be taken"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "5477b26afbad4ae5",
+        "heading": "ANSC 700 — Doctoral Dissertation",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.7945,
+        "metadata_boost": 0.1,
+        "final_score": 0.8945,
+        "text_preview": "ANSC 700. Doctoral Dissertation 15 Credits Dissertation. Consent of Instructor required. Thesis/Dissertation Grading. AN"
+      },
+      {
+        "rank": 1,
+        "chunk_id": "62de7b59204f39f8",
+        "heading": "Doctoral Degrees",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.846,
+        "metadata_boost": 0.02,
+        "final_score": 0.866,
+        "text_preview": "Doctoral Degrees The doctoral degree requires signiﬁcant scholarly study beyond the master’s program, including a minimu"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "81a3a5514d4d67c3",
+        "heading": "EDUC 7000 — Doctoral Dissertation",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.7582,
+        "metadata_boost": 0.1,
+        "final_score": 0.8582,
+        "text_preview": "EDUC 7000. Doctoral Dissertation 1-15 Credits (1-15) Dissertation. May be repeated up to 88 credits. Learning Outcomes 1"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html#chunk-4",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "enrollment",
+        "hybrid_score": 0.686,
+        "metadata_boost": 0.0,
+        "final_score": 0.686,
+        "text_preview": "November 7th Deadline to hold a thesis, dissertation, or doctoral final oral or written exam To sit for the exam, enroll"
+      }
+    ]
+  },
+  {
+    "question_id": "deg_010",
+    "question": "What Computer Science graduate degrees are offered at NMSU?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "https://www.nmsu.edu/degree-programs/graduate/computer-science.html#chunk-0",
+        "heading": "Computer Science (M.S.)",
+        "content_source": "web",
+        "chunk_type": "degree_overview",
+        "hybrid_score": 0.9118,
+        "metadata_boost": 0.16,
+        "final_score": 1.0718,
+        "text_preview": "College of Arts and Sciences Computer Science (M.S.) College of Arts and Sciences Computer Science (M.S.)\n\nFrom Algorith"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "https://www.nmsu.edu/degree-programs/graduate/computer-science.html#chunk-2",
+        "heading": "Computer Science (M.S.)",
+        "content_source": "web",
+        "chunk_type": "degree_overview",
+        "hybrid_score": 0.9087,
+        "metadata_boost": 0.16,
+        "final_score": 1.0687,
+        "text_preview": "Degree questions, answered\nHave questions about the Master of Science in Computer Science? Fill out our inquiry form. Ge"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-degrees.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "degree_overview",
+        "hybrid_score": 0.8807,
+        "metadata_boost": 0.08,
+        "final_score": 0.9607,
+        "text_preview": "The links below go to the most recent information on the graduate degrees offered by the Computer Science Department. Th"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/prospective-graduates.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.8024,
+        "metadata_boost": 0.08,
+        "final_score": 0.8824,
+        "text_preview": "The Computer Science Department at NMSU currently has approximately 85 graduate students including approximately 35 doct"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/prospective-undergraduates.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.7028,
+        "metadata_boost": 0.0,
+        "final_score": 0.7028,
+        "text_preview": "The Computer Science Department at NMSU currently has approximately 220 undergraduate students and 13 faculty members (a"
+      }
+    ]
+  },
+  {
+    "question_id": "deg_011",
+    "question": "What computer science minors can I pursue at NMSU?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "https://www.nmsu.edu/degree-programs/graduate/computer-science.html#chunk-0",
+        "heading": "Computer Science (M.S.)",
+        "content_source": "web",
+        "chunk_type": "degree_overview",
+        "hybrid_score": 0.8394,
+        "metadata_boost": 0.08,
+        "final_score": 0.9194,
+        "text_preview": "College of Arts and Sciences Computer Science (M.S.) College of Arts and Sciences Computer Science (M.S.)\n\nFrom Algorith"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "https://www.nmsu.edu/degree-programs/graduate/computer-science.html#chunk-2",
+        "heading": "Computer Science (M.S.)",
+        "content_source": "web",
+        "chunk_type": "degree_overview",
+        "hybrid_score": 0.7785,
+        "metadata_boost": 0.08,
+        "final_score": 0.8585,
+        "text_preview": "Degree questions, answered\nHave questions about the Master of Science in Computer Science? Fill out our inquiry form. Ge"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/prospective-undergraduates.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.7732,
+        "metadata_boost": 0.0,
+        "final_score": 0.7732,
+        "text_preview": "The Computer Science Department at NMSU currently has approximately 220 undergraduate students and 13 faculty members (a"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/why-cs-at-nmsu.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "general",
+        "hybrid_score": 0.7281,
+        "metadata_boost": 0.0,
+        "final_score": 0.7281,
+        "text_preview": "Why Computer Science?\nThe study of computer science involves learning about the science of computation, and the design a"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/why-cs-at-nmsu.html#chunk-1",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "general",
+        "hybrid_score": 0.7133,
+        "metadata_boost": 0.0,
+        "final_score": 0.7133,
+        "text_preview": "Why Choose the Computer Science Department at NMSU?\nThe Computer Science Department is part of the College of Arts and S"
+      }
+    ]
+  },
+  {
+    "question_id": "deg_012",
+    "question": "What kinds of course credits can I transfer in from another institution?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "65934b23900617c8",
+        "heading": "glossary",
+        "content_source": "catalog",
+        "chunk_type": "glossary",
+        "hybrid_score": 0.8818,
+        "metadata_boost": 0.08,
+        "final_score": 0.9618,
+        "text_preview": "Transfer Courses (Transfer Credits): Earned credits at one institution of higher education counting toward the academic "
+      },
+      {
+        "rank": 2,
+        "chunk_id": "b3168ea6988b92d2",
+        "heading": "General Requirements for Transfer Credits",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.6881,
+        "metadata_boost": 0.16,
+        "final_score": 0.8481,
+        "text_preview": "General Requirements for Transfer Credits Credit will be awarded for transfer courses as follows: • Grades earned in cou"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "589012c629ca342f",
+        "heading": "Evaluation of Transfer Credits",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.6085,
+        "metadata_boost": 0.16,
+        "final_score": 0.7685,
+        "text_preview": "Evaluation of Transfer Credits NMSU has three levels of course credit transfer. Once a student has been admitted to NMSU"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "418f8dadbbd85a0c",
+        "heading": "Transfer of Graduate Credits into a Degree Program",
+        "content_source": "catalog",
+        "chunk_type": "grad_program_info",
+        "hybrid_score": 0.574,
+        "metadata_boost": 0.16,
+        "final_score": 0.734,
+        "text_preview": "Transfer of Graduate Credits into a Degree Program Graduate credits taken at NMSU as undergraduate electives may be tran"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "4898fc0a62ba2318",
+        "heading": "Transfer of International Credit",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.5172,
+        "metadata_boost": 0.16,
+        "final_score": 0.6772,
+        "text_preview": "Transfer of International Credit Applications for admission that include the transfer of credits earned at a non-U.S. un"
+      }
+    ]
+  },
+  {
+    "question_id": "fin_001",
+    "question": "What percentage of the current CS MS students receive financial aid?",
+    "top5": [
+      {
+        "rank": 3,
+        "chunk_id": "f8685176f4bf7392",
+        "heading": "Financial Aid & Scholarship Services",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.8178,
+        "metadata_boost": 0.16,
+        "final_score": 0.9778,
+        "text_preview": "Financial Aid & Scholarship Services University Financial Aid and Scholarship Services administers a broad spectrum of g"
+      },
+      {
+        "rank": 1,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-financial-aid.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "financial_aid",
+        "hybrid_score": 0.9771,
+        "metadata_boost": 0.0,
+        "final_score": 0.9771,
+        "text_preview": "Computer Science Department and NMSU Scholarships\nThe following scholarships are available for graduate CS majors. Gener"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/undergraduate-financial-aid.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "financial_aid",
+        "hybrid_score": 0.9694,
+        "metadata_boost": 0.0,
+        "final_score": 0.9694,
+        "text_preview": "Computer Science Scholarships\nThe following scholarships are available for undergraduate CS majors To apply, fill applic"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "8e24a99aaa0e2abf",
+        "heading": "Financial Aid Awards",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.7734,
+        "metadata_boost": 0.16,
+        "final_score": 0.9334,
+        "text_preview": "Financial Aid Awards All ﬁnancial aid awards are based on information provided by the student and/or parents, availabili"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "0244ea6a32600b83",
+        "heading": "Financial Aid Suspension",
+        "content_source": "catalog",
+        "chunk_type": "grad_program_info",
+        "hybrid_score": 0.6794,
+        "metadata_boost": 0.16,
+        "final_score": 0.8394,
+        "text_preview": "Financial Aid Suspension Students who do not meet the SAP standards will be placed on Financial Aid Suspension. Students"
+      }
+    ]
+  },
+  {
+    "question_id": "fin_002",
+    "question": "What types of financial aid are available for Computer Science students?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/undergraduate-financial-aid.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "financial_aid",
+        "hybrid_score": 1.0,
+        "metadata_boost": 0.0,
+        "final_score": 1.0,
+        "text_preview": "Computer Science Scholarships\nThe following scholarships are available for undergraduate CS majors To apply, fill applic"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-financial-aid.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "financial_aid",
+        "hybrid_score": 0.9721,
+        "metadata_boost": 0.0,
+        "final_score": 0.9721,
+        "text_preview": "Computer Science Department and NMSU Scholarships\nThe following scholarships are available for graduate CS majors. Gener"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "8e24a99aaa0e2abf",
+        "heading": "Financial Aid Awards",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.6088,
+        "metadata_boost": 0.16,
+        "final_score": 0.7688,
+        "text_preview": "Financial Aid Awards All ﬁnancial aid awards are based on information provided by the student and/or parents, availabili"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "e03e64a89750695b",
+        "heading": "Computer Science (Computer Networking) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.5435,
+        "metadata_boost": 0.18,
+        "final_score": 0.7235,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G and ENGL 1110G . The content"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "ecc0329a35c1aae4",
+        "heading": "Computer Science (Human Computer Interaction) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.5254,
+        "metadata_boost": 0.18,
+        "final_score": 0.7054,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G Calculus and Analytic Geomet"
+      }
+    ]
+  },
+  {
+    "question_id": "fin_003",
+    "question": "When and how can I apply for a Graduate Assistantship?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "https://tpal.nmsu.edu/degree-programs/assistantships.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "financial_aid",
+        "hybrid_score": 0.75,
+        "metadata_boost": 0.08,
+        "final_score": 0.83,
+        "text_preview": "Graduate Assistantships are available through the Department of Curriculum and Instruction. Assistantships are available"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-2",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.6999,
+        "metadata_boost": 0.08,
+        "final_score": 0.7799,
+        "text_preview": "Attend the department’s graduate student orientation which is organized by the Computer Science Graduate Student Organiz"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "3bd4805dbe3989f0",
+        "heading": "Assistantships",
+        "content_source": "catalog",
+        "chunk_type": "grad_program_info",
+        "hybrid_score": 0.7289,
+        "metadata_boost": 0.02,
+        "final_score": 0.7489,
+        "text_preview": "Assistantships Graduate assistantships, including teaching and research, offered by New Mexico State University, are awa"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-financial-aid.html#chunk-2",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "financial_aid",
+        "hybrid_score": 0.6068,
+        "metadata_boost": 0.08,
+        "final_score": 0.6868,
+        "text_preview": "Teaching Assistantships\nThe department offers several 10 and 20 hours per week teaching assistantships Teaching assistan"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-financial-aid.html#chunk-4",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "financial_aid",
+        "hybrid_score": 0.6007,
+        "metadata_boost": 0.08,
+        "final_score": 0.6807,
+        "text_preview": "Research Assistantships\nSome Research Assistantships are run by faculty members who have research grants. To apply, cont"
+      }
+    ]
+  },
+  {
+    "question_id": "fin_004",
+    "question": "What do Teaching Assistantships involve, e.g., number of hours weekly and types of work required?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-financial-aid.html#chunk-2",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "financial_aid",
+        "hybrid_score": 0.8447,
+        "metadata_boost": 0.0,
+        "final_score": 0.8447,
+        "text_preview": "Teaching Assistantships\nThe department offers several 10 and 20 hours per week teaching assistantships Teaching assistan"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "https://ece.nmsu.edu/grad-study/teaching-assistants.html#chunk-1",
+        "heading": "New Mexico State University\nKlipsch School of Electrical and Computer Engineering",
+        "content_source": "web",
+        "chunk_type": "financial_aid",
+        "hybrid_score": 0.7526,
+        "metadata_boost": 0.08,
+        "final_score": 0.8326,
+        "text_preview": "Klipsch School Teaching Assistantships\nTeaching assistantships are available for both incoming and current graduate stud"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "https://ece.nmsu.edu/grad-study/teaching-assistants.html#chunk-6",
+        "heading": "New Mexico State University\nKlipsch School of Electrical and Computer Engineering",
+        "content_source": "web",
+        "chunk_type": "financial_aid",
+        "hybrid_score": 0.7298,
+        "metadata_boost": 0.08,
+        "final_score": 0.8098,
+        "text_preview": "Responsibilities of Teaching Assistants\nTeaching assistants are a vital part of the Klipsch School team As such, TAs hav"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "3bd4805dbe3989f0",
+        "heading": "Assistantships",
+        "content_source": "catalog",
+        "chunk_type": "grad_program_info",
+        "hybrid_score": 0.6189,
+        "metadata_boost": 0.16,
+        "final_score": 0.7789,
+        "text_preview": "Assistantships Graduate assistantships, including teaching and research, offered by New Mexico State University, are awa"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "https://ece.nmsu.edu/grad-study/teaching-assistants.html#chunk-7",
+        "heading": "New Mexico State University\nKlipsch School of Electrical and Computer Engineering",
+        "content_source": "web",
+        "chunk_type": "financial_aid",
+        "hybrid_score": 0.6474,
+        "metadata_boost": 0.08,
+        "final_score": 0.7274,
+        "text_preview": "If you are awarded a half-time TA (10 hours/week), you may work no more than 10 additional hours elsewhere on campus the"
+      }
+    ]
+  },
+  {
+    "question_id": "fin_005",
+    "question": "How can I get a Research Assistantship in computer science?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-financial-aid.html#chunk-4",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "financial_aid",
+        "hybrid_score": 0.75,
+        "metadata_boost": 0.0,
+        "final_score": 0.75,
+        "text_preview": "Research Assistantships\nSome Research Assistantships are run by faculty members who have research grants. To apply, cont"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "https://ece.nmsu.edu/grad-study/teaching-assistants.html#chunk-8",
+        "heading": "New Mexico State University\nKlipsch School of Electrical and Computer Engineering",
+        "content_source": "web",
+        "chunk_type": "financial_aid",
+        "hybrid_score": 0.5425,
+        "metadata_boost": 0.08,
+        "final_score": 0.6225,
+        "text_preview": "Research Assistants\nA limited number of research assistantships (RA) are available for highly-qualified students. Genera"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-financial-aid.html#chunk-2",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "financial_aid",
+        "hybrid_score": 0.6197,
+        "metadata_boost": 0.0,
+        "final_score": 0.6197,
+        "text_preview": "Teaching Assistantships\nThe department offers several 10 and 20 hours per week teaching assistantships Teaching assistan"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-financial-aid.html#chunk-5",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "financial_aid",
+        "hybrid_score": 0.4383,
+        "metadata_boost": 0.0,
+        "final_score": 0.4383,
+        "text_preview": "Research Internships\nAir Force Research Laboratory (AFRL) Internships Argonne National Laboratorie Graduate Programs DHS"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/undergraduate-financial-aid.html#chunk-3",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "financial_aid",
+        "hybrid_score": 0.4292,
+        "metadata_boost": 0.0,
+        "final_score": 0.4292,
+        "text_preview": "Research Internships\nAir Force Research Laboratory (AFRL) Internships Argonne National Laboratory Undergraduate Program "
+      }
+    ]
+  },
+  {
+    "question_id": "fac_001",
+    "question": "Which faculty are affiliated with the data analytics concentration?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "f33f72e6185a4b8d",
+        "heading": "Data Analytics - Master of Data Analytics",
+        "content_source": "catalog",
+        "chunk_type": "degree_requirement",
+        "hybrid_score": 0.9277,
+        "metadata_boost": 0.18,
+        "final_score": 1.1077,
+        "text_preview": "Data Analytics - Master of Data Analytics Data analytics is an inherently interdisciplinary discipline, dealing with met"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "https://dataanalytics.nmsu.edu/#chunk-0",
+        "heading": "Professional Master in Data Analytics",
+        "content_source": "web",
+        "chunk_type": "general",
+        "hybrid_score": 0.8862,
+        "metadata_boost": 0.08,
+        "final_score": 0.9662,
+        "text_preview": "Data analytics is an inherently interdisciplinary discipline, dealing with methods and systems to synthesize knowledge o"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "9de391e87fb0c5c0",
+        "heading": "Computer Science (Big Data and Data Science) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "concentration_requirement",
+        "hybrid_score": 0.7152,
+        "metadata_boost": 0.18,
+        "final_score": 0.8952,
+        "text_preview": "Computer Science (Big Data and Data Science) - Bachelor of Science The speciﬁc requirements for the concentration in Big"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "264c007674959630",
+        "heading": "ACCT 458 — Accounting Data Analytics",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.754,
+        "metadata_boost": 0.1,
+        "final_score": 0.854,
+        "text_preview": "ACCT 458. Accounting Data Analytics 3 Credits (3) Data Analytics in ﬁnancial and managerial accounting and auditing. Res"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "8433b15626bf7b4b",
+        "heading": "CSEC 180 — Introduction to Data Analytics",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.7478,
+        "metadata_boost": 0.1,
+        "final_score": 0.8478,
+        "text_preview": "CSEC 180. Introduction to Data Analytics 3 Credits (3) A broad introduction to the ﬁeld of data analytics that prepares "
+      }
+    ]
+  },
+  {
+    "question_id": "fac_002",
+    "question": "Which computer science faculty focus on statistical computing and what are their email addresses?",
+    "top5": [
+      {
+        "rank": 3,
+        "chunk_id": "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html#chunk-0",
+        "heading": "Faculty & Staff Directory",
+        "content_source": "web",
+        "chunk_type": "faculty",
+        "hybrid_score": 0.7489,
+        "metadata_boost": 0.08,
+        "final_score": 0.8289,
+        "text_preview": "Skip to main content Faculty & Staff Directory All Faculty & Staff College Faculty Emeriti Faculty Leadership Staff Tenu"
+      },
+      {
+        "rank": 1,
+        "chunk_id": "https://computerscience.nmsu.edu/#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "general",
+        "hybrid_score": 0.7766,
+        "metadata_boost": 0.0,
+        "final_score": 0.7766,
+        "text_preview": "The Mission of the Computer Science Department is to provide formal education in the core disciplines of computer scienc"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "https://computerscience.nmsu.edu/index.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "general",
+        "hybrid_score": 0.7762,
+        "metadata_boost": 0.0,
+        "final_score": 0.7762,
+        "text_preview": "The Mission of the Computer Science Department is to provide formal education in the core disciplines of computer scienc"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "ff1a31a3918ec2d7",
+        "heading": "faculty",
+        "content_source": "catalog",
+        "chunk_type": "faculty",
+        "hybrid_score": 0.6512,
+        "metadata_boost": 0.1,
+        "final_score": 0.7512,
+        "text_preview": "Professor Son Tran, Department Head Professor Huiping Cao, Associate Department Head Professors Cao, Cook, Misra, Pontel"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "1a37f59a555e7f16",
+        "heading": "A ST 616 — Computational Statistics",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.5612,
+        "metadata_boost": 0.02,
+        "final_score": 0.5812,
+        "text_preview": "A ST 616. Computational Statistics 3 Credits (3) An introduction to topics in computational statistics including: method"
+      }
+    ]
+  },
+  {
+    "question_id": "fac_003",
+    "question": "Where is Dr. Wayllace's office?",
+    "top5": [
+      {
+        "rank": 2,
+        "chunk_id": "3855fd4a8bbcb9cd",
+        "heading": "PL S 162 — The Virtual Law Ofﬁce",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6485,
+        "metadata_boost": 0.2,
+        "final_score": 0.8485,
+        "text_preview": "PL S 162. The Virtual Law Ofﬁce 3 Credits (3) The Virtual Law Ofﬁce class is a 'hands-on', project oriented course desig"
+      },
+      {
+        "rank": 1,
+        "chunk_id": "28631b8a912fef6e",
+        "heading": "FWCE 448 — Problems",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.75,
+        "metadata_boost": 0.02,
+        "final_score": 0.77,
+        "text_preview": "FWCE 448. Problems 1-3 Credits (1-3) Individual investigations in ﬁshery or wildlife science. Maximum 3 credits per seme"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "45c3418fa89213f8",
+        "heading": "FWCE 434 — Aquatic Contaminants and Toxicology",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.5863,
+        "metadata_boost": 0.02,
+        "final_score": 0.6063,
+        "text_preview": "FWCE 434. Aquatic Contaminants and Toxicology 4 Credits (3+3P) Basic principles and methodologies of aquatic toxicity te"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "0c1b6f934ee27d01",
+        "heading": "FWCE 567 — Herpetology",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.5681,
+        "metadata_boost": 0.02,
+        "final_score": 0.5881,
+        "text_preview": "FWCE 567. Herpetology 4 Credits (4) Systematics, taxonomy, ecology, behavior and conservation of amphibians and reptiles"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "026ddb4f8f12bd77",
+        "heading": "FWCE 301 — Wildlife Ecology",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.5491,
+        "metadata_boost": 0.02,
+        "final_score": 0.5691,
+        "text_preview": "FWCE 301. Wildlife Ecology 3 Credits (3) General ecological theory with emphasis on concepts including biogeography, spe"
+      }
+    ]
+  },
+  {
+    "question_id": "fac_004",
+    "question": "Which professors have interests in cryptography?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "874f8f2c94f49733",
+        "heading": "CSCI 5225 — Introduction to Cryptography",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.957,
+        "metadata_boost": 0.1,
+        "final_score": 1.057,
+        "text_preview": "CSCI 5225. Introduction to Cryptography 3 Credits (3) The course covers basic cryptographic primitives, such as symmetri"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "4100870442fd5329",
+        "heading": "CSCI 4225 — Introduction to Cryptography",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.9525,
+        "metadata_boost": 0.1,
+        "final_score": 1.0525,
+        "text_preview": "CSCI 4225. Introduction to Cryptography 3 Credits (3) The course covers basic cryptographic primitives, such as symmetri"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "00dc121ff28e5787",
+        "heading": "CSEC 275 — Introductory to Cryptography",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.9111,
+        "metadata_boost": 0.1,
+        "final_score": 1.0111,
+        "text_preview": "CSEC 275. Introductory to Cryptography 3 Credits (3) Introduction to the foundation of cryptography, principles behind c"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "58c9e2e46d2d91e1",
+        "heading": "CSEC 280 — Introduction to Cyber Defense",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6313,
+        "metadata_boost": 0.02,
+        "final_score": 0.6513,
+        "text_preview": "CSEC 280. Introduction to Cyber Defense 3 Credits (3) Introduction to the foundation of cryptography, principles behind "
+      },
+      {
+        "rank": 5,
+        "chunk_id": "https://computerscience.nmsu.edu/research/groups-labs.html#chunk-5",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "research",
+        "hybrid_score": 0.6025,
+        "metadata_boost": 0.0,
+        "final_score": 0.6025,
+        "text_preview": "Cryptography, Privacy and Security Research (CrySPR)\nThe Cryptography Security and Privacy Research (CrySPR) lab is a re"
+      }
+    ]
+  },
+  {
+    "question_id": "pol_001",
+    "question": "How do I get off academic probation?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "509e68e295bb0a3e",
+        "heading": "Removal of Academic Probation",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.9244,
+        "metadata_boost": 0.16,
+        "final_score": 1.0844,
+        "text_preview": "Removal of Academic Probation Such academic standing is removed when the cumulative GPA is raised to 2.0 or higher, with"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "2bd265102b975640",
+        "heading": "Undergraduate Academic Probation I",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.9183,
+        "metadata_boost": 0.16,
+        "final_score": 1.0783,
+        "text_preview": "Undergraduate Academic Probation I This occurs when a student under Academic Warning has a semester GPA less than 2.0, a"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "cf9f73438b917b01",
+        "heading": "Undergraduate Academic Probation II",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.8576,
+        "metadata_boost": 0.16,
+        "final_score": 1.0176,
+        "text_preview": "Undergraduate Academic Probation II Academic Probation II is issued in two ways. • The ﬁrst is when a student falls belo"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "f1479512fa1a1480",
+        "heading": "Academic Standing, Probation and Suspension Undergraduate Academic Standing",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.7214,
+        "metadata_boost": 0.16,
+        "final_score": 0.8814,
+        "text_preview": "Academic Standing, Probation and Suspension Undergraduate Academic Standing When a student does not maintain adequate ac"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "8def2b62f93bbbbf",
+        "heading": "glossary",
+        "content_source": "catalog",
+        "chunk_type": "glossary",
+        "hybrid_score": 0.7294,
+        "metadata_boost": 0.08,
+        "final_score": 0.8094,
+        "text_preview": "Academic Probation II: Registration restrictions of no more than 7 credit hours applied when: • An undergraduate student"
+      }
+    ]
+  },
+  {
+    "question_id": "pol_002",
+    "question": "What are grounds for dismissal?",
+    "top5": [
+      {
+        "rank": 2,
+        "chunk_id": "25090816a537ce74",
+        "heading": "glossary",
+        "content_source": "catalog",
+        "chunk_type": "glossary",
+        "hybrid_score": 0.7051,
+        "metadata_boost": 0.08,
+        "final_score": 0.7851,
+        "text_preview": "Grade Appeals: It is the student's responsibility to communicate concerns they may have about any grade in a class to th"
+      },
+      {
+        "rank": 1,
+        "chunk_id": "ffe2d9642fbaf8b4",
+        "heading": "Classroom Conduct",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.75,
+        "metadata_boost": 0.02,
+        "final_score": 0.77,
+        "text_preview": "Classroom Conduct Each instructor has the authority to establish and enforce reasonable rules of conduct in their course"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "7ab96fe3664d2812",
+        "heading": "glossary",
+        "content_source": "catalog",
+        "chunk_type": "glossary",
+        "hybrid_score": 0.6322,
+        "metadata_boost": 0.08,
+        "final_score": 0.7122,
+        "text_preview": "Suspension: Status whereby a student is ineligible for enrollment at NMSU due to poor academic performance or disciplina"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "94687701e864c624",
+        "heading": "Academic Misconduct and Grievances Student Academic Code of Conduct",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.4904,
+        "metadata_boost": 0.02,
+        "final_score": 0.5104,
+        "text_preview": "Academic Misconduct and Grievances Student Academic Code of Conduct The Student Academic Code of Conduct (SACC), applica"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "60bc9fc54e91e145",
+        "heading": "Examples of Academic Misconduct and Report Form",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.485,
+        "metadata_boost": 0.02,
+        "final_score": 0.505,
+        "text_preview": "Examples of Academic Misconduct and Report Form • ARP Appendix 5.10-A (Examples) (https://arp.nmsu.edu/appendices/ appen"
+      }
+    ]
+  },
+  {
+    "question_id": "pol_003",
+    "question": "How do I apply to the CS graduate program?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/prospective-graduates.html#chunk-1",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.8875,
+        "metadata_boost": 0.08,
+        "final_score": 0.9675,
+        "text_preview": "Frequently Asked Questions (FAQs)\nQuestions related to application submission Note to PhD in CS applicants : As of Sprin"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-11",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.6112,
+        "metadata_boost": 0.18,
+        "final_score": 0.7912,
+        "text_preview": "Questions related to CS minor\nQ301. What do I need to do to get a CS minor? A. First, you need to finish three CS gradua"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-2",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.5943,
+        "metadata_boost": 0.18,
+        "final_score": 0.7743,
+        "text_preview": "Attend the department’s graduate student orientation which is organized by the Computer Science Graduate Student Organiz"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-6",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.5854,
+        "metadata_boost": 0.18,
+        "final_score": 0.7654,
+        "text_preview": "CS 468 requires CS 271/462 and 272/463 as prerequisites CS 469 requires 272/463 and CS 278/465 as prerequisites CS 471 a"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-1",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.5662,
+        "metadata_boost": 0.18,
+        "final_score": 0.7462,
+        "text_preview": "Questions frequently asked by newly admitted students\nQ1 I am unable to begin my studies in the semester for which I was"
+      }
+    ]
+  },
+  {
+    "question_id": "pol_004",
+    "question": "Where can I get information about the required format for the submission of my dissertation?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html#chunk-8",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "enrollment",
+        "hybrid_score": 0.7704,
+        "metadata_boost": 0.0,
+        "final_score": 0.7704,
+        "text_preview": "July 22nd Deadline to Submit a Thesis or Dissertation to ProQuest Refer to Master's Thesis Students or Doctoral Disserta"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-8",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.6462,
+        "metadata_boost": 0.0,
+        "final_score": 0.6462,
+        "text_preview": "You need to check graduate school website to figure that out Generally, the deadline to have the final exam for CSCI 599"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "62de7b59204f39f8",
+        "heading": "Doctoral Degrees",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.5775,
+        "metadata_boost": 0.02,
+        "final_score": 0.5975,
+        "text_preview": "Doctoral Degrees The doctoral degree requires signiﬁcant scholarly study beyond the master’s program, including a minimu"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html#chunk-7",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "enrollment",
+        "hybrid_score": 0.5019,
+        "metadata_boost": 0.0,
+        "final_score": 0.5019,
+        "text_preview": "May 20, 2026 – August 6, 2026\nDate Action Item June 26th Deadline to Submit Dissertation Titles Dissertation Title Submi"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html#chunk-5",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "enrollment",
+        "hybrid_score": 0.4642,
+        "metadata_boost": 0.0,
+        "final_score": 0.4642,
+        "text_preview": "January 21 – May 15\nDate Action Item January 30th Deadline to File a Degree Application for Current Term Login to your m"
+      }
+    ]
+  },
+  {
+    "question_id": "pol_005",
+    "question": "Tell me about PhD qualifying exams. Who takes them and when? What are they like?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-4",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 1.0,
+        "metadata_boost": 0.0,
+        "final_score": 1.0,
+        "text_preview": "If you manage to get a B, then your course credit can be transferred.A Q10 I am new to the department What courses shoul"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-degrees.html#chunk-1",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "degree_overview",
+        "hybrid_score": 0.549,
+        "metadata_boost": 0.0,
+        "final_score": 0.549,
+        "text_preview": "Doctoral Degrees\nPh.D. in Computer Science Computer Science may also be a component in an Interdisciplinary Doctorate Su"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "62de7b59204f39f8",
+        "heading": "Doctoral Degrees",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.5126,
+        "metadata_boost": 0.02,
+        "final_score": 0.5326,
+        "text_preview": "Doctoral Degrees The doctoral degree requires signiﬁcant scholarly study beyond the master’s program, including a minimu"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html#chunk-4",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "enrollment",
+        "hybrid_score": 0.5238,
+        "metadata_boost": 0.0,
+        "final_score": 0.5238,
+        "text_preview": "November 7th Deadline to hold a thesis, dissertation, or doctoral final oral or written exam To sit for the exam, enroll"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "e5352f838a73b785",
+        "heading": "Standardized Tests",
+        "content_source": "catalog",
+        "chunk_type": "grad_program_info",
+        "hybrid_score": 0.4311,
+        "metadata_boost": 0.02,
+        "final_score": 0.4511,
+        "text_preview": "Standardized Tests Certain graduate programs may require standardized test scores for admission. An applicant may be req"
+      }
+    ]
+  },
+  {
+    "question_id": "pol_006",
+    "question": "I am in my second year as a Cybersecurity major and want to apply for MAP. What is the process?",
+    "top5": [
+      {
+        "rank": 2,
+        "chunk_id": "59d2177c1209b227",
+        "heading": "Master’s Accelerated Program (MAP)",
+        "content_source": "catalog",
+        "chunk_type": "grad_program_info",
+        "hybrid_score": 0.7386,
+        "metadata_boost": 0.16,
+        "final_score": 0.8986,
+        "text_preview": "Master’s Accelerated Program (MAP) Master’s Accelerated Program (MAP) provides the opportunity for academically qualiﬁed"
+      },
+      {
+        "rank": 1,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-10",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.8198,
+        "metadata_boost": 0.0,
+        "final_score": 0.8198,
+        "text_preview": "Questions for students in BS+MS MAP program\nQ201. What is the procedure to get admitted to the BS+MS MAP program? A. Stu"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "d6750c5dd2b7274e",
+        "heading": "Master’s Accelerated Program (MAP)",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.6499,
+        "metadata_boost": 0.16,
+        "final_score": 0.8099,
+        "text_preview": "Master’s Accelerated Program (MAP) The Master’s Accelerated Program (MAP) allows academically qualiﬁed undergraduate stu"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "5c6d9edec9a21fa0",
+        "heading": "glossary",
+        "content_source": "catalog",
+        "chunk_type": "glossary",
+        "hybrid_score": 0.6302,
+        "metadata_boost": 0.08,
+        "final_score": 0.7102,
+        "text_preview": "M Master's Accelerated Program (MAP): An opportunity for select undergraduate students to take graduate level courses th"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "431b80127273c379",
+        "heading": "Computer Science - Master of Science",
+        "content_source": "catalog",
+        "chunk_type": "degree_requirement",
+        "hybrid_score": 0.5492,
+        "metadata_boost": 0.12,
+        "final_score": 0.6692,
+        "text_preview": "The Master of Computer Science degree has two tracks, one with thesis or project track and a course-work only track. For"
+      }
+    ]
+  },
+  {
+    "question_id": "pol_007",
+    "question": "When is the deadline to apply to get my graduate diploma this summer?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "b36d050a024db293",
+        "heading": "Graduate Registration Requirements for Summer",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.8767,
+        "metadata_boost": 0.16,
+        "final_score": 1.0367,
+        "text_preview": "Graduate Registration Requirements for Summer Students who have scheduled their ﬁnal examination, or who are completing "
+      },
+      {
+        "rank": 2,
+        "chunk_id": "7f41f569d43c744a",
+        "heading": "Application Dates and Deadlines",
+        "content_source": "catalog",
+        "chunk_type": "grad_program_info",
+        "hybrid_score": 0.8042,
+        "metadata_boost": 0.02,
+        "final_score": 0.8242,
+        "text_preview": "Application Dates and Deadlines Contact the graduate degree program for published application deadlines. If the graduate"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html#chunk-3",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "enrollment",
+        "hybrid_score": 0.7184,
+        "metadata_boost": 0.08,
+        "final_score": 0.7984,
+        "text_preview": "August 21, 2025 - December 13, 2025\nDate Action Item August 29th Deadline to file a Degree Application for Current Term "
+      },
+      {
+        "rank": 4,
+        "chunk_id": "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "enrollment",
+        "hybrid_score": 0.6559,
+        "metadata_boost": 0.08,
+        "final_score": 0.7359,
+        "text_preview": "Graduate School Calendar\nSummer 2025 Fall 2025 Spring 2026 Summer 2026"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html#chunk-5",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "enrollment",
+        "hybrid_score": 0.6517,
+        "metadata_boost": 0.08,
+        "final_score": 0.7317,
+        "text_preview": "January 21 – May 15\nDate Action Item January 30th Deadline to File a Degree Application for Current Term Login to your m"
+      }
+    ]
+  },
+  {
+    "question_id": "pol_008",
+    "question": "How many faculty references do I need in my MAP application?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "59d2177c1209b227",
+        "heading": "Master’s Accelerated Program (MAP)",
+        "content_source": "catalog",
+        "chunk_type": "grad_program_info",
+        "hybrid_score": 0.9882,
+        "metadata_boost": 0.16,
+        "final_score": 1.1482,
+        "text_preview": "Master’s Accelerated Program (MAP) Master’s Accelerated Program (MAP) provides the opportunity for academically qualiﬁed"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "d6750c5dd2b7274e",
+        "heading": "Master’s Accelerated Program (MAP)",
+        "content_source": "catalog",
+        "chunk_type": "policy",
+        "hybrid_score": 0.7106,
+        "metadata_boost": 0.16,
+        "final_score": 0.8706,
+        "text_preview": "Master’s Accelerated Program (MAP) The Master’s Accelerated Program (MAP) allows academically qualiﬁed undergraduate stu"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-10",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.7146,
+        "metadata_boost": 0.0,
+        "final_score": 0.7146,
+        "text_preview": "Questions for students in BS+MS MAP program\nQ201. What is the procedure to get admitted to the BS+MS MAP program? A. Stu"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "431b80127273c379",
+        "heading": "Computer Science - Master of Science",
+        "content_source": "catalog",
+        "chunk_type": "degree_requirement",
+        "hybrid_score": 0.4989,
+        "metadata_boost": 0.12,
+        "final_score": 0.6189,
+        "text_preview": "The Master of Computer Science degree has two tracks, one with thesis or project track and a course-work only track. For"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "5c6d9edec9a21fa0",
+        "heading": "glossary",
+        "content_source": "catalog",
+        "chunk_type": "glossary",
+        "hybrid_score": 0.465,
+        "metadata_boost": 0.08,
+        "final_score": 0.545,
+        "text_preview": "M Master's Accelerated Program (MAP): An opportunity for select undergraduate students to take graduate level courses th"
+      }
+    ]
+  },
+  {
+    "question_id": "minor_001",
+    "question": "What are my options for a CS minor, and what are the differences?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-11",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.8714,
+        "metadata_boost": 0.1,
+        "final_score": 0.9714,
+        "text_preview": "Questions related to CS minor\nQ301. What do I need to do to get a CS minor? A. First, you need to finish three CS gradua"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "https://computerscience.nmsu.edu/non-majors/minors.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "degree_overview",
+        "hybrid_score": 0.8439,
+        "metadata_boost": 0.08,
+        "final_score": 0.9239,
+        "text_preview": "A Computer Science minor is a great way to get fairly significant learning in computer science and programming, and will"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "b1a889c06156e3e9",
+        "heading": "Computer Science - Graduate Minor",
+        "content_source": "catalog",
+        "chunk_type": "minor_requirement",
+        "hybrid_score": 0.6191,
+        "metadata_boost": 0.18,
+        "final_score": 0.7991,
+        "text_preview": "Computer Science - Graduate Minor Students who wish to take a minor in Computer Science will need to accumulate a minimu"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "ef83f65275f8cd78",
+        "heading": "minor_index",
+        "content_source": "catalog",
+        "chunk_type": "minor_index",
+        "hybrid_score": 0.6565,
+        "metadata_boost": 0.1,
+        "final_score": 0.7565,
+        "text_preview": "Computer Science undergraduate and graduate minors are for non- Computer Science majors only. A student cannot earn more"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-degrees.html#chunk-3",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "degree_overview",
+        "hybrid_score": 0.6508,
+        "metadata_boost": 0.0,
+        "final_score": 0.6508,
+        "text_preview": "Minor\nGraduate Minor in Computer Science"
+      }
+    ]
+  },
+  {
+    "question_id": "minor_002",
+    "question": "I am a graduate studying engineering. What would be the value of my getting a CS minor?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "b1a889c06156e3e9",
+        "heading": "Computer Science - Graduate Minor",
+        "content_source": "catalog",
+        "chunk_type": "minor_requirement",
+        "hybrid_score": 0.87,
+        "metadata_boost": 0.18,
+        "final_score": 1.05,
+        "text_preview": "Computer Science - Graduate Minor Students who wish to take a minor in Computer Science will need to accumulate a minimu"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-11",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "advising",
+        "hybrid_score": 0.8365,
+        "metadata_boost": 0.18,
+        "final_score": 1.0165,
+        "text_preview": "Questions related to CS minor\nQ301. What do I need to do to get a CS minor? A. First, you need to finish three CS gradua"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "https://computerscience.nmsu.edu/grad-students/graduate-degrees.html#chunk-3",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "degree_overview",
+        "hybrid_score": 0.8179,
+        "metadata_boost": 0.08,
+        "final_score": 0.8979,
+        "text_preview": "Minor\nGraduate Minor in Computer Science"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "https://computerscience.nmsu.edu/non-majors/minors.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "degree_overview",
+        "hybrid_score": 0.7768,
+        "metadata_boost": 0.08,
+        "final_score": 0.8568,
+        "text_preview": "A Computer Science minor is a great way to get fairly significant learning in computer science and programming, and will"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "ef83f65275f8cd78",
+        "heading": "minor_index",
+        "content_source": "catalog",
+        "chunk_type": "minor_index",
+        "hybrid_score": 0.6361,
+        "metadata_boost": 0.1,
+        "final_score": 0.7361,
+        "text_preview": "Computer Science undergraduate and graduate minors are for non- Computer Science majors only. A student cannot earn more"
+      }
+    ]
+  },
+  {
+    "question_id": "road_001",
+    "question": "What courses should I take in my first semester as an undergraduate in Cybersecurity?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "482e154e99b5dc92",
+        "heading": "Computer Science (Cybersecurity) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "concentration_requirement",
+        "hybrid_score": 0.978,
+        "metadata_boost": 0.28,
+        "final_score": 1.258,
+        "text_preview": "Computer Science (Cybersecurity) - Bachelor of Science The speciﬁc requirements for the concentration in Cybersecurity 8"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "b47cdb41eb55db41",
+        "heading": "CSEC 110 — Principles of Cybersecurity",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.8181,
+        "metadata_boost": 0.18,
+        "final_score": 0.9981,
+        "text_preview": "CSEC 110. Principles of Cybersecurity 3 Credits (3) Course covers contemporary trends in cybersecurity including underst"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "e1114ca8e2808ded",
+        "heading": "CSEC 295 — Cybersecurity Capstone",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6687,
+        "metadata_boost": 0.18,
+        "final_score": 0.8487,
+        "text_preview": "CSEC 295. Cybersecurity Capstone 3-4 Credits (3-4) Experiential hands-on learning applying skills and knowledge gained i"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "5e1c259e48cc0f3d",
+        "heading": "BCIS 580 — Introduction to Cybersecurity: Exploring Computer, Network,",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6177,
+        "metadata_boost": 0.18,
+        "final_score": 0.7977,
+        "text_preview": "BCIS 580. Introduction to Cybersecurity: Exploring Computer, Network, and Data Security Principles 3 Credits (3) This co"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "58c9e2e46d2d91e1",
+        "heading": "CSEC 280 — Introduction to Cyber Defense",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.6421,
+        "metadata_boost": 0.1,
+        "final_score": 0.7421,
+        "text_preview": "CSEC 280. Introduction to Cyber Defense 3 Credits (3) Introduction to the foundation of cryptography, principles behind "
+      }
+    ]
+  },
+  {
+    "question_id": "road_002",
+    "question": "I am beginning my studies for a BS in Computer Science in the Spring of 2027. In what CS courses should I consider enrolling?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "118ed2b476025933",
+        "heading": "Computer Science - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.9771,
+        "metadata_boost": 0.28,
+        "final_score": 1.2571,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G Calculus and Analytic Geomet"
+      },
+      {
+        "rank": 2,
+        "chunk_id": "e03e64a89750695b",
+        "heading": "Computer Science (Computer Networking) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.9315,
+        "metadata_boost": 0.28,
+        "final_score": 1.2115,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G and ENGL 1110G . The content"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "ecc0329a35c1aae4",
+        "heading": "Computer Science (Human Computer Interaction) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.9109,
+        "metadata_boost": 0.28,
+        "final_score": 1.1909,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G Calculus and Analytic Geomet"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "38523fd8f6fa217f",
+        "heading": "Computer Science (Cybersecurity) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.8881,
+        "metadata_boost": 0.28,
+        "final_score": 1.1681,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G Calculus and Analytic Geomet"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "7c883ac8660d5cdd",
+        "heading": "Computer Science (Artificial Intelligence) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "study_plan",
+        "hybrid_score": 0.8856,
+        "metadata_boost": 0.28,
+        "final_score": 1.1656,
+        "text_preview": "A Suggested Plan of Study for Students This roadmap assumes student placement in MATH 1511G and ENGL 1110G . The content"
+      }
+    ]
+  },
+  {
+    "question_id": "other_001",
+    "question": "What is the difference in job opportunities between a BS in Cybersecurity and one in AI?",
+    "top5": [
+      {
+        "rank": 1,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/undergraduate-degrees.html#chunk-1",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "degree_overview",
+        "hybrid_score": 0.8322,
+        "metadata_boost": 0.0,
+        "final_score": 0.8322,
+        "text_preview": "How to Select Between the B.S and B.A.?\nThe B.S in Computer Science is the traditional computer science degree program, "
+      },
+      {
+        "rank": 2,
+        "chunk_id": "482e154e99b5dc92",
+        "heading": "Computer Science (Cybersecurity) - Bachelor of Science",
+        "content_source": "catalog",
+        "chunk_type": "concentration_requirement",
+        "hybrid_score": 0.6447,
+        "metadata_boost": 0.18,
+        "final_score": 0.8247,
+        "text_preview": "Computer Science (Cybersecurity) - Bachelor of Science The speciﬁc requirements for the concentration in Cybersecurity 8"
+      },
+      {
+        "rank": 3,
+        "chunk_id": "https://computerscience.nmsu.edu/majors/undergraduate-degrees.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "degree_overview",
+        "hybrid_score": 0.6087,
+        "metadata_boost": 0.0,
+        "final_score": 0.6087,
+        "text_preview": "We offer the following undergraduate majors: Bachelor of Science (B.S.) in Computer Science ( ABET - CAC accredited), Ba"
+      },
+      {
+        "rank": 5,
+        "chunk_id": "76e4efb6262255a4",
+        "heading": "ACCT 558 — Artiﬁcial Intelligence in Accounting",
+        "content_source": "catalog",
+        "chunk_type": "course_description",
+        "hybrid_score": 0.471,
+        "metadata_boost": 0.1,
+        "final_score": 0.571,
+        "text_preview": "ACCT 558. Artiﬁcial Intelligence in Accounting 3 Credits (3) This course covers the concepts and applications of artiﬁci"
+      },
+      {
+        "rank": 4,
+        "chunk_id": "https://computerscience.nmsu.edu/department/program-level-learning-outcomes-cs-programs.html#chunk-0",
+        "heading": "New Mexico State University",
+        "content_source": "web",
+        "chunk_type": "general",
+        "hybrid_score": 0.5267,
+        "metadata_boost": 0.0,
+        "final_score": 0.5267,
+        "text_preview": "Programs:\nBA in CS Program-Level Learning Outcomes BS in CS Program-Level Learning Outcomes BS in Cybersecurity Program-"
+      }
+    ]
+  }
+]

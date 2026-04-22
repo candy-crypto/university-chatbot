@@ -17,6 +17,15 @@ root_url: "https://computerscience.nmsu.edu/"
 # These are added to the crawl queue before the BFS begins.
 seed_urls:
   - "https://apply.nmsu.edu/apply/"
+  - "https://advising.nmsu.edu/"
+  - "https://dataanalytics.nmsu.edu/application-admission.html"
+  - "https://dataanalytics.nmsu.edu/courses/roadmap-fall.html"
+  - "https://dataanalytics.nmsu.edu/courses/roadmap-spring.html"
+  - "https://ece.nmsu.edu/grad-study/teaching-assistants.html"
+  - "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html"
+  - "https://miniapps.nmsu.edu/transfer"
+  - "https://tpal.nmsu.edu/degree-programs/assistantships.html"
+  - "https://www.nmsu.edu/degree-programs/graduate/computer-science.html"
 
 allowed_domains:
   - "computerscience.nmsu.edu"
@@ -34,6 +43,7 @@ allowed_path_prefixes:
   - "/"
 
 deny_url_patterns:
+  - ".pdf"
   - "/search"
   - "?q="
   - "/department/newsletters-new"
@@ -56,6 +66,7 @@ fallback_contact_url: "https://computerscience.nmsu.edu/"
 #   faculty          — faculty/staff directory pages
 #   research         — research groups, software, technical reports, awards
 #   policy           — department policies and procedures
+#   glossary         — catalog glossary definitions
 #   advising         — advising, FAQs, prospective student guidance
 #   financial_aid    — scholarships, assistantships, financial aid listings
 #   enrollment       — registration, admissions, transfer, calendars

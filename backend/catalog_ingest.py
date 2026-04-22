@@ -16,7 +16,7 @@ from weaviate.classes.query import Filter
 from weaviate.classes.data import DataObject
 
 from weaviate_client import get_weaviate_client, ensure_collection, get_collection
-from db import init_db, log_crawl_run
+from db import init_db, log_crawl_run, upsert_courses
 
 load_dotenv()
 
@@ -81,6 +81,14 @@ def embed_batch(texts):
 
 def normalize_text(text: str) -> str:
     return re.sub(r"\s+", " ", (text or "")).strip()
+
+
+def extract_suffix(course_code: str) -> str:
+    """Return 'G', 'V', or '' based on the last character of the course code."""
+    code = (course_code or "").strip()
+    if code and code[-1] in ("G", "V"):
+        return code[-1]
+    return ""
 
 
 def iso_now() -> str:
@@ -175,6 +183,41 @@ def map_catalog_chunk(chunk, crawl_version: str):
     }
 
 
+EMBED_TOKEN_LIMIT = 8192
+
+
+def preflight_check(mapped: list) -> bool:
+    """
+    Check all chunks for oversized text before any embedding calls are made.
+    Prints a warning for each chunk that exceeds the embedding token limit.
+    Returns True if all chunks are within limits, False if any are too long.
+    """
+    # 4 chars per token is a conservative approximation
+    char_limit = EMBED_TOKEN_LIMIT * 4
+    oversized = [
+        item for item in mapped
+        if len(item["text"]) > char_limit
+    ]
+    if not oversized:
+        print(f"Pre-flight check passed: all {len(mapped)} chunks within token limit.")
+        return True
+
+    print(f"\nPre-flight check FAILED: {len(oversized)} chunk(s) exceed {EMBED_TOKEN_LIMIT} token limit:")
+    for item in oversized:
+        est_tokens = estimate_tokens(item["text"])
+        print(
+            f"  chunk_id:   {item['chunk_id']}\n"
+            f"  chunk_type: {item['chunk_type']}\n"
+            f"  heading:    {item['heading']}\n"
+            f"  source:     {item['source']}\n"
+            f"  est_tokens: {est_tokens}\n"
+            f"  chars:      {len(item['text'])}\n"
+        )
+    print("Ingest aborted. Existing catalog chunks have already been deleted.")
+    print("Fix the oversized chunks and re-run to restore the collection.")
+    return False
+
+
 def upsert_catalog_chunks(catalog_chunks, crawl_version: str):
     client = get_weaviate_client()
     try:
@@ -184,6 +227,27 @@ def upsert_catalog_chunks(catalog_chunks, crawl_version: str):
         delete_catalog_chunks(collection, CATALOG_DEPARTMENT_ID, CATALOG_YEAR)
 
         mapped = [map_catalog_chunk(chunk, crawl_version) for chunk in catalog_chunks if normalize_text(chunk.text)]
+
+        # Populate the course lookup table from course_description chunks.
+        course_records = [
+            {
+                "course_code":  item["course_code"],
+                "course_title": item["heading"].split(" — ", 1)[1] if " — " in item["heading"] else item["heading"],
+                "credits":      item["credits"],
+                "suffix":       extract_suffix(item["course_code"]),
+                "department_id": item["department_id"],
+                "campus":       item["campus"],
+                "catalog_year": item["catalog_year"],
+            }
+            for item in mapped
+            if item["chunk_type"] == "course_description" and item.get("course_code")
+        ]
+        upsert_courses(course_records)
+        print(f"Upserted {len(course_records)} course records to lookup table.")
+
+        if not preflight_check(mapped):
+            return 0
+
         embeddings = embed_batch([item["text"] for item in mapped])
 
         objects = []
@@ -217,6 +281,11 @@ def main():
     )
 
     indexed = upsert_catalog_chunks(chunks, crawl_version)
+
+    if indexed == 0:
+        print(f"Parsed {len(chunks)} catalog chunks")
+        print("Indexed 0 chunks — aborted due to pre-flight failure (no changes made to Weaviate).")
+        return
 
     log_crawl_run(
         department_id=CATALOG_DEPARTMENT_ID,

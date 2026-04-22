@@ -76,7 +76,7 @@ def ingest_single_url(url: str, department_id: str, dry_run: bool = False) -> in
     if not chunks:
         text = data.get("text", "").strip()
         if text:
-            chunks = [text[:2000]]
+            chunks = [{"heading": data.get("h1", ""), "text": text[:2000]}]
 
     if not chunks:
         print("ERROR: No chunks produced. Aborting.")
@@ -86,18 +86,20 @@ def ingest_single_url(url: str, department_id: str, dry_run: bool = False) -> in
 
     if dry_run:
         for i, c in enumerate(chunks):
-            print(f"\n── Chunk {i} ({'%d chars' % len(c)}) ──")
-            print(c[:300] + ("..." if len(c) > 300 else ""))
+            print(f"\n── Chunk {i} (heading: {c['heading']!r}) ({'%d chars' % len(c['text'])}) ──")
+            print(c["text"][:300] + ("..." if len(c["text"]) > 300 else ""))
         print("\n[dry-run] No changes written to Weaviate.")
         return 0
 
     print(f"  Embedding {len(chunks)} chunk(s) with OpenAI...")
-    embeddings = embed_batch(chunks)
+    embeddings = embed_batch([c["text"] for c in chunks])
 
     crawl_version = time.strftime("%Y%m%d_%H%M%S")
 
     objects = []
-    for i, (chunk_text, emb) in enumerate(zip(chunks, embeddings)):
+    for i, (chunk, emb) in enumerate(zip(chunks, embeddings)):
+        chunk_text = chunk["text"]
+        chunk_heading = chunk.get("heading") or data.get("h1", "")
         objects.append(DataObject(
             uuid=str(uuid.uuid4()),
             properties={
@@ -106,7 +108,7 @@ def ingest_single_url(url: str, department_id: str, dry_run: bool = False) -> in
                 "department_id":       department_id.strip().lower(),
                 "campus":              campus,
                 "text":                chunk_text,
-                "heading":             data.get("h1", ""),
+                "heading":             chunk_heading,
                 "source":              url,
                 "level":               level,
                 "degree_type":         degree_type,

@@ -131,6 +131,7 @@ class CatalogChunk:
 #   minor_requirement        Individual minor / certificate requirements
 #   course_description       Single course entry (end-of-catalog section only)
 #   policy                   University-wide policy section
+#   glossary                 Catalog glossary definitions
 #   grad_program_info        Grad school entrance reqs, assistantships, funding
 #   research                 Research facility or lab description
 
@@ -191,6 +192,35 @@ def get_page_lines(page) -> list[dict]:
             "is_header": is_hdr,
         })
     return lines
+
+
+# ── Known limitation: two-column section boundary mixing ──────────────────────
+#
+# The NMSU catalog is typeset in two columns. get_page_lines() groups characters
+# by (col_key, y_bucket) and sorts by that key, which processes every left-column
+# line before any right-column line on the same page. This is correct within a
+# section, but breaks at section boundaries that fall mid-page.
+#
+# When a section ends partway down the left column and a new section begins in
+# the right column, the right-column tail of the ending section is read after
+# ALL left-column content — including the start of the next section's left-column
+# text. The result is that a few lines from the old section's right-column tail
+# get silently appended to the new section's chunk.
+#
+# Typical symptom: a chunk for section B contains stray lines from the bottom of
+# section A's right column, and section A's chunk is missing those same lines.
+# The effect is small (a few lines per page where a boundary falls mid-column),
+# but it means affected chunks have slightly incorrect content.
+#
+# Correct fix: process lines in horizontal bands (y-bands spanning both columns)
+# so that content is read left-to-right within each band, then move to the next
+# band. This would correctly interleave the two columns at section boundaries.
+# The fix requires restructuring lines_to_text() and the downstream chunkers to
+# detect column breaks by y-position rather than by column label.
+#
+# This fix has been deferred until after the evaluation benchmark is established,
+# so that retrieval quality can be measured before and after the change.
+# ──────────────────────────────────────────────────────────────────────────────
 
 
 def lines_to_text(lines: list[dict], skip_headers: bool = True) -> str:
@@ -345,6 +375,7 @@ def chunk_generic_pages(
     dept_name:   str = "",
     lab_name:    str = "",
     topic:       str = "",
+    degree_level: str = "",
     split_at_size: float = HEADING_SIZE_MIN,
 ) -> list[CatalogChunk]:
     """
@@ -379,6 +410,7 @@ def chunk_generic_pages(
             dept_name=dept_name,
             policy_topic=cur_topic if chunk_type in ("policy", "grad_program_info") else "",
             lab_name=cur_topic if chunk_type == "research" else lab_name,
+            degree_level=degree_level,
             referenced_courses=find_referenced_courses(text),
             is_research_related=(chunk_type == "research"),
         )
@@ -890,7 +922,13 @@ def chunk_course_descriptions(pdf, start: int, end: int) -> list[CatalogChunk]:
     Each course entry begins with the pattern "PREFIX NNNN[G]. Course Title".
 
     Streams page-by-page to avoid accumulating all 700+ pages in memory at once.
+    Content accumulation per entry is capped at COURSE_CHUNK_MAX_CHARS to prevent
+    non-course tail content (indexes, appendices) at the end of the catalog from
+    being absorbed into the last matched course entry.
     """
+    # Cap at 8000 tokens worth of characters (well under the 8192 embedding limit).
+    COURSE_CHUNK_MAX_CHARS = 8000 * 4
+
     chunks         = []
     cur_lines      = []
     cur_page       = start
@@ -899,6 +937,11 @@ def chunk_course_descriptions(pdf, start: int, end: int) -> list[CatalogChunk]:
 
     def flush():
         text = "\n".join(cur_lines).strip()
+        # Truncate to cap before building the chunk — anything beyond is non-course content.
+        if len(text) > COURSE_CHUNK_MAX_CHARS:
+            print(f"  [warn] {cur_code} p{cur_page}: truncated from {len(text)} to "
+                  f"{COURSE_CHUNK_MAX_CHARS} chars (non-course tail content discarded)")
+            text = text[:COURSE_CHUNK_MAX_CHARS]
         if len(text) < 30 or not cur_code:
             return
         pm = re.match(r'^([A-Z]{1,4}(?:\s[A-Z]{1,4})?)', cur_code)
@@ -1050,13 +1093,32 @@ def upload_to_weaviate(
 # 'start_heading' in config: skip content before this heading (transition pages)
 
 EXPLICIT_SECTIONS = [
+    # ── Glossary ─────────────────────────────────────────────────────────────
+    # topic pre-set so content before the first heading is not dropped.
+    (22,  31,  "glossary", {"topic": "Glossary"}),
     # ── University policies ──────────────────────────────────────────────────
+    (31,  55,  "policy",   {"dept_name": ""}),
     (60,  73,  "policy",   {"dept_name": ""}),
-    # ── Graduate School intro, entrance reqs, assistantships (pp. 74-90) ──────
-    # Split around the research section (80-85) to avoid duplicate processing.
-    (74,  79,  "grad_info",{}),   # financial aid → grad school intro
-    # p86-90 removed: these pages are an alphabetical master's degree index
-    # (Agriculture, Animal Science, etc.) — no retrieval value for CS chatbot
+    # ── General Education & VWW (undergraduate only) ─────────────────────────
+    # p241: Gen Ed intro paragraph + Area I-IV course lists
+    # p242: Area V-VI + 9-credit rule + VWW definition paragraph + alternatives
+    # pp243-244: VWW course lists by college
+    # Course lists are redundant with G/V-suffix course descriptions but the
+    # definitional paragraphs are essential for "What are VWW requirements?" queries.
+    (241, 244, "policy",   {"topic": "General Education and Viewing a Wider World Requirements",
+                            "degree_level": "undergraduate"}),
+    # ── Academic Advising / CAASS ─────────────────────────────────────────────
+    # p41: CAASS mentioned in passing within registration policy — keep for retrieval.
+    # p447-449: College of Arts and Sciences intro — contains the full CAASS name in
+    #   the college header. Ends just before "Bachelor Degrees" heading on p449.
+    # p955 and p1129 are incidental mentions in programs of no interest — omitted.
+    (41,  41,  "policy",   {"dept_name": "", "topic": "Center for Academic Advising and Student Support (CAASS)"}),
+    (447, 449, "policy",   {"dept_name": "", "topic": "College of Arts and Sciences",
+                            "start_heading": "College of Arts and Sciences"}),
+    # ── Graduate School intro, entrance reqs, assistantships ─────────────────
+    # p86-90: alphabetical master's degree index — skip (no retrieval value)
+    # p91-105: graduate programs not of interest — skip
+    (74,  79,  "grad_info",{}),   # graduate school intro
     # ── Research Facilities (all labs — no CS filter) ─────────────────────────
     (80,  85,  "research", {}),   # all research facilities; heading buffer handles p85 R-col
     # ── CS Department ─────────────────────────────────────────────────────────
@@ -1162,33 +1224,9 @@ def run_pipeline(
     dry_run=True  → parse and return chunks without uploading (default)
     dry_run=False → requires embed_fn; uploads to Weaviate after parsing
 
-    course_prefixes: list of dept prefixes to include in course_description chunks.
-      Default: all prefixes found in requirements of target programs.
-      Pass [] to skip course chunking regardless of include_courses.
+    include_courses: if True, chunk ALL course descriptions (pages ~1379–end of PDF).
+    course_prefixes: unused — kept for call-site compatibility. All courses are included.
     """
-    if course_prefixes is None:
-        # All prefixes appearing in requirements for CS-family programs.
-        # Covers: CS core, EE AI, Bioinformatics, Data Analytics, and
-        # the general-education courses woven into every CS degree plan.
-        course_prefixes = [
-            "CSCI",   # Computer Science
-            "E E",    # Electrical Engineering (AI/ML concentration)
-            "MOLB",   # Molecular Biology (Bioinformatics)
-            "MATH",   # Mathematics (required in all CS degrees)
-            "STAT",   # Statistics
-            "A ST",   # Applied Statistics
-            "BIOL",   # Biology (Bioinformatics)
-            "CHEM",   # Chemistry
-            "PHYS",   # Physics
-            "ASTR",   # Astronomy
-            "GEOL",   # Geology (gen-ed science option)
-            "GEOG",   # Geography
-            "ENGL",   # English (writing requirement)
-            "COMM",   # Communication
-            "HNRS",   # Honors
-            "BCIS",   # Business Computer Info Systems (CS Secondary Ed)
-            "CJUS",   # Criminal Justice (Cybersecurity)
-        ]
 
     all_chunks: list[CatalogChunk] = []
     seen_ids: set[str] = set()
@@ -1217,7 +1255,13 @@ def run_pipeline(
 
             if handler == "policy":
                 add(chunk_generic_pages(pdf, start, end, "policy",
-                                        dept_name=cfg.get("dept_name", "")))
+                                        dept_name=cfg.get("dept_name", ""),
+                                        topic=cfg.get("topic", ""),
+                                        degree_level=cfg.get("degree_level", "")))
+
+            elif handler == "glossary":
+                add(chunk_generic_pages(pdf, start, end, "glossary",
+                                        topic=cfg.get("topic", "Glossary")))
 
             elif handler == "grad_info":
                 add(chunk_generic_pages(pdf, start, end, "grad_program_info"))
@@ -1252,22 +1296,20 @@ def run_pipeline(
     # ── End-of-catalog course descriptions (batched, outside main PDF handle) ──
     # Fresh PDF handle per batch so pdfplumber's per-page cache is released
     # between batches — avoids OOM on the 700-page course section.
-    if include_courses and course_prefixes:
+    # ALL course descriptions are included — no prefix filter — per original design.
+    if include_courses:
         COURSE_BATCH = 80
-        pfx_set = {p.split()[0] for p in course_prefixes}
         course_total = 0
-        print(f"  Parsing course descriptions from p{course_start} "
+        print(f"  Parsing ALL course descriptions from p{course_start} "
               f"in batches of {COURSE_BATCH} pages …")
         for b_start in range(course_start, total, COURSE_BATCH):
             b_end = min(b_start + COURSE_BATCH - 1, total - 1)
             with pdfplumber.open(pdf_path) as pdf_b:
-                raw = chunk_course_descriptions(pdf_b, b_start, b_end)
-            retained = [c for c in raw
-                        if any(c.dept_prefix.startswith(p) for p in pfx_set)]
-            add(retained)
-            course_total += len(retained)
-            if retained:
-                print(f"    p{b_start}–{b_end}: {len(raw)} entries, {len(retained)} retained")
+                batch = chunk_course_descriptions(pdf_b, b_start, b_end)
+            add(batch)
+            course_total += len(batch)
+            if batch:
+                print(f"    p{b_start}–{b_end}: {len(batch)} entries")
         print(f"  {course_total} course chunks total")
 
     print(f"\nTotal chunks: {len(all_chunks)}")
