@@ -356,7 +356,7 @@
     - "6e812bb0213d9f4f"   # CSCI 3410 — Introduction to Intelligent Agents Using Science Fiction
     - "96ed44c75c847eb2"   # CSCI 4440 — Generative Artificial Intelligence
     - "14ca18cad3cdd826"   # CSCI 4245 — Computer Networks I
-  retrieval_note: "study_plan chunks (ranks 3-5) displaced 3 of 4 expected course_description chunks; course_description boost (+0.15) added for 'courses + topic verb' queries; re-run retrieval after boost to confirm TBD IDs"
+  retrieval_note: "study_plan chunks (ranks 3-5) displaced 3 of 4 expected course_description chunks; course_description boost (+0.15) added for 'courses + topic verb' queries; all chunk IDs confirmed"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -775,8 +775,8 @@
     - "https://computerscience.nmsu.edu/grad-students/graduate-financial-aid.html#chunk-0"  # grad CS scholarships — confirmed rank 2 (1.0414)
     - "f6773056-167d-5890-9c9a-47447cbc0dfe"  # "Funding Opportunities for Graduate Students" p.78 — NOT retrieved; covers TAs, RAs, fellowships
     - "f5c4fbcc-5881-53c9-99f2-6a5bbdd8c38f"  # "Assistantships" p.78 — NOT retrieved; TA/RA details
-    - "https://gradschool.nmsu.edu/scholarships-and-tuition/awards-and-funding.html#chunk-0"  # grad school awards — NOT IN COLLECTION; seed_url added to cs.yaml
-  retrieval_note: "ranks 1-2 confirmed good (both CS financial aid pages); rank 3 general NMSU policy is supplementary; ranks 4-5 are study_plan chunks — irrelevant, same 0.18 stopword-inflated boost as seen in deg_005; critical p.78-79 grad_program_info chunks (TAs, RAs, assistantships, fellowships) not retrieved; gradschool awards page not in collection — seed_url and page_type added to cs.yaml"
+    - "https://gradschool.nmsu.edu/scholarships-and-tuition/awards-and-funding.html#chunk-0"  # grad school awards — confirmed in collection after 2026-04-24 web ingest
+  retrieval_note: "ranks 1-2 confirmed good (both CS financial aid pages); rank 3 general NMSU policy is supplementary; ranks 4-5 are study_plan chunks — irrelevant, same 0.18 stopword-inflated boost as seen in deg_005; critical p.78-79 grad_program_info chunks (TAs, RAs, assistantships, fellowships) not retrieved; gradschool awards page now in collection"
   expected_source_type: "either"
   applicable_groups:
     - "current_undergrad"
@@ -825,11 +825,11 @@
     - "International students without a US degree must pass NMSU International Teaching Assistant (ITA) screening before receiving a TA"
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/grad-students/graduate-financial-aid.html#chunk-2"  # "Teaching Assistantships" — confirmed rank 1 (1.0353); CS-specific hours, duties, stipend
-    - "https://tpal.nmsu.edu/degree-programs/assistantships.html#chunk-0"                   # TPAL assistantships page — NOT IN COLLECTION (seeded but failed to crawl; retry on next ingest)
+    - "https://tpal.nmsu.edu/degree-programs/assistantships.html#chunk-0"                   # TPAL assistantships page — confirmed in collection after 2026-04-24 web ingest
     - "https://ece.nmsu.edu/grad-study/teaching-assistants.html#chunk-1"                    # ECE "Klipsch School TAs" — confirmed rank 2 (0.9249); cross-dept but university-wide policy
     - "https://ece.nmsu.edu/grad-study/teaching-assistants.html#chunk-6"                    # ECE "Responsibilities of TAs" — confirmed rank 3 (0.8453)
     - "3bd4805dbe3989f0"  # catalog "Assistantships" p.78 — confirmed rank 5 (0.7793)
-  retrieval_note: "retrieval adequate — CS TA chunk at rank 1 covers hours/stipend/duties; tpal.nmsu.edu is the canonical university-wide source but NOT IN COLLECTION (seeded but failed Playwright render — retry on next ingest); ECE chunks (ranks 2-4) are cross-department but TA policies are NMSU-wide so content is valid; ECE chunk-7 (final rank 4, 0.7627) has the 10-hr additional work limit rule"
+  retrieval_note: "retrieval adequate — CS TA chunk at rank 1 covers hours/stipend/duties; tpal.nmsu.edu now in collection; ECE chunks (ranks 2-4) are cross-department but TA policies are NMSU-wide so content is valid; ECE chunk-7 (final rank 4, 0.7627) has the 10-hr additional work limit rule"
   expected_source_type: "web"
   applicable_groups:
     - "prospective_ms"
@@ -850,9 +850,9 @@
     - "Contact your advisor for information on available RA positions"
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/grad-students/graduate-financial-aid.html#chunk-4"  # "Research Assistantships" — confirmed final rank 1 (0.83); CS-specific RA process
-    - "https://tpal.nmsu.edu/degree-programs/assistantships.html#chunk-0"                   # TPAL — NOT IN COLLECTION; same crawl failure as fin_004
+    - "https://tpal.nmsu.edu/degree-programs/assistantships.html#chunk-0"                   # TPAL — confirmed in collection after 2026-04-24 web ingest
     - "https://ece.nmsu.edu/grad-study/teaching-assistants.html#chunk-8"                    # ECE "Research Assistants" — confirmed final rank 2 (0.6239); cross-dept but accurate on RA eligibility/process
-  retrieval_note: "rank 1 correct; tpal page missing from collection (same crawl failure); CS TA chunk at final rank 3 (0.6206) is off-topic; Research Internship chunks (ranks 4-5, 0.52/0.52) are adjacent but not RAs; undergrad internship chunk (rank 5) not penalized — query has no explicit graduate signal"
+  retrieval_note: "rank 1 correct; tpal page now in collection; CS TA chunk at final rank 3 (0.6206) is off-topic; Research Internship chunks (ranks 4-5, 0.52/0.52) are adjacent but not RAs; undergrad internship chunk (rank 5) not penalized — query has no explicit graduate signal"
   expected_source_type: "web"
   applicable_groups:
     - "prospective_ms"
@@ -869,8 +869,8 @@
   key_facts:
     - "Dr. Huiping Cao and Dr. Tuan Le are affiliated with the Data Analytics concentration"
   expected_chunk_ids:
-    - "https://dataanalytics.nmsu.edu/facultydirectory/index.html#chunk-0"  # data analytics faculty directory — NOT IN COLLECTION; was blocked by deny_url_pattern; deny rule removed and page added to cs.yaml seed_urls and page_types; will exist after next web ingest
-  retrieval_note: "complete retrieval failure for faculty question — faculty directory was blocked by deny_url_pattern for dataanalytics.nmsu.edu/facultydirectory; deny rule removed; current top 5 are degree_requirement, general program, concentration_requirement, and course_description chunks — none list faculty; CS faculty directory chunk_type exists but CS faculty directory page does not list data analytics affiliations specifically"
+    - "https://dataanalytics.nmsu.edu/facultydirectory/index.html#chunk-0"  # data analytics faculty directory — confirmed in collection after 2026-04-24 web ingest (was blocked by deny_url_pattern; rule removed)
+  retrieval_note: "deny_url_pattern for dataanalytics.nmsu.edu/facultydirectory removed; page now in collection; faculty boost (+0.15) added for faculty/person queries; retrieval to be confirmed at eval time"
   expected_source_type: "web"
   banner_redirect_expected: false
 
@@ -949,8 +949,8 @@
     - "59d2177c1209b227"  # Master's Accelerated Program (MAP) — catalog p.76; general MAP eligibility; CS-specific process (p.129) not chunked separately (chunker gap)
     - "https://computerscience.nmsu.edu/grad-students/graduate-degrees.html#chunk-2"  # Master's Degrees — lists available CS graduate programs
     - "https://dataanalytics.nmsu.edu/application-admission.html#chunk-0"  # Data Analytics application requirements
-    # TBD: catalog p.566 bioinformatics entrance requirements — content exists but not chunked (nmsu_catalog_chunker.py gap)
-  retrieval_note: "retrieval failure — all 5 expected chunks absent from top 5; ranks 2-3 (CS minor FAQ, MAP FAQ) inflated by 'cs' abbreviation matching in heading boost, now fixed; catalog enrollment chunks still not surfacing due to vocabulary mismatch ('apply' in query vs formal catalog language about 'application dates and deadlines'); enrollment chunk_type boost for apply/application queries may be needed"
+    - "80e8f7f60b3bcda7"  # Entrance Requirements for Graduate Study in Bioinformatics — catalog p.566; now a separate grad_program_info chunk after 2026-04-25 chunker fix
+  retrieval_note: "retrieval failure — all 5 expected chunks absent from top 5; ranks 2-3 (CS minor FAQ, MAP FAQ) inflated by 'cs' abbreviation matching in heading boost, now fixed; enrollment chunk_type boost (+0.12) added for apply/admission queries; bioinformatics entrance requirements now separately indexed; retrieval to be confirmed at eval time"
   expected_source_type: "either"
   applicable_groups:
     - "prospective_ms"
