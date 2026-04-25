@@ -180,7 +180,9 @@
     - "One course must be from a college other than the student's own"
     - "Should be taken in junior and/or senior year"
     - "Study Abroad (4+ weeks in foreign country) or Military Experience (4+ weeks in foreign country) can replace 3 VWW credits"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "45eb0bef0400c391"  # NMSU Viewing a Wider World Requirements — catalog
+    - "3064c5eebfcc27c6"  # Alternatives for Meeting VWW Requirements — catalog
   expected_source_type: "catalog"
   applicable_groups:
     - "prospective_undergrad"
@@ -650,7 +652,7 @@
     - "No hard deadline is specified in department sources"
     - "Must have an advisor to enroll in CSCI 5999 Master's Thesis"
   expected_chunk_ids:
-    - "8f253b35-b997-5c0b-8255-2637dd489844"  # CSCI 5999 Master's Thesis p.1569 — "under supervision of their advisor"; implies advisor required to enroll; MISSING from top 5
+    - "8989b07bb9abc2e5"  # CSCI 5999 Master's Thesis p.1569 — "under supervision of their advisor"; implies advisor required to enroll
   retrieval_note: "p.128 does NOT state the advisor deadline — removed from expected; CSCI 5999 course description (p.1569) is the best available source (implies advisor needed to enroll); rank 1 is grad school calendar about exam/submission deadlines — wrong question; FAQ does not address this; other-department thesis courses (RGSC/ASTR) contain accurate but non-CS-specific info; expected LLM answer: no hard deadline found, but must have advisor to enroll in CSCI 5999"
   expected_source_type: "catalog"
   applicable_groups:
@@ -664,7 +666,7 @@
     - "No hard deadline is specified in department sources"
     - "Must have an advisor to enroll in CSCI 5994 Master's Project"
   expected_chunk_ids:
-    - "317c4dfb-7c06-52ff-b02a-77441ece55e9"  # CSCI 5994 Master's Project p.1569 — "under supervision of their advisor"
+    - "dce5a946d24fd867"  # CSCI 5994 Master's Project p.1569 — "under supervision of their advisor"
   retrieval_note: "same pattern as deg_007; other-department project/thesis courses contain accurate universal policy; expected LLM answer: no hard deadline, but advisor required to enroll in CSCI 5994; FAQ does not address this specifically"
   expected_source_type: "catalog"
   applicable_groups:
@@ -903,7 +905,10 @@
   key_facts:
     - "Dr. Roopa Vishwanathan: expertise in cryptographic protocol design, applied cryptography for decentralized finance and blockchain applications, redaction in blockchains"
     - "Dr. Gaurav Panwar: expertise in cryptography"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "ff1a31a3918ec2d7"  # faculty directory chunk — contains both Vishwanathan and Panwar
+    - "https://computerscience.nmsu.edu/research/groups-labs.html#chunk-5"  # CrySPR lab — Vishwanathan
+    - "https://computerscience.nmsu.edu/research/groups-labs.html#chunk-7"  # PRISM lab — Panwar
   expected_source_type: "web"
   banner_redirect_expected: false
 

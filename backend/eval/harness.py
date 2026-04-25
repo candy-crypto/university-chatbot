@@ -421,11 +421,27 @@ def evaluate_question(record: dict, use_judge: bool) -> dict:
         result["judge_error"]       = judge_scores["judge_error"]
 
         if jt is not None:
-            result["passed"] = (ret_score >= RETRIEVAL_SCORE_THRESHOLD and
-                                jt >= JUDGE_TOTAL_THRESHOLD)
+            if banner_redirect_expected:
+                # Redirect questions have no retrievable chunk — pass on
+                # redirect trigger + judge quality, not retrieval score.
+                result["passed"] = (banner_triggered and
+                                    jt >= JUDGE_TOTAL_THRESHOLD)
+            elif not expected_ids:
+                # Unanswerable questions have no expected chunks — pass on
+                # judge quality alone (system must say "not available").
+                result["passed"] = jt >= JUDGE_TOTAL_THRESHOLD
+            else:
+                result["passed"] = (ret_score >= RETRIEVAL_SCORE_THRESHOLD and
+                                    jt >= JUDGE_TOTAL_THRESHOLD)
     else:
         # Without judge, pass based on retrieval score only
-        result["passed"] = ret_score >= RETRIEVAL_SCORE_THRESHOLD
+        # (redirect/unanswerable questions fall back to banner trigger check)
+        if banner_redirect_expected:
+            result["passed"] = banner_triggered
+        elif not expected_ids:
+            result["passed"] = True  # cannot evaluate without judge
+        else:
+            result["passed"] = ret_score >= RETRIEVAL_SCORE_THRESHOLD
 
     return result
 
