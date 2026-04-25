@@ -115,7 +115,15 @@ _GRADUATE_TERMS = frozenset({
 _SCHEDULE_TERMS = frozenset({
     "offered", "offer", "offering", "schedule", "rotation",
     "semester", "fall", "spring", "opportunity",
+    # Availability vocabulary not caught by the terms above.
+    "next",         # "next time it's offered", "next fall"
+    "available",    # "is CSCI 4120 available?"
+    "availability", # "course availability"
 })
+# "when" is in _STOPWORDS so tokenize() drops it; check the raw query instead.
+# Covers "when is X offered?", "when will X run?", "when does X meet?" without
+# removing "when" from the stopword list (which would cause false boosts elsewhere).
+_WHEN_RE = re.compile(r'\bwhen\b', re.IGNORECASE)
 # Degree/requirement trigger terms — includes comparison vocabulary so the
 # degree_requirement boost fires for "difference between X and Y" queries.
 _REQUIREMENT_TERMS = frozenset({
@@ -136,6 +144,26 @@ _POLICY_QUERY_TERMS = frozenset({
     "policy", "policies", "rule", "rules",
     "procedure", "procedures", "process",
     "deadline", "deadlines", "hold", "holds",
+})
+# Gen Ed / VWW terms — used to (a) boost policy/grad_program_info chunks and
+# (b) penalize study_plan chunks that mention VWW courses but are not the
+# authoritative policy source.
+_GEN_ED_TERMS = frozenset({
+    "vww", "viewing", "wider", "world",
+    "gened", "gen", "education", "general",
+})
+# Faculty-query terms — signal that the user is asking about a specific person
+# or looking for faculty directory information.
+_FACULTY_TERMS = frozenset({
+    "faculty", "professor", "instructor", "dr", "doctor",
+    "who", "office", "email", "contact", "research", "teaches",
+    "advisor", "adviser",
+})
+# Enrollment / application terms — trigger boost for enrollment chunk_type.
+_ENROLLMENT_TERMS = frozenset({
+    "apply", "application", "applications",
+    "admission", "admissions", "admit", "admitted",
+    "enroll", "enrollment", "register", "registration",
 })
 # "between X and Y", "X vs Y" — student is comparing named specific items;
 # default TOP_K is sufficient since the named chunks will score highly.
@@ -161,15 +189,19 @@ def tokenize(text: str) -> List[str]:
 # are present for BM25 matching.
 
 _ACRONYM_MAP = {
-    r"\bAI\b":   "Artificial Intelligence",
-    r"\bML\b":   "Machine Learning",
-    r"\bHCI\b":  "Human Computer Interaction",
-    r"\bNLP\b":  "Natural Language Processing",
-    r"\bOS\b":   "Operating Systems",
-    r"\bSE\b":   "Software Engineering",
-    r"\bDS\b":   "Data Science",
-    r"\bDB\b":   "Database",
-    r"\bMAP\b":  "Masters Accelerated Program",
+    r"\bAI\b":    "Artificial Intelligence",
+    r"\bML\b":    "Machine Learning",
+    r"\bHCI\b":   "Human Computer Interaction",
+    r"\bNLP\b":   "Natural Language Processing",
+    r"\bOS\b":    "Operating Systems",
+    r"\bSE\b":    "Software Engineering",
+    r"\bDS\b":    "Data Science",
+    r"\bDB\b":    "Database",
+    r"\bMAP\b":   "Masters Accelerated Program",
+    # CAASS has no BM25 hits without expansion — the acronym never appears in the
+    # catalog; only the full name "Center for Academic Advising and Student Support"
+    # appears on the CS advising FAQ and the College of A&S intro pages.
+    r"\bCAASS\b": "Center for Academic Advising and Student Support",
 }
 
 
@@ -361,7 +393,12 @@ def metadata_boost(query: str, chunk: Dict[str, Any]) -> float:
             boost += 0.06
 
     # Course schedule chunks are authoritative for offering/scheduling queries.
-    if chunk.get("chunk_type") == "course_schedule" and query_tokens.intersection(_SCHEDULE_TERMS):
+    # _SCHEDULE_TERMS covers most vocabulary; _WHEN_RE catches "when is/will/does"
+    # whose key word "when" is a stopword and never survives tokenize().
+    if chunk.get("chunk_type") == "course_schedule" and (
+        query_tokens.intersection(_SCHEDULE_TERMS)
+        or _WHEN_RE.search(query)
+    ):
         boost += 0.15
 
     # Minor requirement chunks are preferred when the query is about a minor.
@@ -384,6 +421,30 @@ def metadata_boost(query: str, chunk: Dict[str, Any]) -> float:
     # Policy chunks are preferred for VWW, Gen Ed, and explicit policy queries.
     if (chunk.get("chunk_type") in ("policy", "grad_program_info")
             and query_tokens.intersection(_POLICY_QUERY_TERMS)):
+        boost += 0.12
+
+    # Extra boost for Gen Ed / VWW policy chunks: study_plan chunks that list VWW
+    # courses can outscore the policy definition pages on phrase match.  Raise the
+    # policy/grad_program_info signal higher, and suppress study_plan chunks that
+    # are not answering a degree-plan question.
+    if (chunk.get("chunk_type") in ("policy", "grad_program_info")
+            and query_tokens.intersection(_GEN_ED_TERMS)):
+        boost += 0.08
+    if (chunk.get("chunk_type") == "study_plan"
+            and query_tokens.intersection(_GEN_ED_TERMS)):
+        boost -= 0.12
+
+    # Faculty chunks are preferred when the query is about a specific person or
+    # asking for faculty directory information.
+    if (chunk.get("chunk_type") == "faculty"
+            and query_tokens.intersection(_FACULTY_TERMS)):
+        boost += 0.15
+
+    # Enrollment chunks are preferred for apply/admission/registration queries.
+    # Vocabulary mismatch: "apply" in a user query rarely appears verbatim in
+    # formal catalog enrollment chunks, so BM25 misses them without this boost.
+    if (chunk.get("chunk_type") == "enrollment"
+            and query_tokens.intersection(_ENROLLMENT_TERMS)):
         boost += 0.12
 
     # Level match — boost chunks whose level matches the audience implied by the

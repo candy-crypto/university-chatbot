@@ -213,9 +213,10 @@ def get_page_lines(page) -> list[dict]:
 # section. A few lines from section A's right column tail get appended to
 # section B's chunk, and section A's chunk is missing those lines.
 #
-# Known affected pages: pp.41-42 (Prerequisites/Corequisites), pp.213-214
-# (doctoral milestones). Effect is small — only lines near the column boundary
-# are affected.
+# Known affected pages: pp.41-42 (Prerequisites/Corequisites), which falls
+# inside the (31, 55) policy block. pp.213-214 (Range Science PhD) are NOT
+# in any EXPLICIT_SECTIONS range and are never processed — not affected.
+# Effect is small — only lines near the column boundary are misassigned.
 #
 # Correct fix: process lines in y-bands spanning both columns so headings are
 # seen in reading order rather than column order. This requires restructuring
@@ -456,30 +457,46 @@ def chunk_generic_pages(
 def chunk_dept_intro(pdf, start: int, end: int, dept_name: str,
                      start_heading: str = "") -> list[CatalogChunk]:
     """
-    Parse department intro page(s).  Splits on 16pt+ headings into:
-      program_index  ("Degrees for the Department")
-      minor_index    ("Minors for the Department")
-      faculty        ("Faculty", "College Faculty")
-      dept_intro     (any narrative before the first major heading)
+    Parse department intro page(s).  Splits on named headings into:
+      program_index    ("Degrees for the Department")
+      minor_index      ("Minors for the Department")
+      faculty          ("Faculty", "College Faculty")
+      grad_program_info (MAP, Graduate Program Information, Entrance Requirements,
+                         Graduate Assistantships — p.566)
+      dept_intro       (any narrative before the first major heading)
     Skips the embedded "XYZ Courses" section entirely.
+
+    Multi-line headings (e.g. "Entrance Requirements for Graduate Study in Computer"
+    on one line, "Science" on the next) are buffered and joined before lookup so
+    they match the combined key in DEPT_CHUNK_TYPES.
     """
     DEPT_CHUNK_TYPES = {
         "Degrees for the Department": "program_index",
         "Minors for the Department":  "minor_index",
         "Faculty":                    "faculty",
         "College Faculty":            "faculty",
+        # p.566 graduate program sections — previously absorbed into dept_intro blob
+        # Note: apostrophe in "Master's" is U+2019 (curly) as encoded in the PDF.
+        "Master\u2019s Accelerated Program (MAP)":                     "grad_program_info",
+        "Graduate Program Information":                                 "grad_program_info",
+        "Entrance Requirements for Graduate Study in Computer Science": "grad_program_info",
+        "Entrance Requirements for Graduate Study in Bioinformatics":   "grad_program_info",
+        "Graduate Assistantships":                                      "grad_program_info",
     }
     COURSES_HEADING_RE = re.compile(r'.+\sCourses?$', re.IGNORECASE)
 
     chunks      = []
     cur_lines   = []
     cur_type    = "dept_intro"
+    cur_topic   = ""       # policy_topic for grad_program_info chunks
     cur_page    = start
     in_courses  = False
     found_start = (start_heading == "")
     norm_fn     = lambda s: re.sub(r"\s+", " ", unicodedata.normalize("NFKC", s.strip().lower()))
     norm_start  = norm_fn(start_heading)
-    hbuf_dept   = []   # buffer for multi-line 18pt dept heading
+    hbuf_dept   = []   # buffer for multi-line 18pt dept name heading (pre-start)
+    hbuf_sec    = []   # buffer for multi-line section headings (post-start)
+    hbuf_sec_pg = start
 
     def flush():
         text = "\n".join(cur_lines).strip()
@@ -492,8 +509,23 @@ def chunk_dept_intro(pdf, start: int, end: int, dept_name: str,
             dept_name=dept_name,
             program_family=[_dept_to_family(dept_name)],
             referenced_courses=find_referenced_courses(text),
+            policy_topic=cur_topic,
         )
         chunks.append(c)
+
+    def _commit_hbuf_sec(pg):
+        """Resolve buffered section-heading lines → flush previous chunk, start new one."""
+        nonlocal cur_type, cur_topic, cur_page, cur_lines, in_courses
+        combined = " ".join(hbuf_sec)
+        flush()
+        cur_lines  = []
+        cur_type   = DEPT_CHUNK_TYPES[combined]
+        cur_topic  = combined if cur_type == "grad_program_info" else ""
+        cur_page   = hbuf_sec_pg
+        in_courses = False
+        # Include heading in body so it is searchable via BM25/vector
+        if cur_type == "grad_program_info":
+            cur_lines.append(combined)
 
     for pg in range(start, min(end + 1, len(pdf.pages))):
         lines = get_page_lines(pdf.pages[pg])
@@ -514,25 +546,50 @@ def chunk_dept_intro(pdf, start: int, end: int, dept_name: str,
                     hbuf_dept = []
                 continue
 
-            # Detect start of embedded course descriptions — skip this section
-            if is_heading(line) and COURSES_HEADING_RE.match(txt):
-                flush()
-                cur_lines  = []
-                in_courses = True
+            if is_heading(line):
+                # Courses section: commit pending section-heading buffer as body,
+                # then flush current chunk and enter skip mode.
+                if COURSES_HEADING_RE.match(txt):
+                    if hbuf_sec:
+                        if not in_courses:
+                            cur_lines.extend(hbuf_sec)
+                        hbuf_sec.clear()
+                    flush()
+                    cur_lines  = []
+                    in_courses = True
+                    continue
+
+                # Accumulate section heading lines; check after each addition
+                # so single-line headings are committed immediately and multi-
+                # line headings are joined before the lookup.
+                if not hbuf_sec:
+                    hbuf_sec_pg = pg
+                hbuf_sec.append(txt)
+                combined = " ".join(hbuf_sec)
+                if combined in DEPT_CHUNK_TYPES:
+                    _commit_hbuf_sec(pg)
+                    hbuf_sec.clear()
+                # else: keep buffering — may be first line of a multi-line heading
                 continue
 
-            # Detect a known major heading — ends the course section if we were in it
-            if is_heading(line) and txt in DEPT_CHUNK_TYPES:
-                flush()
-                cur_lines  = []
-                cur_type   = DEPT_CHUNK_TYPES[txt]
-                cur_page   = pg
-                in_courses = False
-                continue   # heading text is captured as chunk_type, not content
+            # Body line — dump any unresolved heading buffer as body text, then
+            # add the body line itself.
+            if hbuf_sec:
+                if not in_courses:
+                    cur_lines.extend(hbuf_sec)
+                hbuf_sec.clear()
 
             if not in_courses:
                 cur_lines.append(txt)
 
+    # End of range — flush any trailing heading buffer, then final chunk
+    if hbuf_sec:
+        combined = " ".join(hbuf_sec)
+        if combined in DEPT_CHUNK_TYPES:
+            _commit_hbuf_sec(start)  # pg irrelevant here; hbuf_sec_pg already set
+        elif not in_courses:
+            cur_lines.extend(hbuf_sec)
+        hbuf_sec.clear()
     flush()
     return chunks
 

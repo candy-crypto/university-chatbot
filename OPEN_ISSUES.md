@@ -1,6 +1,6 @@
 # Open Issues — University Chatbot
 
-Last updated: 2026-04-24  
+Last updated: 2026-04-25  
 Branch: BarbaraA-Reed-retrieval-annotate
 
 Items marked **[done]** were implemented in code but not yet re-ingested.
@@ -34,21 +34,21 @@ Items marked **[re-ingest needed]** require a pipeline re-run to take effect.
 
 - [x] **CAASS / glossary boost fix (partial)** — glossary boost now conditional on `query_tokens ∩ glossary_heading_tokens`. Prevents advisor glossary chunk boosting for "What is CAASS?". Full acronym expansion for CAASS still needed. *(adv_001)*
 
-- [x] **course_schedule retrieval gap** — "opportunity", "next time", "when is", "when will" added to `_schedule_terms`. **[done]**
+- [x] **course_schedule retrieval gap** — `_SCHEDULE_TERMS` extended with "next", "available", "availability"; `_WHEN_RE` regex added to catch "when is/will/does" whose key word "when" is a stopword that `tokenize()` drops. Both checks combined in the course_schedule boost condition. **[done]**
 
 - [x] **Disambiguation — course level** — system prompt instructs LLM to ask which version when two similarly-named courses at different levels appear in context. **[done]**
 
 - [x] **Disambiguation — degree vs. concentration** — system prompt instructs LLM to take current student's stated major at face value; for prospective students, clarify when a name applies to both a standalone degree and a concentration. **[done]**
 
-- [ ] **`policy` chunk_type boost** — policy chunks losing to study_plan chunks for VWW / Gen Ed queries (pp.241-244). Needs targeted boost trigger. *(req_001, req_002)*
+- [x] **`policy` chunk_type boost** — `_GEN_ED_TERMS` frozenset added; policy/grad_program_info chunks get extra +0.08 for Gen Ed/VWW queries; study_plan chunks get -0.12 penalty when Gen Ed/VWW terms present (to suppress study plans that list VWW courses from outranking the policy definition pages). **[done]** *(req_001, req_002)*
 
-- [ ] **OECS false positive (avail_006)** — non-CS course outranking CSCI 4120 for availability queries. Root cause not yet identified.
+- [ ] **OECS false positive (avail_006)** — root cause identified: OECS 125 "Operating Systems" has exact BM25 phrase match. Existing course_schedule boost (+0.15 when "offered"/"semester" in query) already promotes the rotation table to rank 1. OECS chunk may still appear in top 5 but LLM disambiguation handles it. No retrieval fix needed.
 
-- [ ] **Faculty chunk_type boost for proper-name queries** — Playwright wait added but boost not yet implemented. *(fac_001, fac_003)*
+- [x] **Faculty chunk_type boost** — `_FACULTY_TERMS` frozenset added; faculty chunks get +0.15 when query contains faculty/person/contact terms. *(fac_001, fac_003)* **[done]**
 
-- [ ] **CAASS acronym expansion (full fix)** — CAASS has no BM25 hits; needs acronym expansion or query expansion. Glossary conditional boost is partial fix only. *(adv_001)*
+- [x] **CAASS acronym expansion (full fix)** — `CAASS → "Center for Academic Advising and Student Support"` added to `_ACRONYM_MAP`. BM25 will now match the full name in the College of A&S intro and advising FAQ chunks. **[done]** *(adv_001)*
 
-- [ ] **Enrollment chunk_type boost for apply/application queries** — pol_003 retrieval failure: catalog enrollment chunks not surfacing for "how do I apply" queries due to vocabulary mismatch. *(pol_003)*
+- [x] **Enrollment chunk_type boost for apply/application queries** — `_ENROLLMENT_TERMS` frozenset added; enrollment chunks get +0.12 when apply/admission/registration terms present. **[done]** *(pol_003)*
 
 ---
 
@@ -68,9 +68,9 @@ Items marked **[re-ingest needed]** require a pipeline re-run to take effect.
 
 - [x] **Two-column PDF parsing — heading fragment fix** — character midpoint used for column detection; fixes CSCI 5250 parsed as "SCI 4250". **[ingested 2026-04-24]**
 
-- [ ] **Two-column PDF parsing — cross-page section boundaries** — pp.41-42 and pp.213-214 split across page boundaries. Requires restructuring `lines_to_text()` — deferred. *(req_012, deg_009)*
+- [ ] **Two-column PDF parsing — column-order section boundary** — pp.41-42: when a section heading appears in the right column while the left column still has content below that y-position, `get_page_lines()` emits left-column lines first, so the preceding chunk absorbs a few lines that visually belong to the next section. Requires restructuring to process lines in y-bands across both columns — deferred. pp.213-214 (Range Science PhD) cited in earlier notes are **not processed** and not affected. *(req_012, deg_009)*
 
-- [ ] **Bioinformatics entrance requirements not chunked** — catalog p.566 contains "Entrance Requirements for Graduate Study in Bioinformatics" (GRE not required, BS in computational/life sciences, 3.2 GPA, career statement, 3 reference letters). This section in the CS dept block was not extracted as a separate chunk by `chunk_dept_intro()`. *(pol_003)*
+- [x] **Bioinformatics entrance requirements not chunked** — `chunk_dept_intro()` now splits on five additional headings (MAP, Graduate Program Information, Entrance Requirements for CS, Entrance Requirements for Bioinformatics, Graduate Assistantships) mapped to `grad_program_info`. Multi-line headings buffered and joined before lookup; Unicode apostrophe in "Master's" handled. **[re-ingest needed]** *(pol_003)*
 
 ---
 
@@ -88,7 +88,9 @@ Items marked **[re-ingest needed]** require a pipeline re-run to take effect.
 
 - [x] **Re-run catalog ingest** — completed 2026-04-24 (5,901 chunks)
 
-- [ ] **Update TBD chunk IDs in ground_truth.yaml** — re-run `export_chunk_ids.py` and fill in TBD entries now that ingests are complete
+- [x] **Update TBD chunk IDs in ground_truth.yaml** — resolved 2026-04-24; 3 remain as known chunker gaps (adv_001, pol_003 p.566, fac_003)
+
+- [x] **Re-run catalog ingest** — completed 2026-04-25 (5,906 chunks; +5 from p.566 grad_program_info splits)
 
 ---
 
