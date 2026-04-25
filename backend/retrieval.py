@@ -571,6 +571,17 @@ def _build_hard_filters(query: str, tokens: set) -> "Filter | None":
                 "minor_requirement", "minor_index",
             ])
         )
+        # Degree-structure queries (comparing/explaining tracks, requirements, or
+        # degree types) also exclude course_description — other-department course
+        # descriptions (e.g. EDUC "Master's Thesis", SPED "Master's Thesis") match
+        # on degree vocabulary and pollute results without adding useful signal.
+        # Guard: only when the student is NOT asking about specific courses
+        # ("what courses are required?" keeps course_description in scope).
+        if ("courses" not in tokens and "course" not in tokens
+                and tokens.intersection(_REQUIREMENT_TERMS)):
+            filters.append(
+                Filter.by_property("chunk_type").contains_none(["course_description"])
+            )
     elif ("courses" in tokens
           and tokens.intersection(_COURSE_TOPIC_TERMS)
           and not tokens.intersection(_POLICY_QUERY_TERMS)
