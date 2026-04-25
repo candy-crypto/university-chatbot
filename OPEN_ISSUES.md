@@ -54,17 +54,19 @@ Items marked **[re-ingest needed]** require a pipeline re-run to take effect.
 
 ## ingest.py
 
-- [x] **FAQ Q&A chunking** — `_expand_qa_sections()` splits sections with 2+ Q\d+ markers into one chunk per Q&A pair. **[re-ingest needed]**
+- [x] **FAQ Q&A chunking** — `_expand_qa_sections()` splits sections with 2+ Q\d+ markers into one chunk per Q&A pair. **[ingested 2026-04-24]**
 
-- [x] **Faculty directory dynamic rendering** — Playwright `wait_for_selector` loop added for faculty CSS selectors. **[re-ingest needed]**
+- [x] **Faculty directory dynamic rendering** — Playwright `wait_for_selector` loop added for faculty CSS selectors. **[ingested 2026-04-24]**
 
-- [x] **Whitelist-only crawl** — BFS-discovered links no longer queued; only `pages` + `seed_urls` visited. **[done]**
+- [x] **Whitelist-only crawl** — BFS-discovered links no longer queued; only `pages` + `seed_urls` visited. **[ingested 2026-04-24]**
+
+- [x] **Per-page browser isolation** — fresh Playwright page opened and closed per URL so a failed/redirected navigation cannot corrupt subsequent crawl requests. **[ingested 2026-04-24]**
 
 ---
 
 ## nmsu_catalog_chunker.py
 
-- [x] **Two-column PDF parsing — heading fragment fix** — character midpoint used for column detection; fixes CSCI 5250 parsed as "SCI 4250". **[re-ingest needed]**
+- [x] **Two-column PDF parsing — heading fragment fix** — character midpoint used for column detection; fixes CSCI 5250 parsed as "SCI 4250". **[ingested 2026-04-24]**
 
 - [ ] **Two-column PDF parsing — cross-page section boundaries** — pp.41-42 and pp.213-214 split across page boundaries. Requires restructuring `lines_to_text()` — deferred. *(req_012, deg_009)*
 
@@ -74,17 +76,17 @@ Items marked **[re-ingest needed]** require a pipeline re-run to take effect.
 
 - [x] **Whitelist-only crawl** — renamed `page_types:` → `pages:`. **[done]**
 
-- [x] **non-majors/minors.html level tag** — removed `undergraduate` level tag so graduate students are not penalized when asking about minor value/options. **[re-ingest needed]**
+- [x] **non-majors/minors.html level tag** — removed `undergraduate` level tag so graduate students are not penalized when asking about minor value/options. **[ingested 2026-04-24]**
 
 ---
 
 ## Pipeline re-runs needed
 
-- [ ] **Re-run web ingest** — required for: FAQ chunking fix, Playwright faculty fix, whitelist crawl change, cs.yaml seed_url additions, minors.html level tag fix
+- [x] **Re-run web ingest** — completed 2026-04-24 (43 pages, 172 chunks)
 
-- [ ] **Re-run catalog ingest** — required after two-column PDF heading fix
+- [x] **Re-run catalog ingest** — completed 2026-04-24 (5,901 chunks)
 
-- [ ] **Update TBD chunk IDs in ground_truth.yaml** — re-run `export_chunk_ids.py` after ingests; many TBD entries added during ground truth review pass
+- [ ] **Update TBD chunk IDs in ground_truth.yaml** — re-run `export_chunk_ids.py` and fill in TBD entries now that ingests are complete
 
 ---
 
@@ -92,4 +94,4 @@ Items marked **[re-ingest needed]** require a pipeline re-run to take effect.
 
 - [x] **Full review pass completed** — pol_001 through other_001 reviewed and recorded (2026-04-24)
 
-- [ ] **TBD chunk IDs** — multiple entries have TBD chunk IDs pending re-ingest; update after pipeline re-runs
+- [ ] **TBD chunk IDs** — multiple entries have TBD chunk IDs; ingests now complete, ready to update
