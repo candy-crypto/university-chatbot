@@ -155,11 +155,18 @@ def get_page_lines(page) -> list[dict]:
 
     # Group chars by (column, y-bucket) so same-y headings in different
     # columns never merge into a single garbled line.
+    #
+    # Use the character horizontal midpoint (not its left edge x0) to decide
+    # which column it belongs to. A heading that starts just left of COL_SPLIT_X
+    # (e.g. "CSCI 5250" at x0=304, x1=312) has its centre in the right column
+    # and should be classified as "R". Using x0 alone caused the leading character
+    # ("C") to land in the left column, producing garbled headings like "SCI 4250".
     raw_lines = defaultdict(list)
     for c in chars:
         if not c["text"]:
             continue
-        col_key  = "L" if c["x0"] < COL_SPLIT_X else "R"
+        x_mid    = (c["x0"] + c.get("x1", c["x0"] + c.get("size", 6) * 0.55)) / 2
+        col_key  = "L" if x_mid < COL_SPLIT_X else "R"
         y_bucket = round(c["top"] / 3) * 3
         raw_lines[(col_key, y_bucket)].append(c)
 
@@ -194,32 +201,25 @@ def get_page_lines(page) -> list[dict]:
     return lines
 
 
-# ── Known limitation: two-column section boundary mixing ──────────────────────
+# ── Remaining two-column limitation: section boundary mixing ──────────────────
 #
-# The NMSU catalog is typeset in two columns. get_page_lines() groups characters
-# by (col_key, y_bucket) and sorts by that key, which processes every left-column
-# line before any right-column line on the same page. This is correct within a
-# section, but breaks at section boundaries that fall mid-page.
+# get_page_lines() sorts by (col_key, y_bucket), processing all left-column
+# lines before any right-column lines. This is correct within a section, but
+# breaks at section boundaries that fall mid-page.
 #
-# When a section ends partway down the left column and a new section begins in
-# the right column, the right-column tail of the ending section is read after
-# ALL left-column content — including the start of the next section's left-column
-# text. The result is that a few lines from the old section's right-column tail
-# get silently appended to the new section's chunk.
+# When a section ends partway down the left column and the NEXT section begins
+# in the right column (above the left-column section end), the right-column
+# tail of the ending section is read AFTER all left-column content of the new
+# section. A few lines from section A's right column tail get appended to
+# section B's chunk, and section A's chunk is missing those lines.
 #
-# Typical symptom: a chunk for section B contains stray lines from the bottom of
-# section A's right column, and section A's chunk is missing those same lines.
-# The effect is small (a few lines per page where a boundary falls mid-column),
-# but it means affected chunks have slightly incorrect content.
+# Known affected pages: pp.41-42 (Prerequisites/Corequisites), pp.213-214
+# (doctoral milestones). Effect is small — only lines near the column boundary
+# are affected.
 #
-# Correct fix: process lines in horizontal bands (y-bands spanning both columns)
-# so that content is read left-to-right within each band, then move to the next
-# band. This would correctly interleave the two columns at section boundaries.
-# The fix requires restructuring lines_to_text() and the downstream chunkers to
-# detect column breaks by y-position rather than by column label.
-#
-# This fix has been deferred until after the evaluation benchmark is established,
-# so that retrieval quality can be measured before and after the change.
+# Correct fix: process lines in y-bands spanning both columns so headings are
+# seen in reading order rather than column order. This requires restructuring
+# lines_to_text() and all downstream chunkers; deferred.
 # ──────────────────────────────────────────────────────────────────────────────
 
 

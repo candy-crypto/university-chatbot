@@ -400,7 +400,11 @@
     - "CSCI 2410 Practical Programming (3 credits): teaches how to code"
     - "CSCI 3710/4575 Software Development (4 credits): teaches how to work in teams to build, test, and maintain systems"
     - "Practical Programming is 2000-level; Software Development is 3000/4000-level"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "d15a83ecc9c69fc0"   # CSCI 2410 Practical Programming — rank 1
+    - "eeaf6086e70999b1"   # CSCI 3710 Software Development — rank 3
+    - "59c0aab961329a69"   # CSCI 4575 Software Development Transition — rank 2
+  retrieval_note: "ranks 4-5 are minor/concentration chunks displacing no course descriptions; course_description boost extended to include 'difference/compare/between/versus' trigger terms"
   expected_source_type: "catalog"
   applicable_groups:
     - "current_undergrad"
@@ -413,7 +417,9 @@
     - "CJUS 412 Introduction to Security Technology and Loss Prevention"
     - "Covers private and public responses to security problems: employee theft, perimeter security, domestic and foreign terrorism"
     - "Reviews related law and management practices"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "2646447e27a95400"   # CJUS 412 Introduction to Security Technology — correct chunk, final_score #1 after re-ranking
+  retrieval_note: "CJUS 412 showed rank=2 in export but final_score 1.1379 > CJUS 2140's 1.0511 — rank field was stale (pre-boost Weaviate rank); fixed by re-assigning rank after sort in search_chunks(); other 4 chunks are CJUS courses matched by department prefix — correct chunk is being passed to LLM first"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -424,7 +430,10 @@
     - "CSCI 1210: foundations course teaching programming basics — problem solving, writing, organizing, and debugging code"
     - "CSCI 1720: assumes basics are known; focuses on OOP, recursion, and algorithm design in Java"
     - "Take 1210 if new to programming or not yet comfortable debugging; go straight to 1720 if already able to write and troubleshoot small programs"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "07590040f97b54a3"   # CSCI 1720 Computer Science I — rank 1
+    - "5070df1ddcf69f22"   # CSCI 1210 Computer Programming Fundamentals — rank 2
+  retrieval_note: "top 2 are exactly the courses being compared; ranks 3-5 are related introductory CSCI courses — noise but not harmful"
   expected_source_type: "catalog"
   applicable_groups:
     - "prospective_undergrad"
@@ -442,7 +451,12 @@
     - "E T 539 Advanced Enterprise Security: restricted to M-IT majors"
     - "POLS 368 Human Security: no prerequisites"
     - "POLS 568 Advanced Issues in Human Security: no prerequisites"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "b47cdb41eb55db41"   # CSEC 110 Principles of Cybersecurity — top course_description
+    - "e1114ca8e2808ded"   # CSEC 295 Cybersecurity Capstone
+    - "ec3fff454254af61"   # BCIS 480 Introduction to Cybersecurity
+    - "5e1c259e48cc0f3d"   # BCIS 580 Introduction to Cybersecurity (graduate)
+  retrieval_note: "9 cybersecurity courses in catalog but TOP_K=5 only returns 5; concentration_requirement chunk displaces one course; need hard Weaviate filter (chunk_type=course_description) + dynamic TOP_K 10-12 for 'what courses teach X' queries — post-demo fix; CSCI 4205/5205 Computer Security and E T / POLS courses missing from top 5"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -453,7 +467,9 @@
   question: "What are the prerequisites for Programming Language Structure?"
   key_facts:
     - "CSCI 4105 Programming Language Structure requires C- or better in CSCI 3730 Compilers and Automata Theory AND C- or better in CSCI 3710 Software Development"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "9c4865bbd0fc6235"   # CSCI 4105 Programming Language Structure I — rank 1, correct
+  retrieval_note: "rank 1 correct; ranks 2-5 are related course_description chunks (prerequisites of 4105 and similar courses) — noise but not harmful; for specific-course prereq queries, TOP_K=5 is appropriate (rank 1 has the answer); raise TOP_K only for topic queries with no specific course identified"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -462,7 +478,9 @@
   question: "What are the prerequisites for CSCI 4110?"
   key_facts:
     - "CSCI 4110 Computing Ethics and Social Implications of Computing requires C- or better in CSCI 3710 Software Development"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "2dd3ef533673839b"   # CSCI 4110 Computing Ethics — rank 1, correct; rank 5 is minor_requirement noise
+  retrieval_note: "rank 1 correct; ranks 2-4 are other CSCI course_descriptions; rank 5 is Computer Systems minor — noise; chunk_type filter post-demo will eliminate it"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -471,7 +489,9 @@
   question: "What are the prerequisites for CSCI 4130?"
   key_facts:
     - "CSCI 4130 Linux System Administration has no prerequisites"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "7d8174865ca59a05"   # CSCI 4130 Linux System Administration — highest final_score (1.0669), rank 1 after re-sort
+  retrieval_note: "correct chunk retrieved; stale rank field showed 4 (pre-boost Weaviate rank) — fixed by rank re-assignment after sort; ranks 2-5 are other CSCI courses and Computer Systems minor — noise"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -480,7 +500,9 @@
   question: "What are the prerequisites for the Compilers course?"
   key_facts:
     - "CSCI 3730 Compilers and Automata Theory requires C- or better in CSCI 2210 Object-Oriented Programming, CSCI 2220 Introduction to Data Structures and Algorithms, AND CSCI 2230 Assembly Language and Machine Organization"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "c5fa84003468a908"   # CSCI 3730 Compilers and Automata Theory — rank 4; correct chunk
+  retrieval_note: "ranks 1-2 are policy chunks ('Prerequisites and Corequisites') ranked high because 'prerequisites' matches heading — chunk_type filter (course_description only) post-demo will eliminate them; CSCI 4580 Compilers Transition also retrieved (rank 3) — disambiguation needed; two identical-heading policy chunks suggest chunker split one section across two chunks"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -489,7 +511,9 @@
   question: "What are the prerequisites for Practical Programming?"
   key_facts:
     - "CSCI 2410 Practical Programming has no prerequisites"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "d15a83ecc9c69fc0"   # CSCI 2410 Practical Programming — rank 1, correct
+  retrieval_note: "rank 1 correct; all 5 chunks are course_descriptions — clean result; ranks 2-5 are related programming courses, noise but not harmful"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -505,7 +529,10 @@
     - "Both require CSCI 4205 Computer Security and CSCI 4225 Introduction to Cryptography"
     - "Cybersecurity adds: CSCI 4235, CSCI 4240, CSCI 4130, CSCI 4245, plus cross-departmental courses"
     - "BS CS is ABET-accredited (Computing Accreditation Commission); BS Cybersecurity does not mention ABET accreditation"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "16d9f6f83799bfca"   # CS BS degree_requirement — missing from top 5
+    - "14f0a41f77e90fb4"   # Cybersecurity BS degree_requirement — missing from top 5
+  retrieval_note: "both correct chunks missing; rank 1 is CS Cybersecurity concentration_requirement (482e154e99b5dc92) — wrong chunk, this is a concentration not the standalone Cybersecurity BS; system prompt chunk type hierarchy helps LLM flag the distinction but can't answer without correct chunks; bidirectional filter (degree_requirement for 'difference between degrees' queries) planned post-demo"
   expected_source_type: "catalog"
   applicable_groups:
     - "prospective_undergrad"
@@ -520,7 +547,10 @@
     - "BS in Cybersecurity prepares students for professional security work with a tighter, more directed curriculum"
     - "CS students can add a Cybersecurity concentration without switching degrees"
     - "Students planning employment at the bachelor level are advised to add a concentration"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "14f0a41f77e90fb4"   # Cybersecurity BS degree_requirement — missing from top 5
+    - "16d9f6f83799bfca"   # CS BS degree_requirement — missing from top 5; needed for comparison
+  retrieval_note: "CS BS degree_requirement missing — LLM cannot make the comparison without it; rank 1 is CS Cybersecurity concentration (482e154e99b5dc92) not the standalone Cybersecurity BS; same structural failure as deg_001; bidirectional degree filter post-demo"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -532,7 +562,13 @@
     - "BS in CS is the traditional rigorous degree focused on CS fundamentals; ABET-accredited"
     - "Students planning graduate work in CS are encouraged to pursue the BS over the BA"
     - "BS is recommended for single-major CS students"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "16d9f6f83799bfca"   # CS BS degree_requirement — confirmed rank 1 (final_score 0.9724)
+    - "202f3d183e743b5d"   # CS BA degree_requirement — confirmed rank 2 (final_score 0.9367)
+    - "6fb64bffef3e6e90"   # CS BS degree_core_requirement — confirmed rank 3 (final_score 0.9319)
+    - "https://computerscience.nmsu.edu/majors/undergraduate-degrees.html#chunk-1"  # web "How to Select Between BS and BA" — dropped from Weaviate rank 1 to final rank 4 (0.8754) after degree_requirement boosts; still useful context
+    - "3fd443758d042e53"   # CS BA second_language — confirmed rank 5 (0.8319)
+  retrieval_note: "all 5 chunks retrieved; web 'How to Select' chunk ranked #1 by Weaviate (0.7954) but degree_requirement boost pushes catalog chunks to ranks 1-3 (0.9724/0.9367/0.9319); correct ordering — LLM gets both requirement structure and advisory context"
   expected_source_type: "catalog"
   applicable_groups:
     - "prospective_undergrad"
@@ -548,7 +584,12 @@
     - "BS requires two lab science courses; BA requires one"
     - "BA offers more CS elective breadth; BS requires more depth in math and science outside CS"
     - "BS is ABET-accredited (CAC); BA has no accreditation mention"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "16d9f6f83799bfca"   # CS BS degree_requirement — missing from top 5
+    - "202f3d183e743b5d"   # CS BA degree_requirement — missing from top 5
+    - "6fb64bffef3e6e90"   # CS BS degree_core_requirement — missing from top 5
+    - "https://computerscience.nmsu.edu/majors/undergraduate-degrees.html#chunk-1"  # web "How to Select Between BS and BA" — confirmed rank 1 (0.9602); good advisory context
+  retrieval_note: "deg_004 phrasing ('difference between') does not trigger degree_requirement boost (_requirement_terms has 'required/must/need' but not 'difference'); BM25 also weaker match than deg_003 phrasing ('consider BS instead of BA'); result: web advisory chunk ranks #1 but the 3 catalog requirement chunks are absent; bidirectional degree_requirement filter (post-demo) is the fix — same failure as deg_001/deg_002; adding 'difference'/'differences'/'compare' to the boost trigger set would partially address this"
   expected_source_type: "catalog"
   applicable_groups:
     - "prospective_undergrad"
@@ -564,7 +605,12 @@
     - "Graduate full-time: 9 credits per semester to retain GA eligibility"
     - "Graduate students in final dissertation semester may petition Graduate School to enroll in fewer credits for that one semester"
     - "Graduate Academic Probation I: capped at 13 credits; Probation II: capped at 7 credits"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "8be931ca2fd6489a"   # "Course Load for Undergraduate Students" — confirmed final rank 5 (0.5983); most directly answers the question; lowest score due to no boost triggers firing
+    - "fc4d628e13bcb208"   # "Course Load for Graduate Students" — confirmed final rank 3 (0.8089)
+    - "3e04f7a6977ac11f"   # glossary "Full-time" definition — confirmed final rank 1 (0.83)
+    - "80a28b47eeacb905"   # Cybersecurity study_plan — confirmed final rank 2 (0.8245); spurious match but shows per-semester credit layout; 0.28 boost unusually high — investigate
+  retrieval_note: "adequate — all key policy chunks retrieved; stale ranks displayed (Weaviate pre-boost order: 1=grad_load, 2=glossary, 3=credits, 4=undergrad_load, 5=study_plan); after boost re-sort: undergrad_load falls to rank 5 (0.5983) because no boost triggers fire for it; study_plan ranked 2nd due to high 0.28 metadata boost — source of that boost worth investigating; question is non-specific ('I') so both undergrad and grad load chunks retrieved — LLM must ask or infer audience"
   expected_source_type: "catalog"
   applicable_groups:
     - "current_undergrad"
@@ -583,7 +629,10 @@
     - "Project track (CSCI 5994): 6 credits; implement a solution; write project report; have final exam covering project and coursework; report not sent to Graduate School"
     - "Thesis track (CSCI 5999): 6 credits; design and implement new ideas; outcome should be submitted for publication; thesis sent to Graduate School; final exam deadline is earlier than project track"
     - "MAP students may begin either track during junior/senior year; up to 12 credits of dual credit applied to both undergraduate and master's degree"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "197af6bc-6653-525c-a9de-11bb5ff2126f"  # CS MS degree_requirement — contains "two tracks, thesis/project and coursework-only"; MISSING from top 5
+    - "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-7"  # FAQ "current students" section — confirmed rank 1 (0.9422); contains procedural details (program of study form, thesis/project final exam steps) but NOT the track comparison itself; chunk spans many Q&As because FAQ was chunked by h2/h3 section heading, not by individual Q&A
+  retrieval_note: "critical chunk 197af6bc (catalog p.128) missing — it contains all three track descriptions in a single chunk and is the authoritative comparison source; this question needs both p.128 AND the FAQ chunks, so a hard degree_requirement filter is NOT appropriate here; ranks 2-5 are Master's Thesis course descriptions from EDUC/ME/AE/EE — spurious semantic match on 'thesis' keyword; level penalty not firing because query has no explicit undergrad/grad signal; FAQ was chunked by h2/h3 section (not Q&A pair) so each FAQ chunk mixes many questions — see FAQ chunking fix todo"
   expected_source_type: "either"
   applicable_groups:
     - "prospective_ms"
@@ -599,10 +648,11 @@
   question: "When must I have a thesis advisor?"
   key_facts:
     - "No hard deadline is specified in department sources"
-    - "Must have an advisor to enroll in CSCI 5994 Master's Project or CSCI 5999 Master's Thesis"
-    - "Anticipated in the 3rd or 4th semester"
-  expected_chunk_ids: []
-  expected_source_type: "either"
+    - "Must have an advisor to enroll in CSCI 5999 Master's Thesis"
+  expected_chunk_ids:
+    - "8f253b35-b997-5c0b-8255-2637dd489844"  # CSCI 5999 Master's Thesis p.1569 — "under supervision of their advisor"; implies advisor required to enroll; MISSING from top 5
+  retrieval_note: "p.128 does NOT state the advisor deadline — removed from expected; CSCI 5999 course description (p.1569) is the best available source (implies advisor needed to enroll); rank 1 is grad school calendar about exam/submission deadlines — wrong question; FAQ does not address this; other-department thesis courses (RGSC/ASTR) contain accurate but non-CS-specific info; expected LLM answer: no hard deadline found, but must have advisor to enroll in CSCI 5999"
+  expected_source_type: "catalog"
   applicable_groups:
     - "current_ms_thesis"
   banner_redirect_expected: false
@@ -613,9 +663,10 @@
   key_facts:
     - "No hard deadline is specified in department sources"
     - "Must have an advisor to enroll in CSCI 5994 Master's Project"
-    - "Anticipated in the 3rd or 4th semester"
-  expected_chunk_ids: []
-  expected_source_type: "either"
+  expected_chunk_ids:
+    - "317c4dfb-7c06-52ff-b02a-77441ece55e9"  # CSCI 5994 Master's Project p.1569 — "under supervision of their advisor"
+  retrieval_note: "same pattern as deg_007; other-department project/thesis courses contain accurate universal policy; expected LLM answer: no hard deadline, but advisor required to enroll in CSCI 5994; FAQ does not address this specifically"
+  expected_source_type: "catalog"
   applicable_groups:
     - "current_ms_coursework"
   banner_redirect_expected: false
@@ -624,8 +675,13 @@
   category: "degree_requirements"
   question: "When must I have a dissertation advisor?"
   key_facts:
-    - "PhD students must have a dissertation advisor within 1 semester of passing the qualifying exam"
-  expected_chunk_ids: []
+    - "Must identify a thesis advisor within one semester of passing qualifying exams"
+    - "Must form a thesis committee within one year of passing qualifying exams"
+  expected_chunk_ids:
+    - "401f1907-78b6-41fe-9196-34841bcb141e"  # CS grad degrees page "PhD milestones" — states advisor deadline explicitly; confirmed in web chunk
+    - "31af52f1-a612-5988-96ee-0f858c021c6d"  # CSCI 7000 Doctoral Dissertation p.1569 — implies advisor required to enroll
+    - "8f0f6a93-3eca-5933-91e2-81d33ec3cbd6"  # CS PhD degree_requirement p.191 — qualifying exam details; does not state advisor deadline but relevant context
+  retrieval_note: "catalog pp.213-214 (cross-page chunk) likely missing from index due to cross-page boundary issue; authoritative answer is in web chunk 401f1907 (PhD milestones list); unlike deg_007/deg_008 there IS a hard deadline here for doctoral students only"
   expected_source_type: "either"
   applicable_groups:
     - "current_phd"
@@ -641,7 +697,10 @@
     - "M.S. in Bioinformatics"
     - "Professional M.S. in Computational Data Analytics"
     - "Computer Science may be a component in an Interdisciplinary M.S. or Ph.D."
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "https://computerscience.nmsu.edu/grad-students/graduate-degrees.html#chunk-0"  # confirmed rank 1 (1.0474); "links to most recent info on graduate degrees offered"
+    - "https://computerscience.nmsu.edu/grad-students/prospective-graduates.html#chunk-0"  # confirmed rank 2 (0.9562); lists approx 85 grad students, relevant overview
+  retrieval_note: "retrieval good; rank 1 is the right landing chunk; undergrad prospective page correctly penalized to rank 5 (final_score 0.5059) by -0.20 level penalty"
   expected_source_type: "web"
   banner_redirect_expected: false
 
@@ -651,7 +710,16 @@
   key_facts:
     - "Undergraduate minors: Bioinformatics, Computer Systems, Algorithm Theory, Software Development"
     - "Graduate CS minor: 9 graduate credits, not including CSCI 4540; contact Graduate Committee Chair for course selection guidance"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "https://computerscience.nmsu.edu/non-majors/minors.html#chunk-0"  # CS minors web page — NOT YET IN COLLECTION (seed_url added to cs.yaml; will exist after next web ingest)
+    - "bd2d19dd-105e-5052-b7ff-d9efa0025057"  # minor_index p.567 — intro: undergrad and grad minors for non-CS majors; no more than one undergrad minor
+    - "1fae20e4-c2fd-5d1c-a0a1-24d1e3eace32"  # Algorithm Theory undergrad minor p.608
+    - "666ec311-6df2-5ecf-a91d-5a0bb7f577e5"  # Bioinformatics undergrad minor p.608
+    - "99acbd45-ca4d-5de7-b0a3-32f839f38b5d"  # Computer Systems undergrad minor p.608
+    - "a0dc06b4-a8b4-5bea-83e2-79e1df56f598"  # Software Development undergrad minor p.609
+    - "e22fc25d-ab54-5f78-9346-821bbb446f70"  # Computer Science graduate minor p.230
+    - "facf9f47-9cd4-5ff4-b00b-13061bb66e95"  # Bioinformatics (with CS) graduate minor p.230
+  retrieval_note: "complete retrieval failure — all 7 minor chunks absent from top 5; general CS major/advising pages dominate because 'computer science' + 'NMSU' overwhelms 'minor' BM25 signal; minor boost (+0.15) can't help if chunks never enter top-K; hard Weaviate filter on chunk_type=minor_requirement,minor_index when 'minor' in query is the fix (todo item); web source computerscience.nmsu.edu/non-majors/minors.html is configured in cs.yaml but missing from collection (not in seed_urls and not linked from crawled pages — seed_url added); molb.nmsu.edu and catalogs.nmsu.edu are out of scope (not in allowed_domains); catalog p.565-566 is dept_intro chunk (50842213), not minor-specific; catalog minor_requirement chunks at p.608-610 and p.230 are indexed but not retrieved"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -667,8 +735,14 @@
     - "AP and CLEP scores may be evaluated for transfer credit"
     - "Transfer Course Equivalency Search tool available at miniapps.nmsu.edu/transfer"
     - "Graduate certificate students cannot transfer credits from another institution toward the certificate; time limit on transfer credits is 5 years after certificate completion"
-  expected_chunk_ids: []
-  expected_source_type: "either"
+  expected_chunk_ids:
+    - "65934b23900617c8"   # glossary "Transfer Courses" p.23/25 — confirmed rank 1 (0.963)
+    - "b3168ea6988b92d2"   # "General Requirements for Transfer Credits" p.61 — confirmed rank 2 (0.853)
+    - "589012c629ca342f"   # "Evaluation of Transfer Credits" p.61 — confirmed rank 3 (0.7716); three levels of credit transfer
+    - "418f8dadbbd85a0c"   # "Transfer of Graduate Credits into a Degree Program" p.77 — confirmed rank 4 (0.738)
+    - "4898fc0a62ba2318"   # "Transfer of International Credit" p.61 — confirmed rank 5 (0.6809)
+  retrieval_note: "retrieval good — all 5 chunks directly relevant; p.61 (3 chunks), p.23/25 glossary, p.77 grad transfer all confirmed; miniapps.nmsu.edu/transfer URL not retrieved as a web chunk but is cited verbatim in the p.61 policy text so LLM can still direct students there; grad credit 7-year time limit and graduate certificate restriction may be in chunk 418f8dad or a nearby chunk not in top 5"
+  expected_source_type: "catalog"
   applicable_groups:
     - "prospective_undergrad"
     - "transfer_student"
@@ -683,6 +757,7 @@
   key_facts:
     - "Cannot be answered — this information is not available in department sources"
   expected_chunk_ids: []
+  retrieval_note: "retrieval topically adjacent but no chunk contains the statistic; rank 2 undergraduate scholarships page should have been penalized by level penalty but was not — 'ms' is not in _graduate_terms (has 'master','graduate','phd' but not 'ms'); expected LLM behavior: state the information is not available in sources"
   expected_source_type: "either"
   banner_redirect_expected: false
 
@@ -695,7 +770,13 @@
     - "Graduate School maintains a Fellowship and Grant Information webpage with database of grants and fellowships for graduate students"
     - "Department offers 10 and 20 hours/week graduate TAs each semester"
     - "Undergraduates: list of scholarships available on department undergraduate financial aid page"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "https://computerscience.nmsu.edu/majors/undergraduate-financial-aid.html#chunk-0"  # undergrad CS scholarships — confirmed rank 1 (1.08)
+    - "https://computerscience.nmsu.edu/grad-students/graduate-financial-aid.html#chunk-0"  # grad CS scholarships — confirmed rank 2 (1.0414)
+    - "f6773056-167d-5890-9c9a-47447cbc0dfe"  # "Funding Opportunities for Graduate Students" p.78 — NOT retrieved; covers TAs, RAs, fellowships
+    - "f5c4fbcc-5881-53c9-99f2-6a5bbdd8c38f"  # "Assistantships" p.78 — NOT retrieved; TA/RA details
+    - "https://gradschool.nmsu.edu/scholarships-and-tuition/awards-and-funding.html#chunk-0"  # grad school awards — NOT IN COLLECTION; seed_url added to cs.yaml
+  retrieval_note: "ranks 1-2 confirmed good (both CS financial aid pages); rank 3 general NMSU policy is supplementary; ranks 4-5 are study_plan chunks — irrelevant, same 0.18 stopword-inflated boost as seen in deg_005; critical p.78-79 grad_program_info chunks (TAs, RAs, assistantships, fellowships) not retrieved; gradschool awards page not in collection — seed_url and page_type added to cs.yaml"
   expected_source_type: "either"
   applicable_groups:
     - "current_undergrad"
@@ -716,7 +797,12 @@
     - "Department does not accept unsolicited applications or late applications"
     - "For RAs: contact the managing research faculty member directly"
     - "GAs are governed by the NMSU and United Electrical, Radio and Machine Workers of America Collective Bargaining Agreement"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "https://computerscience.nmsu.edu/grad-students/graduate-financial-aid.html#chunk-2"  # "Teaching Assistantships" — confirmed final rank 5 (0.8443); CS-specific timing and process
+    - "https://computerscience.nmsu.edu/grad-students/graduate-financial-aid.html#chunk-4"  # "Research Assistantships" — confirmed final rank 3 (0.8659); contact faculty directly
+    - "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-2"    # FAQ newly admitted Q7 — confirmed final rank 1 (0.9387); TA timing Q&A; will be its own chunk after FAQ fix
+    - "3bd4805dbe3989f0"  # catalog "Assistantships" p.78 — confirmed final rank 4 (0.8447); university-wide policy
+  retrieval_note: "retrieval adequate for this question — CS-specific TA/RA chunks retrieved; gradschool awards page not retrieved (not in collection, more relevant to fin_002 than here); ECE TA page at final rank 2 (0.8984) is cross-department — accurate on university-wide policy but not CS-specific; 0.24 boost is stopword inflation; FAQ chunk-2 is the large multi-Q chunk — after FAQ fix will split to individual Q&A about TA application"
   expected_source_type: "web"
   applicable_groups:
     - "prospective_ms"
@@ -737,7 +823,13 @@
     - "Generally awarded to PhD students; MS students may also receive TAs"
     - "PhD students: up to 8 semesters total (exception requires Department Head approval); MS students: limited to 2 semesters and must complete a thesis"
     - "International students without a US degree must pass NMSU International Teaching Assistant (ITA) screening before receiving a TA"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "https://computerscience.nmsu.edu/grad-students/graduate-financial-aid.html#chunk-2"  # "Teaching Assistantships" — confirmed rank 1 (1.0353); CS-specific hours, duties, stipend
+    - "https://tpal.nmsu.edu/degree-programs/assistantships.html#chunk-0"                   # TPAL assistantships page — NOT IN COLLECTION (seeded but failed to crawl; retry on next ingest)
+    - "https://ece.nmsu.edu/grad-study/teaching-assistants.html#chunk-1"                    # ECE "Klipsch School TAs" — confirmed rank 2 (0.9249); cross-dept but university-wide policy
+    - "https://ece.nmsu.edu/grad-study/teaching-assistants.html#chunk-6"                    # ECE "Responsibilities of TAs" — confirmed rank 3 (0.8453)
+    - "3bd4805dbe3989f0"  # catalog "Assistantships" p.78 — confirmed rank 5 (0.7793)
+  retrieval_note: "retrieval adequate — CS TA chunk at rank 1 covers hours/stipend/duties; tpal.nmsu.edu is the canonical university-wide source but NOT IN COLLECTION (seeded but failed Playwright render — retry on next ingest); ECE chunks (ranks 2-4) are cross-department but TA policies are NMSU-wide so content is valid; ECE chunk-7 (final rank 4, 0.7627) has the 10-hr additional work limit rule"
   expected_source_type: "web"
   applicable_groups:
     - "prospective_ms"
@@ -756,7 +848,11 @@
     - "If objectives are not met or funding runs out, faculty may terminate the RA at their discretion"
     - "Minimum 3.0 GPA required; must make adequate progress toward graduate degree"
     - "Contact your advisor for information on available RA positions"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "https://computerscience.nmsu.edu/grad-students/graduate-financial-aid.html#chunk-4"  # "Research Assistantships" — confirmed final rank 1 (0.83); CS-specific RA process
+    - "https://tpal.nmsu.edu/degree-programs/assistantships.html#chunk-0"                   # TPAL — NOT IN COLLECTION; same crawl failure as fin_004
+    - "https://ece.nmsu.edu/grad-study/teaching-assistants.html#chunk-8"                    # ECE "Research Assistants" — confirmed final rank 2 (0.6239); cross-dept but accurate on RA eligibility/process
+  retrieval_note: "rank 1 correct; tpal page missing from collection (same crawl failure); CS TA chunk at final rank 3 (0.6206) is off-topic; Research Internship chunks (ranks 4-5, 0.52/0.52) are adjacent but not RAs; undergrad internship chunk (rank 5) not penalized — query has no explicit graduate signal"
   expected_source_type: "web"
   applicable_groups:
     - "prospective_ms"
@@ -772,7 +868,9 @@
   question: "Which faculty are affiliated with the data analytics concentration?"
   key_facts:
     - "Dr. Huiping Cao and Dr. Tuan Le are affiliated with the Data Analytics concentration"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "https://dataanalytics.nmsu.edu/facultydirectory/index.html#chunk-0"  # data analytics faculty directory — NOT IN COLLECTION; was blocked by deny_url_pattern; deny rule removed and page added to cs.yaml seed_urls and page_types; will exist after next web ingest
+  retrieval_note: "complete retrieval failure for faculty question — faculty directory was blocked by deny_url_pattern for dataanalytics.nmsu.edu/facultydirectory; deny rule removed; current top 5 are degree_requirement, general program, concentration_requirement, and course_description chunks — none list faculty; CS faculty directory chunk_type exists but CS faculty directory page does not list data analytics affiliations specifically"
   expected_source_type: "web"
   banner_redirect_expected: false
 
@@ -781,7 +879,10 @@
   question: "Which computer science faculty focus on statistical computing and what are their email addresses?"
   key_facts:
     - "Dr. Joe Song (joemsong@nmsu.edu) focuses on statistical computing"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html#chunk-0"  # CS faculty directory — confirmed final rank 1 (0.8312); lists all faculty with research areas and emails
+    - "ff1a31a3918ec2d7"  # catalog faculty chunk — confirmed final rank 3 (0.7537); lists faculty names only, no emails or research detail
+  retrieval_note: "final rank 1 correct (stale rank was 2 — re-sort fixes display); faculty directory chunk-0 contains the answer if Dr. Song's research area and email are in that section; catalog faculty chunk (rank 3) supplements with names but lacks email and research detail; ranks 2/4/5 are irrelevant"
   expected_source_type: "web"
   banner_redirect_expected: false
 
@@ -790,7 +891,9 @@
   question: "Where is Dr. Wayllace's office?"
   key_facts:
     - "Dr. Christabel Wayllace's office is Science Hall 173"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html#TBD"  # faculty directory — NOT IN CHUNK; directory uses JavaScript dynamic rendering; Playwright captures only static shell (3 chunks: nav header, location, contact); faculty entries with office info not extracted; fix needed (todo: Playwright wait for dynamic content)
+  retrieval_note: "complete retrieval failure — proper name 'Wayllace' has no BM25 match anywhere in collection; hybrid search matched 'office' in CAASS contact page then fell back to random FWCE courses; faculty directory is dynamically rendered and faculty entries are not indexed; requires both (1) Playwright fix to capture dynamic content and (2) faculty chunk_type boost for proper-name queries"
   expected_source_type: "web"
   banner_redirect_expected: false
 
@@ -812,7 +915,10 @@
   key_facts:
     - "Undergrad: returned to good standing when both cumulative GPA and most recent semester GPA both exceed 2.0"
     - "Graduate: returned to good standing when both cumulative GPA and most recent semester GPA both exceed 3.0"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "509e68e295bb0a3e"  # Removal of Academic Probation (undergrad) — direct answer
+    - "TBD"  # Graduate academic probation removal — catalog p.53; chunk ID not yet assigned
+  retrieval_note: "rank 1 correct; graduate removal chunk (catalog p.53) missing from top 5 — no graduate-specific probation chunk surfaced; ranks 2-4 are background context (what probation is, not how to exit it)"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -834,9 +940,17 @@
     - "All prospective students must submit an Application for Admission to the Graduate School; apply at apply.nmsu.edu/apply"
     - "GRE General Test not required for CS, Data Analytics, or Bioinformatics; high scores strengthen application and are valued for GA awards"
     - "Official transcripts from every institution attended must be sent directly to the Graduate School"
-    - "MAP eligibility: 60 semester hours completed (25+ at NMSU), min 3.25 cumulative GPA, within 48 credits of BS, min 3.3 GPA in CS and Math courses, must have taken 2 of CSCI 3730/3710/3720, faculty recommendations required"
-    - "Bioinformatics MS: BS from accredited institution in computational or life sciences, min 3.2 GPA, Career statement, minimum 3 letters of reference"
-  expected_chunk_ids: []
+    - "Application deadlines: contact the program; if no deadline published, apply by March 15 (fall) or October 15 (spring) to be considered for financial support; grad school accepts applications up to 30 days before first day of classes"
+    - "MAP process: pre-apply when within 48 credits of BS in CS; requires faculty recommendations, 3.3 GPA in CS/Math courses, and completion of at least 2 of CSCI 3730/3710/3720; after CS department acceptance, formally apply to the Graduate School during semester of BS graduation"
+    - "Bioinformatics MS: BS from accredited institution in computational or life sciences field, min 3.2 GPA, Career statement, minimum 3 letters of reference"
+    - "Data Analytics MS: see dataanalytics.nmsu.edu/application-admission.html for specific requirements"
+  expected_chunk_ids:
+    - "TBD"  # catalog p.76 — application dates and deadlines
+    - "TBD"  # catalog p.129 — MAP application process (timing, dept approval, then grad school)
+    - "TBD"  # catalog p.566 — bioinformatics entrance requirements
+    - "TBD"  # https://computerscience.nmsu.edu/grad-students/graduate-degrees.html — application links
+    - "TBD"  # https://dataanalytics.nmsu.edu/application-admission.html — data analytics application
+  retrieval_note: "retrieval failure — all 5 expected chunks absent from top 5; ranks 2-3 (CS minor FAQ, MAP FAQ) inflated by 'cs' abbreviation matching in heading boost, now fixed; catalog enrollment chunks still not surfacing due to vocabulary mismatch ('apply' in query vs formal catalog language about 'application dates and deadlines'); enrollment chunk_type boost for apply/application queries may be needed"
   expected_source_type: "either"
   applicable_groups:
     - "prospective_ms"
@@ -852,7 +966,11 @@
     - "Work with your advisor on this requirement"
     - "Detailed guidelines are available through the Graduate School SharePoint page for Doctoral Dissertation Students"
     - "The SharePoint page is behind a login and cannot be accessed directly by the chatbot"
-  expected_chunk_ids: []
+    - "Graduate deadlines (submission to ProQuest, dissertation title deadlines) are on the Graduate School Calendar"
+  expected_chunk_ids:
+    - "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-8"  # FAQ Q108 — formatting redirects to SharePoint; will become its own Q&A chunk after re-ingest
+    - "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html#chunk-8"  # ProQuest submission deadline + reference to formatting guidance pages
+  retrieval_note: "rank 2 (FAQ chunk-8) is the correct source containing Q108; rank 1 (calendar chunk-8) is a useful secondary for deadlines; after FAQ Q&A chunking re-ingest, Q108 will be its own chunk and should rank higher; SharePoint formatting pages not indexed and not indexable (login required); chatbot can redirect but cannot answer formatting specifics from context"
   expected_source_type: "web"
   applicable_groups:
     - "current_phd"
@@ -864,18 +982,19 @@
   category: "policy"
   question: "Tell me about PhD qualifying exams. Who takes them and when? What are they like?"
   key_facts:
-    - "All doctoral students must pass a qualifying examination"
-    - "Purpose: determine areas of strength and weakness; assess readiness to conduct doctoral research"
+    - "All doctoral students must pass a qualifying examination before registering for dissertation credits"
+    - "Purpose: determine areas of strength and weakness; assess ability to assimilate graduate-level subject matter"
     - "Scheduled by student's advisor; administered by the major department"
-    - "Exam committee includes student's advisor and at least two ECE faculty members"
-    - "Should be taken after completing graduate core with B or better in every course, within one year of defending MSEE or entering PhD program"
-    - "Two attempts allowed; failure to demonstrate readiness leads to recommendation to limit studies to master's degree"
-    - "Direct-to-doctorate (no prior graduate experience): take after 12 graduate credits"
-    - "Entering with master's from another institution: take before completing one semester"
-    - "Entering with NMSU master's (same department): department may allow master's final exam to serve as qualifying exam"
-    - "Outcomes: admit to doctorate, limit to master's, re-evaluate after one semester, or discontinue"
-  expected_chunk_ids: []
-  expected_source_type: "web"
+    - "Direct-to-doctorate (little or no prior graduate experience): take after 12 graduate credits"
+    - "Entering with master's from another institution or department: take before completing one semester"
+    - "Entering with NMSU master's (same department): department may allow master's final exam to serve as qualifying exam, or require a separate exam"
+    - "Possible outcomes: (1) admit to doctorate, (2) limit program to master's, (3) re-evaluate after one semester, (4) discontinue graduate work"
+    - "Graduate School must be notified of results in all cases"
+    - "After passing: advisor and department head appoint doctoral committee and prepare preliminary program of study"
+  expected_chunk_ids:
+    - "TBD"  # catalog p.39 — qualifying examination policy
+  retrieval_note: "key_facts corrected — prior version contained ECE-specific content (ECE faculty, MSEE) sourced in error; correct source is catalog p.39; rank 1 FAQ chunk (newly admitted students) may contain qualifying exam Q&A within a large mixed chunk — will split after re-ingest; rank 4 catalog Doctoral Degrees chunk is adjacent but not the specific qualifying exam section"
+  expected_source_type: "catalog"
   applicable_groups:
     - "prospective_phd"
     - "current_phd"
@@ -886,16 +1005,15 @@
   question: "I am in my second year as a Cybersecurity major and want to apply for MAP. What is the process?"
   key_facts:
     - "NMSU does not offer a graduate degree in Cybersecurity"
-    - "Cybersecurity majors may apply to MAP for the MS in Computer Science"
-    - "Eligible after 60 semester hours with 25 or more credits completed at NMSU"
-    - "Minimum 3.25 cumulative GPA; minimum 3.3 GPA in CS and Math courses"
-    - "Must have taken at least 2 of: CSCI 3730, CSCI 3710, CSCI 3720"
-    - "Faculty recommendations required"
-    - "Submit CS department pre-application form when within 48 credits of earning a BS"
-  expected_chunk_ids: []
+    - "CS graduate programs available: MS in Computer Science, MS in Data Analytics, MS in Bioinformatics, PhD in Computer Science"
+    - "MAP is specific to the BS→MS in Computer Science accelerated path; not available for all graduate degrees"
+    - "Preferred response: state that no Cybersecurity graduate program exists, list the available CS graduate programs, and invite the student to ask about a specific program"
+  expected_chunk_ids:
+    - "TBD"  # https://computerscience.nmsu.edu/grad-students/graduate-degrees.html — lists available CS graduate programs; LLM infers absence of Cybersecurity from this list
+  retrieval_note: "no chunk explicitly states there is no Cybersecurity grad program; LLM must infer from graduate program list; MAP chunks (ranks 1-3) are relevant secondary context if student follows up about MS CS; graduate-degrees.html page not in top 5 — needed to ground the full program list"
   expected_source_type: "web"
   applicable_groups:
-    - "prospective_map"
+    - "prospective_ms"
     - "current_undergrad"
   banner_redirect_expected: false
 
@@ -905,7 +1023,9 @@
   key_facts:
     - "Deadline to apply for summer graduate diploma: July 6, 2026"
     - "Check the Graduate School calendar for current deadlines as these change each year"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html#chunk-6"  # Summer 2026 calendar — degree application deadline
+  retrieval_note: "Summer 2026 calendar chunk absent from top 5 before temporal expansion fix; after fix, 'this summer' → 'Summer 2026' in query, giving BM25 hits on the summer chunk heading; Fall/Spring calendar chunks were outranking it due to shared 'degree application deadline' vocabulary with no temporal discrimination"
   expected_source_type: "web"
   applicable_groups:
     - "current_ms_coursework"
@@ -920,12 +1040,15 @@
   key_facts:
     - "Faculty recommendations are required for MAP; the specific number is not stated in available department sources"
     - "Contact the CS department directly for this detail"
-  expected_chunk_ids: []
-  expected_source_type: "web"
+  expected_chunk_ids:
+    - "59d2177c1209b227"  # MAP grad_program_info — mentions recommendations required, no count
+    - "d6750c5dd2b7274e"  # MAP policy — mentions recommendations required, no count
+  retrieval_note: "retrieval correct — top MAP chunks retrieved; answer is unanswerable from context because no source specifies a count; LLM should state recommendations are required and direct student to the department"
+  expected_source_type: "catalog"
   applicable_groups:
     - "prospective_map"
   banner_redirect_expected: false
-  notes: "Partially answerable — recommendations required but count not specified in sources. System prompt should state what is known and note the gap."
+  notes: "Unanswerable from context — specific count not in any indexed source. Correct LLM behavior: state what is known (recommendations required) and redirect to CS department."
 
 # ── Minors ────────────────────────────────────────────────────────────────────
 
@@ -940,7 +1063,16 @@
     - "Computer Systems: hardware, OS, networking focus; good for EE/ECE and engineering majors"
     - "Graduate CS minor: 9 credits of graduate-level CS, excluding CSCI 4540 Computer Science I Transition"
     - "Graduate Bioinformatics minor: 9 credits (MS) or 12 credits (PhD) including BIOL 550; jointly offered with Molecular Biology; contact Molecular Biology Program for current requirements"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "TBD"  # catalog p.567 — Minors for the Department overview (lists all 6 options)
+    - "TBD"  # minor_requirement: Algorithm Theory undergraduate minor
+    - "TBD"  # minor_requirement: Bioinformatics undergraduate minor
+    - "TBD"  # minor_requirement: Computer Systems undergraduate minor
+    - "TBD"  # minor_requirement: Software Development undergraduate minor
+    - "b1a889c06156e3e9"  # minor_requirement: Computer Science Graduate Minor
+    - "TBD"  # minor_requirement: Bioinformatics Graduate Minor
+    - "ef83f65275f8cd78"  # minor_index — eligibility rules (non-CS majors only, one minor limit)
+  retrieval_note: "question requires 6+ chunks to answer fully (one per minor option); top 5 skewed toward graduate minor and general overview; all 4 undergraduate minor_requirement chunks absent; effective TOP_K needs to be higher for 'what are my options' + 'differences' queries about minors — consider raising to 10-12 when 'minor' in query and comparison vocabulary present"
   expected_source_type: "either"
   applicable_groups:
     - "current_undergrad"
@@ -956,7 +1088,11 @@
   key_facts:
     - "A CS minor provides significant learning in computer science and programming"
     - "Will distinguish the student from colleagues when starting their career"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "https://computerscience.nmsu.edu/non-majors/minors.html#chunk-0"  # value-proposition language — best answer to the 'why' question
+    - "b1a889c06156e3e9"  # Graduate Minor requirements — what the minor involves
+    - "ef83f65275f8cd78"  # minor_index — confirms eligibility (non-CS majors only)
+  retrieval_note: "non-majors/minors.html (rank 4) has the value-proposition language but was penalized -0.20 as undergraduate-level; fixed by removing undergraduate tag from cs.yaml page_levels — page covers both undergrad and grad minors; ranks 1-3 describe minor requirements, not value"
   expected_source_type: "web"
   applicable_groups:
     - "current_ms_coursework"
@@ -970,11 +1106,16 @@
   category: "roadmap"
   question: "What courses should I take in my first semester as an undergraduate in Cybersecurity?"
   key_facts:
+    - "Student says 'Cybersecurity major' — answer for standalone BS in Cybersecurity (catalog pp.606-607), not CS with Cybersecurity concentration"
+    - "Both programs share early CS coursework: CSCI 1115G or CSCI 1110 as entry point, math prerequisites apply"
     - "CSCI 1115G Modern Computing in Practice: recommended first semester; requires MATH 1215, MATH 1130G, or equivalent; offered every semester"
     - "CSCI 1110 Computer Science Principles: alternative option; requires MATH 1215; is a prerequisite for CSCI 1720"
     - "If math prerequisites are not met, take the appropriate Math course first and postpone CSCI 1115G"
-  expected_chunk_ids: []
-  expected_source_type: "either"
+  expected_chunk_ids:
+    - "TBD"  # catalog pp.606-607 — standalone BS in Cybersecurity degree requirements
+    - "482e154e99b5dc92"  # CS Cybersecurity concentration requirements
+  retrieval_note: "retrieval failure — standalone BS Cybersecurity chunk (pp.606-607) absent; CS concentration chunk (rank 1) is a different program; student saying 'Cybersecurity major' means the standalone degree, no disambiguation needed"
+  expected_source_type: "catalog"
   applicable_groups:
     - "prospective_undergrad"
   banner_redirect_expected: false
@@ -983,13 +1124,16 @@
   category: "roadmap"
   question: "I am beginning my studies for a BS in Computer Science in the Spring of 2027. In what CS courses should I consider enrolling?"
   key_facts:
+    - "Entry point depends on prior experience: CSCI 1115G or CSCI 1110 for students with no programming background; CSCI 2210 for students with AP/transfer credit placing out of intro courses"
     - "CSCI 1115G Modern Computing in Practice: recommended first; requires MATH 1215, MATH 1130G, or equivalent"
     - "CSCI 1110 Computer Science Principles: optional; requires MATH 1215; prerequisite for CSCI 1720"
     - "CSCI 1720 Computer Science I: requires C- in MATH 1250G or MATH 1430G+; or C- in MATH 1220G with CS Placement Test score 1+; or C- in MATH 1220G and C- in CSCI 1110"
     - "CSCI 2210 Object-Oriented Programming: requires C- in CSCI 1720 or ENGR 140"
-    - "CSCI 2230 Assembly Language and Machine Organization: requires C- in CSCI 1720 or ENGR 140"
-  expected_chunk_ids: []
-  expected_source_type: "either"
+    - "Primary goal: list entry-level options; student can follow up on prerequisites for specific courses"
+  expected_chunk_ids:
+    - "118ed2b476025933"  # core BS CS study plan — lists first-year course options
+  retrieval_note: "rank 1 correct; ranks 2-5 are concentration study plans — redundant noise since first-year content is identical to core BS plan; concentration plans flood results because all study_plan chunks share first-year vocabulary; course description chunks absent but not critical — student can follow up"
+  expected_source_type: "catalog"
   applicable_groups:
     - "prospective_undergrad"
   banner_redirect_expected: false
@@ -1000,9 +1144,14 @@
   category: "other"
   question: "What is the difference in job opportunities between a BS in Cybersecurity and one in AI?"
   key_facts:
-    - "Cannot be answered — this information is not available in department sources"
-  expected_chunk_ids: []
-  expected_source_type: "either"
+    - "Job opportunity comparison cannot be answered — no job market data in department sources"
+    - "LLM should note the limitation, then offer to compare the concentration requirements as a proxy for what skills/focus each program develops"
+    - "Note: 'AI' in query = Artificial Intelligence concentration within BS CS; fixed via acronym expansion"
+  expected_chunk_ids:
+    - "482e154e99b5dc92"  # CS Cybersecurity concentration requirements
+    - "TBD"              # CS Artificial Intelligence concentration requirements — absent before acronym expansion fix
+  retrieval_note: "rank 1 (BS vs BA comparison) is noise; rank 2 (Cybersecurity concentration) is correct; AI concentration chunk absent before fix — 'AI' had no BM25 match for 'Artificial Intelligence'; fixed by appending full form in expand_acronyms(); correct LLM behavior: state job data unavailable, offer concentration requirement comparison instead"
+  expected_source_type: "catalog"
   applicable_groups:
     - "prospective_undergrad"
     - "current_undergrad"

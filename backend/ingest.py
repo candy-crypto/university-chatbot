@@ -42,6 +42,10 @@ CHUNK_MAX_LEN = int(os.getenv("CHUNK_MAX_LEN", "2000"))
 # e.g. CSCI 1115G, MATH 1511G, E E 1110
 COURSE_CODE_RE = re.compile(r'\b([A-Z][A-Z\s]{0,5}\s+\d{3,4}[A-Z]?)\b')
 
+# FAQ Q-marker pattern: matches Q1, Q7, Q101, Q201 etc. at a word boundary.
+# Used to split FAQ-style pages into one chunk per Q&A pair.
+_QA_MARKER_RE = re.compile(r'(?<!\w)Q\d+(?=[\s.])')
+
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
@@ -89,6 +93,23 @@ def extract_page_data(page, url: str, config: dict) -> dict:
         page.wait_for_load_state("networkidle", timeout=5000)
     except PlaywrightTimeoutError:
         pass
+
+    # Faculty directory pages load their content via JavaScript.
+    # Wait for a faculty entry element to appear so we capture the full list
+    # rather than the static shell. The selectors cover the CS department
+    # directory and the Data Analytics faculty directory.
+    _FACULTY_URLS = {
+        "computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html",
+        "dataanalytics.nmsu.edu/facultydirectory/index.html",
+    }
+    if any(furl in url for furl in _FACULTY_URLS):
+        for selector in (".fac-card", ".faculty-card", ".staff-member",
+                         "[class*='faculty']", "[class*='staff']", ".views-row"):
+            try:
+                page.wait_for_selector(selector, timeout=8000)
+                break
+            except PlaywrightTimeoutError:
+                continue
 
     # h1 for the heading field
     h1_list = page.locator("h1").evaluate_all(
@@ -174,6 +195,45 @@ def extract_page_data(page, url: str, config: dict) -> dict:
 
 # ── Chunking ───────────────────────────────────────────────────────────────────
 
+def _expand_qa_sections(sections: list) -> list:
+    """
+    Split FAQ-style sections into one section per Q&A pair.
+
+    If a section's text contains 2 or more Q\\d+ markers (e.g. Q1, Q101),
+    it is split at each marker boundary so every question and its answer
+    become a separate section.  The question text (up to 200 chars) is
+    used as the heading so downstream retrieval can match on question wording.
+    Sections with fewer than 2 markers are returned unchanged.
+    """
+    expanded = []
+    for section in sections:
+        text = section.get("text", "")
+        parent_heading = section.get("heading", "")
+        positions = [m.start() for m in _QA_MARKER_RE.finditer(text)]
+
+        if len(positions) < 2:
+            expanded.append(section)
+            continue
+
+        # Keep any preamble before the first Q-marker as its own section
+        if positions[0] > 50:
+            preamble = text[:positions[0]].strip()
+            if preamble:
+                expanded.append({"heading": parent_heading, "text": preamble})
+
+        for i, start in enumerate(positions):
+            end = positions[i + 1] if i + 1 < len(positions) else len(text)
+            qa_text = text[start:end].strip()
+            # Use the question portion as the heading (first 200 chars, trimmed
+            # at the last space so we don't cut mid-word)
+            raw_heading = qa_text[:200]
+            cutoff = raw_heading.rfind(" ")
+            qa_heading = raw_heading[:cutoff].strip() if cutoff > 0 else raw_heading
+            expanded.append({"heading": qa_heading or parent_heading, "text": qa_text})
+
+    return expanded
+
+
 def chunk_page(sections: list, chunk_type: str,
                min_len: int = CHUNK_MIN_LEN,
                max_len: int = CHUNK_MAX_LEN) -> list:
@@ -191,6 +251,10 @@ def chunk_page(sections: list, chunk_type: str,
     """
     if not sections:
         return []
+
+    # Expand FAQ-style sections: if a section contains multiple Q\d+ markers,
+    # split it into one section per Q&A pair before applying size guardrails.
+    sections = _expand_qa_sections(sections)
 
     # course_schedule: one coherent document, keep whole if possible
     if chunk_type == "course_schedule":
@@ -297,18 +361,42 @@ def embed_batch(texts: list) -> list:
 
 def crawl_site(config: dict, max_pages: int = 60) -> list:
     """
-    Breadth-first crawl of the configured department site.
-    Reads chunk_type, level, degree_type, and campus from the YAML config
-    for each page URL. Falls back to 'general' for unlisted pages.
+    Whitelist-only crawl of the configured department site.
+
+    Only visits URLs explicitly listed in the config's 'pages' mapping (the
+    page-type/level/degree-type classification table) plus any 'seed_urls'.
+    BFS-discovered links are ignored — they are not added to the queue.
+
+    This prevents the crawler from ingesting unlisted pages that happen to be
+    linked from listed pages (e.g. login forms, news articles, staff-only docs).
+
+    The 'pages' key replaces the old 'page_types' key; either is accepted for
+    backwards compatibility during the transition.
     """
-    root_url          = config["root_url"]
-    campus            = config.get("campus", "")
-    page_types        = config.get("page_types", {})
+    root_url  = config["root_url"]
+    campus    = config.get("campus", "")
+
+    # Support both 'pages' (new) and 'page_types' (legacy) key names.
+    pages_cfg         = config.get("pages") or config.get("page_types", {})
     page_levels       = config.get("page_levels", {})
     page_degree_types = config.get("page_degree_types", {})
 
-    # Seed queue from root_url plus any extra seed_urls listed in the config.
-    seed_urls = [root_url] + [u for u in config.get("seed_urls", []) if u != root_url]
+    # The crawl queue is the union of:
+    #   1. root_url (always visited)
+    #   2. seed_urls listed in config
+    #   3. all URLs explicitly listed in the 'pages' mapping
+    # BFS-discovered links are crawled but NOT added to the queue.
+    explicitly_listed = set(pages_cfg.keys())
+    seed_urls = (
+        [root_url]
+        + [u for u in config.get("seed_urls", []) if u != root_url]
+        + [u for u in explicitly_listed if u not in {root_url}]
+    )
+    # Deduplicate while preserving order (root first, seeds next, listed last).
+    seen_order: dict[str, None] = {}
+    for u in seed_urls:
+        seen_order[u] = None
+    seed_urls = list(seen_order.keys())
 
     visited = set()
     queued  = set(seed_urls)
@@ -337,7 +425,7 @@ def crawl_site(config: dict, max_pages: int = 60) -> list:
                             "text":               data["text"],
                             "sections":           data["sections"],
                             "page_timestamp":     data.get("page_timestamp"),
-                            "chunk_type":         page_types.get(url, "general"),
+                            "chunk_type":         pages_cfg.get(url, "general"),
                             "level":              page_levels.get(url, ""),
                             "degree_type":        page_degree_types.get(url, ""),
                             "campus":             campus,
@@ -345,10 +433,8 @@ def crawl_site(config: dict, max_pages: int = 60) -> list:
                             "referenced_courses": extract_referenced_courses(data["text"]),
                         })
 
-                    for link in data["links"]:
-                        if link not in visited and link not in queued:
-                            queue.append(link)
-                            queued.add(link)
+                    # Whitelist-only: do NOT add BFS-discovered links to the queue.
+                    # (Links are still extracted for reference but not followed.)
 
                     time.sleep(0.3)
 

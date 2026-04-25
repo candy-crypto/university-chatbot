@@ -9,6 +9,7 @@ construction for grounded answer generation.
 
 import os
 import re
+from datetime import date
 from typing import List, Dict, Any
 
 from dotenv import load_dotenv
@@ -88,9 +89,220 @@ def embed_text(text: str) -> List[float]:
     return response.data[0].embedding
 
 
+# ── Token-level constants ─────────────────────────────────────────────────────
+
+# Common English words that carry no domain meaning and cause spurious
+# metadata boost matches (e.g. "of" in "Bachelor of Science" matching "of"
+# in a query about an unrelated topic).
+_STOPWORDS = frozenset({
+    "a", "an", "the", "and", "or", "in", "on", "at", "to", "for",
+    "of", "with", "by", "from", "as", "it", "its", "this", "that",
+    "i", "me", "my", "we", "our", "you", "your",
+    "is", "are", "was", "were", "be", "been", "being",
+    "have", "has", "had", "do", "does", "did",
+    "will", "would", "could", "should", "may", "might", "can",
+    "what", "which", "who", "when", "where", "how", "if",
+})
+
+_UNDERGRAD_TERMS = frozenset({
+    "undergraduate", "undergrad", "bachelor", "bachelors",
+    "freshman", "freshmen", "sophomore", "junior", "senior",
+})
+_GRADUATE_TERMS = frozenset({
+    "graduate", "grad", "master", "masters", "ms", "phd",
+    "doctoral", "doctorate", "thesis", "dissertation",
+})
+_SCHEDULE_TERMS = frozenset({
+    "offered", "offer", "offering", "schedule", "rotation",
+    "semester", "fall", "spring", "opportunity",
+})
+# Degree/requirement trigger terms — includes comparison vocabulary so the
+# degree_requirement boost fires for "difference between X and Y" queries.
+_REQUIREMENT_TERMS = frozenset({
+    "required", "requirement", "requirements", "must", "need", "needs",
+    "difference", "differences", "compare", "comparing", "comparison",
+    "distinguish", "between", "versus", "vs",
+})
+# Topic-verb terms that signal "what courses cover X?" queries.
+_COURSE_TOPIC_TERMS = frozenset({
+    "address", "addresses", "cover", "covers", "covering",
+    "about", "related", "focus", "focuses", "teach", "teaches",
+    "include", "includes", "involve", "involves", "topics",
+    "difference", "differences", "compare", "comparing",
+    "distinguish", "between", "versus", "vs",
+})
+_POLICY_QUERY_TERMS = frozenset({
+    "vww", "viewing", "wider", "world",
+    "policy", "policies", "rule", "rules",
+    "procedure", "procedures", "process",
+    "deadline", "deadlines", "hold", "holds",
+})
+# "between X and Y", "X vs Y" — student is comparing named specific items;
+# default TOP_K is sufficient since the named chunks will score highly.
+_SPECIFIC_COMPARISON_TERMS = frozenset({"between", "vs", "versus"})
+
+
 def tokenize(text: str) -> List[str]:
-    """Normalize text and extract lowercase term tokens."""
-    return re.findall(r"[a-z0-9]+", (text or "").lower())
+    """Normalize text, extract lowercase tokens, and filter stopwords.
+
+    Stopword filtering prevents common English words ("of", "a", "in", …)
+    from creating spurious intersections between query tokens and chunk
+    metadata fields, which previously caused inflated boosts on unrelated
+    chunks (e.g. study_plan chunks receiving 0.18–0.28 boost from shared
+    preposition tokens).
+    """
+    return [t for t in re.findall(r"[a-z0-9]+", (text or "").lower())
+            if t not in _STOPWORDS]
+
+
+# ── Acronym expansion ─────────────────────────────────────────────────────────
+# Common CS/NMSU acronyms that students use but that don't appear verbatim in
+# catalog headings. We APPEND the expansion rather than replace so both forms
+# are present for BM25 matching.
+
+_ACRONYM_MAP = {
+    r"\bAI\b":   "Artificial Intelligence",
+    r"\bML\b":   "Machine Learning",
+    r"\bHCI\b":  "Human Computer Interaction",
+    r"\bNLP\b":  "Natural Language Processing",
+    r"\bOS\b":   "Operating Systems",
+    r"\bSE\b":   "Software Engineering",
+    r"\bDS\b":   "Data Science",
+    r"\bDB\b":   "Database",
+    r"\bMAP\b":  "Masters Accelerated Program",
+}
+
+
+def expand_acronyms(query: str) -> str:
+    """Append full forms of recognized acronyms so BM25 can match catalog headings.
+
+    Appends rather than replaces so both the acronym and the expansion are
+    present in the query string. E.g.:
+        'difference between Cybersecurity and AI'
+        → 'difference between Cybersecurity and AI Artificial Intelligence'
+    """
+    additions = []
+    for pattern, expansion in _ACRONYM_MAP.items():
+        if re.search(pattern, query):
+            additions.append(expansion)
+    if additions:
+        return query + " " + " ".join(additions)
+    return query
+
+
+# ── Temporal query expansion ───────────────────────────────────────────────────
+# NMSU approximate semester boundaries (month, day):
+#   Spring:  Jan 1  – May 19
+#   Summer:  May 20 – Aug 14
+#   Fall:    Aug 15 – Dec 31
+
+_SEASON_ORDER = {"Spring": 1, "Summer": 2, "Fall": 3}
+
+
+def _semester_for_date(d: date) -> tuple[str, int]:
+    """Return (semester_name, year) for a given date."""
+    m, day, y = d.month, d.day, d.year
+    if (m < 5) or (m == 5 and day < 20):
+        return ("Spring", y)
+    elif (m < 8) or (m == 8 and day < 15):
+        return ("Summer", y)
+    else:
+        return ("Fall", y)
+
+
+def _next_occurrence(target: str, current_sem: str, current_year: int) -> tuple[str, int]:
+    """Earliest occurrence of target season that is current or future."""
+    if _SEASON_ORDER[target] >= _SEASON_ORDER[current_sem]:
+        return (target, current_year)
+    return (target, current_year + 1)
+
+
+def _strictly_next(target: str, current_sem: str, current_year: int) -> tuple[str, int]:
+    """First occurrence of target season strictly after the current semester."""
+    if _SEASON_ORDER[target] > _SEASON_ORDER[current_sem]:
+        return (target, current_year)
+    return (target, current_year + 1)
+
+
+def _last_occurrence(target: str, current_sem: str, current_year: int) -> tuple[str, int]:
+    """Most recent past occurrence of target season."""
+    if _SEASON_ORDER[target] < _SEASON_ORDER[current_sem]:
+        return (target, current_year)
+    return (target, current_year - 1)
+
+
+def _next_academic_semester(current_sem: str, current_year: int) -> tuple[str, int]:
+    """Next academic semester, skipping Summer (students say 'next semester' to mean Fall/Spring)."""
+    if current_sem == "Fall":
+        return ("Spring", current_year + 1)
+    return ("Fall", current_year)
+
+
+def _prev_academic_semester(current_sem: str, current_year: int) -> tuple[str, int]:
+    """Previous academic semester, skipping Summer."""
+    if current_sem == "Spring":
+        return ("Fall", current_year - 1)
+    return ("Spring", current_year)
+
+
+def expand_temporal_query(query: str, today: date | None = None) -> str:
+    """Rewrite relative temporal references to absolute semester/year strings.
+
+    This ensures that BM25 scoring can match the right calendar or schedule
+    chunks when a student asks about 'this semester', 'next fall', etc.
+
+    Examples (assuming today = April 24, 2026 → Spring 2026):
+        'this semester'   → 'Spring 2026'
+        'next semester'   → 'Fall 2026'   (academic — skips Summer)
+        'last semester'   → 'Fall 2025'   (academic — skips Summer)
+        'this summer'     → 'Summer 2026'
+        'next fall'       → 'Fall 2026'
+        'next spring'     → 'Spring 2027'
+        'last spring'     → 'Spring 2025'
+        'this year'       → '2026'
+        'next year'       → '2027'
+        'last year'       → '2025'
+    """
+    d = today or date.today()
+    cur_sem, cur_year = _semester_for_date(d)
+    q = query
+
+    # "this/current semester"
+    q = re.sub(
+        r'\b(this|current)\s+semester\b',
+        f"{cur_sem} {cur_year}",
+        q, flags=re.IGNORECASE,
+    )
+    # "next semester" (academic — skips Summer)
+    ns, ny = _next_academic_semester(cur_sem, cur_year)
+    q = re.sub(r'\bnext\s+semester\b', f"{ns} {ny}", q, flags=re.IGNORECASE)
+
+    # "last/previous semester" (academic — skips Summer)
+    ps, py = _prev_academic_semester(cur_sem, cur_year)
+    q = re.sub(r'\b(last|previous)\s+semester\b', f"{ps} {py}", q, flags=re.IGNORECASE)
+
+    # Year terms
+    q = re.sub(r'\b(this|current)\s+year\b', str(cur_year), q, flags=re.IGNORECASE)
+    q = re.sub(r'\bnext\s+year\b', str(cur_year + 1), q, flags=re.IGNORECASE)
+    q = re.sub(r'\b(last|previous)\s+year\b', str(cur_year - 1), q, flags=re.IGNORECASE)
+
+    # Season terms: this/next/last fall|spring|summer
+    for season in ("Fall", "Spring", "Summer"):
+        sl = season.lower()
+        this_sem, this_year = _next_occurrence(season, cur_sem, cur_year)
+        q = re.sub(rf'\bthis\s+{sl}\b', f"{season} {this_year}", q, flags=re.IGNORECASE)
+
+        next_sem, next_year = _strictly_next(season, cur_sem, cur_year)
+        q = re.sub(rf'\bnext\s+{sl}\b', f"{season} {next_year}", q, flags=re.IGNORECASE)
+
+        last_sem, last_year = _last_occurrence(season, cur_sem, cur_year)
+        q = re.sub(
+            rf'\b(last|previous)\s+{sl}\b',
+            f"{season} {last_year}",
+            q, flags=re.IGNORECASE,
+        )
+
+    return q
 
 
 def metadata_boost(query: str, chunk: Dict[str, Any]) -> float:
@@ -98,7 +310,12 @@ def metadata_boost(query: str, chunk: Dict[str, Any]) -> float:
     query_tokens = set(tokenize(query))
     boost = 0.0
 
-    if query_tokens.intersection(tokenize(chunk.get("heading", ""))):
+    # Exclude bare "cs" from heading matches — it is a department abbreviation
+    # that appears in nearly every FAQ chunk heading, causing spurious +0.08
+    # boosts on off-topic chunks (e.g. "Questions related to CS minor" ranking
+    # high for "How do I apply to the CS graduate program?").
+    heading_tokens = set(tokenize(chunk.get("heading", ""))) - {"cs"}
+    if query_tokens.intersection(heading_tokens):
         boost += 0.08
 
     # Course code and referenced courses — important for course-specific queries.
@@ -134,63 +351,66 @@ def metadata_boost(query: str, chunk: Dict[str, Any]) -> float:
     if query_tokens.intersection(tokenize(chunk.get("policy_topic", ""))):
         boost += 0.06
 
-    # Glossary chunks are preferred for definitional queries.
+    # Glossary chunks preferred for definitional queries — but only when the
+    # query actually contains a term from the glossary entry's heading.
+    # (Unconditional +0.06 was causing the advisor glossary entry to rank #1
+    # for "What is CAASS?" even though CAASS is not about advisors.)
     if chunk.get("chunk_type") == "glossary":
-        boost += 0.06
+        glossary_heading_tokens = set(tokenize(chunk.get("heading", "")))
+        if query_tokens.intersection(glossary_heading_tokens):
+            boost += 0.06
 
     # Course schedule chunks are authoritative for offering/scheduling queries.
-    _schedule_terms = {"offered", "offer", "offering", "schedule", "rotation", "semester", "fall", "spring", "opportunity"}
-    if chunk.get("chunk_type") == "course_schedule" and query_tokens.intersection(_schedule_terms):
+    if chunk.get("chunk_type") == "course_schedule" and query_tokens.intersection(_SCHEDULE_TERMS):
         boost += 0.15
 
     # Minor requirement chunks are preferred when the query is about a minor.
     if chunk.get("chunk_type") == "minor_requirement" and "minor" in query_tokens:
         boost += 0.15
 
-    # Degree requirement chunks are authoritative for "what is required" questions.
-    # Prefer them over study_plan chunks, which list courses as a roadmap rather
-    # than as a definitive requirement.
-    _requirement_terms = {"required", "requirement", "requirements", "must", "need", "needs"}
-    if chunk.get("chunk_type") in ("degree_core_requirement", "degree_requirement") and query_tokens.intersection(_requirement_terms):
+    # Degree/concentration requirement chunks are authoritative for "what is
+    # required" and comparison queries ("difference between X and Y").
+    if (chunk.get("chunk_type") in (
+            "degree_core_requirement", "degree_requirement", "concentration_requirement")
+            and query_tokens.intersection(_REQUIREMENT_TERMS)):
         boost += 0.10
 
-    # Course description chunks are authoritative for "what courses cover topic X" questions.
-    _course_topic_terms = {"address", "addresses", "cover", "covers", "covering",
-                           "about", "related", "focus", "focuses", "teach", "teaches",
-                           "include", "includes", "involve", "involves", "topics"}
+    # Course description chunks are authoritative for "what courses cover topic X".
     if (chunk.get("chunk_type") == "course_description"
             and "courses" in query_tokens
-            and query_tokens.intersection(_course_topic_terms)):
+            and query_tokens.intersection(_COURSE_TOPIC_TERMS)):
         boost += 0.15
 
     # Policy chunks are preferred for VWW, Gen Ed, and explicit policy queries.
-    _policy_query_terms = {
-        "vww", "viewing", "wider", "world",           # VWW-specific
-        "policy", "policies", "rule", "rules",         # explicit policy questions
-        "procedure", "procedures", "process",          # process questions
-        "deadline", "deadlines", "hold", "holds",      # administrative process
-    }
-    if chunk.get("chunk_type") in ("policy", "grad_program_info") and query_tokens.intersection(_policy_query_terms):
+    if (chunk.get("chunk_type") in ("policy", "grad_program_info")
+            and query_tokens.intersection(_POLICY_QUERY_TERMS)):
         boost += 0.12
 
-    # Level match — boost chunks whose level matches the audience implied by the query,
-    # and penalize chunks whose level contradicts it.
-    _undergrad_terms = {"undergraduate", "undergrad", "bachelor", "bachelors",
-                        "freshman", "freshmen", "sophomore", "junior", "senior"}
-    _graduate_terms  = {"graduate", "grad", "master", "masters", "phd",
-                        "doctoral", "doctorate", "thesis", "dissertation"}
+    # Level match — boost chunks whose level matches the audience implied by the
+    # query, and penalize chunks whose level contradicts it.
     chunk_level = chunk.get("level", "")
-    if chunk_level == "undergraduate" and query_tokens.intersection(_undergrad_terms):
+    if chunk_level == "undergraduate" and query_tokens.intersection(_UNDERGRAD_TERMS):
         boost += 0.08
-    elif chunk_level == "graduate" and query_tokens.intersection(_graduate_terms):
+    elif chunk_level == "graduate" and query_tokens.intersection(_GRADUATE_TERMS):
         boost += 0.08
-    elif chunk_level == "graduate" and query_tokens.intersection(_undergrad_terms):
+    elif chunk_level == "graduate" and query_tokens.intersection(_UNDERGRAD_TERMS):
         boost -= 0.20   # penalize graduate chunks for explicit undergrad queries
-    elif chunk_level == "undergraduate" and query_tokens.intersection(_graduate_terms):
+    elif chunk_level == "undergraduate" and query_tokens.intersection(_GRADUATE_TERMS):
         boost -= 0.20   # penalize undergrad chunks for explicit graduate queries
 
     if query_tokens.intersection(tokenize(chunk.get("lab", ""))):
         boost += 0.05
+
+    # Penalize study_plan chunks whose concentration is not mentioned in the query.
+    # Without this, all 11 concentration study plans flood results for a plain
+    # "BS in Computer Science" query because their first-year content is identical.
+    # The core BS CS plan has concentration="" and is not penalized.
+    if chunk.get("chunk_type") == "study_plan":
+        concentration = chunk.get("concentration") or ""
+        if concentration:
+            concentration_tokens = set(tokenize(concentration))
+            if not query_tokens.intersection(concentration_tokens):
+                boost -= 0.20
 
     # Slight preference for catalog content, which tends to be more authoritative.
     if chunk.get("content_source") == "catalog":
@@ -215,26 +435,143 @@ def parse_weaviate_objects(objects: Any, score_attr: str | None = None) -> List[
     return results
 
 
+def _build_hard_filters(query: str, tokens: set) -> "Filter | None":
+    """
+    Build optional Weaviate hard filters based on query signals.
+
+    Hard filters narrow the candidate pool *before* hybrid scoring, ensuring
+    that the right chunk types can enter top-K even when their BM25/vector
+    scores are weaker than irrelevant chunks from other categories.
+
+    Priority:
+      1. Level filter (always applied when audience is explicit, independent
+         of chunk_type filters).
+      2. Minor filter — when "minor" in query: restrict to minor + supporting
+         chunk types so minor chunks aren't displaced by BS/study_plan chunks.
+      3. Degree-exclude-minor — when degree vocabulary present without "minor":
+         exclude minor_requirement chunks that pollute degree queries.
+      4. Course-description filter — for "what courses teach X?" queries with no
+         specific course code: restrict to course_description and raise TOP_K.
+
+    Returns a combined Filter, or None if no hard filtering is warranted.
+    """
+    filters = []
+    minor_query = "minor" in tokens
+
+    # ── Level filter ──────────────────────────────────────────────────────────
+    # Include chunks whose level matches the query audience OR whose level is
+    # unset (level == "" means the chunk applies to all audiences).
+    # NOTE: Filter.by_property("level").equal("") causes Weaviate hybrid BM25
+    # to fail with "only stopwords provided". Use not_equal on the opposite
+    # level instead — semantically equivalent and avoids the empty-string bug.
+    if tokens.intersection(_UNDERGRAD_TERMS):
+        filters.append(
+            Filter.by_property("level").not_equal("graduate")
+        )
+    elif tokens.intersection(_GRADUATE_TERMS):
+        filters.append(
+            Filter.by_property("level").not_equal("undergraduate")
+        )
+
+    # ── chunk_type filter ─────────────────────────────────────────────────────
+    if minor_query:
+        # Minor queries: widen the candidate pool to include minor chunks and
+        # the context types needed to answer fully (general advising pages,
+        # degree overviews, course descriptions for "what courses are in the minor?").
+        filters.append(
+            Filter.by_property("chunk_type").contains_any([
+                "minor_requirement", "minor_index",
+                "degree_overview", "general", "advising", "course_description",
+            ])
+        )
+    elif tokens.intersection({"degree", "major", "program", "bachelor", "master", "phd"}):
+        # Degree queries without "minor": exclude minor chunks that match on
+        # shared vocabulary (e.g. Biology minor appearing for Biology degree queries).
+        filters.append(
+            Filter.by_property("chunk_type").contains_none([
+                "minor_requirement", "minor_index",
+            ])
+        )
+    elif ("courses" in tokens
+          and tokens.intersection(_COURSE_TOPIC_TERMS)
+          and not _COURSE_CODE_RE.search(query.upper())):
+        # Topic queries ("what courses teach X?" — no specific course code):
+        # restrict to course_description so degree/minor chunks don't displace
+        # relevant courses. TOP_K is raised in search_chunks() for these queries.
+        filters.append(Filter.by_property("chunk_type").equal("course_description"))
+
+    if not filters:
+        return None
+
+    result = filters[0]
+    for f in filters[1:]:
+        result = result & f
+    return result
+
+
 def search_chunks(query: str, department_id: str, top_k: int = TOP_K) -> List[Dict[str, Any]]:
     """
     Hybrid retrieval using Weaviate's native hybrid search.
 
     Weaviate fuses BM25 keyword scores and vector similarity scores using
     Reciprocal Rank Fusion (RRF) internally, then returns results ranked by
-    the combined score. A metadata boost is applied as a final re-ranking step.
+    the combined score. Optional hard Weaviate filters narrow the candidate
+    pool by chunk_type and level before scoring. A metadata boost is applied
+    as a final re-ranking step.
     """
+    query = expand_temporal_query(query)
+    query = expand_acronyms(query)
     query_vector = embed_text(query)
+    tokens = set(tokenize(query))
 
     client = get_weaviate_client()
     try:
         ensure_collection(client)
         collection = get_collection(client)
 
+        # Always filter by department. Add optional hard filters for level
+        # and chunk_type based on query signals.
+        base_filter = Filter.by_property("department_id").equal(department_id)
+        extra = _build_hard_filters(query, tokens)
+        weaviate_filter = base_filter if extra is None else base_filter & extra
+
+        # Raise TOP_K when the query mentions a multi-item category without
+        # naming specific items. The presence of "between/vs/versus" indicates
+        # a specific comparison (2-3 named items) — keep default TOP_K in that
+        # case since the relevant chunks will score highly on their own.
+        #
+        # Ceilings set by item counts in the CS department:
+        #   concentrations: 11  → TOP_K 15
+        #   minors:          6  → TOP_K 12
+        #   degrees/programs ~5 → TOP_K 10
+        #   scholarships    ~5+ → TOP_K 10
+        #   courses: not raised here — handled by topic-verb detection below
+        #   roadmaps: only 2 — default TOP_K=5 is sufficient
+        effective_top_k = top_k
+        is_specific = bool(tokens.intersection(_SPECIFIC_COMPARISON_TERMS))
+
+        if not is_specific:
+            if tokens.intersection({"concentration", "concentrations",
+                                    "track", "tracks", "specialization"}):
+                effective_top_k = max(top_k, 15)
+            elif tokens.intersection({"minor", "minors"}):
+                effective_top_k = max(top_k, 12)
+            elif tokens.intersection({"degree", "degrees", "program", "programs"}):
+                effective_top_k = max(top_k, 10)
+            elif tokens.intersection({"scholarship", "scholarships",
+                                      "financial", "funding", "aid"}):
+                effective_top_k = max(top_k, 10)
+
+        if ("courses" in tokens
+                and tokens.intersection(_COURSE_TOPIC_TERMS)
+                and not _COURSE_CODE_RE.search(query.upper())):
+            effective_top_k = max(effective_top_k, 12)
+
         response = collection.query.hybrid(
             query=query,
             vector=query_vector,
-            filters=Filter.by_property("department_id").equal(department_id),
-            limit=top_k,
+            filters=weaviate_filter,
+            limit=effective_top_k,
             alpha=HYBRID_ALPHA,
             return_metadata=MetadataQuery(score=True),
             return_properties=RETURN_PROPERTIES,
@@ -250,6 +587,9 @@ def search_chunks(query: str, department_id: str, top_k: int = TOP_K) -> List[Di
             item["final_score"] = item["hybrid_score"] + boost
 
         results.sort(key=lambda x: x.get("final_score", 0.0), reverse=True)
+        # Re-assign rank to reflect final post-boost order.
+        for i, item in enumerate(results, start=1):
+            item["rank"] = i
         return results
 
     finally:
@@ -637,11 +977,18 @@ def generate_grounded_answer(question: str, department_id: str) -> Dict[str, Any
     chunks = search_chunks(question, normalized_department_id)
     context = build_context(chunks)
 
-    system_prompt = """
+    _today = date.today()
+    _cur_sem, _cur_year = _semester_for_date(_today)
+    system_prompt = f"""
 You are the official chatbot for the Computer Science department at New Mexico State University (NMSU). \
 You answer questions about CS degree programs, courses, advising, financial aid, faculty, and department policy. \
 All answers must be grounded in the retrieved context provided with each question. \
 Do not invent facts, course numbers, names, URLs, dates, or page numbers.
+
+## Current Date
+Today is {_today.strftime("%B %d, %Y")}. The current academic semester is {_cur_sem} {_cur_year}. \
+Use this to interpret relative time references (e.g. "this semester", "next fall", "last spring") \
+and to flag when a retrieved calendar chunk covers a different semester than the one the student asked about.
 
 ## Audience Groups
 
@@ -739,6 +1086,23 @@ Direct the user to https://computerscience.nmsu.edu/grad-students/graduate-degre
 full program details
 - If a URL in the retrieved context is login-gated or behind an intranet, tell the user they will need to \
 be logged in to access it
+
+## Degree vs. Concentration Disambiguation
+
+When a **current student** identifies their major by name (e.g., "I am a Cybersecurity major", \
+"I'm in the Data Analytics program"), take it at face value — current students know their own enrollment. \
+Do not suggest they might mean a concentration instead.
+
+When a **prospective student** asks about a program by name, they may not know the full landscape. \
+If the named program is a concentration within a broader degree (e.g., Cybersecurity is both a standalone \
+BS and a CS concentration), briefly clarify both options and ask which they are interested in.
+
+## Course Disambiguation
+
+If the retrieved context contains two courses with the same or very similar name but different levels \
+(e.g., CSCI 4250 Human-Computer Interaction and CSCI 5250 Advanced HCI), ask the student which one they \
+mean before giving a detailed answer. Briefly name both options and ask whether they are looking for the \
+undergraduate or graduate version.
 
 ## Thesis and Dissertation Formatting
 

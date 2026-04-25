@@ -18,11 +18,14 @@ root_url: "https://computerscience.nmsu.edu/"
 seed_urls:
   - "https://apply.nmsu.edu/apply/"
   - "https://advising.nmsu.edu/"
+  - "https://computerscience.nmsu.edu/non-majors/minors.html"
+  - "https://dataanalytics.nmsu.edu/facultydirectory/index.html"
   - "https://dataanalytics.nmsu.edu/application-admission.html"
   - "https://dataanalytics.nmsu.edu/courses/roadmap-fall.html"
   - "https://dataanalytics.nmsu.edu/courses/roadmap-spring.html"
   - "https://ece.nmsu.edu/grad-study/teaching-assistants.html"
   - "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html"
+  - "https://gradschool.nmsu.edu/scholarships-and-tuition/awards-and-funding.html"
   - "https://miniapps.nmsu.edu/transfer"
   - "https://tpal.nmsu.edu/degree-programs/assistantships.html"
   - "https://www.nmsu.edu/degree-programs/graduate/computer-science.html"
@@ -50,7 +53,6 @@ deny_url_patterns:
   - "/department/job-openings"
   - "/news-events/open-positions"
   - "/news-events/news"
-  - "dataanalytics.nmsu.edu/facultydirectory"
   - "dataanalytics.nmsu.edu/courses/index"
   # apply.nmsu.edu — block login/registration forms and internal Slate paths
   - "apply.nmsu.edu/account/"
@@ -60,7 +62,10 @@ deny_url_patterns:
 fallback_contact_url: "https://computerscience.nmsu.edu/"
 
 
-# ── Page type classification ───────────────────────────────────────────────────
+# ── Page classification ────────────────────────────────────────────────────────
+# Only URLs listed here (plus seed_urls) are crawled. The crawler is whitelist-
+# only: BFS-discovered links are not followed.
+#
 # Chunk types used here:
 #   general          — informational pages that don't fit a narrower type
 #   faculty          — faculty/staff directory pages
@@ -73,7 +78,7 @@ fallback_contact_url: "https://computerscience.nmsu.edu/"
 #   degree_overview  — program descriptions (what the degree is, who it's for)
 #   course_schedule  — multi-semester course offering schedule (kept as single chunk)
 
-page_types:
+pages:
 
   # ── Department / General ────────────────────────────────────────────────────
   "https://computerscience.nmsu.edu/":                                       general
@@ -125,10 +130,12 @@ page_types:
   # ── Graduate School (external) ──────────────────────────────────────────────
   "https://gradschool.nmsu.edu/":                                            general
   "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html": enrollment
+  "https://gradschool.nmsu.edu/scholarships-and-tuition/awards-and-funding.html": financial_aid
 
   # ── MS Data Analytics (external — CS-administered program) ──────────────────
   # Homepage and faculty directory are redundant to catalog — denied above.
   # Courses index is redundant to catalog — denied above.
+  "https://dataanalytics.nmsu.edu/facultydirectory/index.html":              faculty
   "https://dataanalytics.nmsu.edu/application-admission.html":               enrollment
   "https://dataanalytics.nmsu.edu/courses/roadmap-fall.html":                study_plan
   "https://dataanalytics.nmsu.edu/courses/roadmap-spring.html":              study_plan
@@ -159,7 +166,9 @@ page_levels:
   "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html": undergraduate
   "https://computerscience.nmsu.edu/non-majors/gen-ed.html":                 undergraduate
   "https://computerscience.nmsu.edu/non-majors/learn-to-code.html":          undergraduate
-  "https://computerscience.nmsu.edu/non-majors/minors.html":                 undergraduate
+  # non-majors/minors.html covers both undergrad and grad CS minors — untagged
+  # so graduate students are not penalized when asking about minor value/options.
+  # "https://computerscience.nmsu.edu/non-majors/minors.html":              undergraduate
   "https://advising.nmsu.edu/":                                               undergraduate
 
   # Graduate-specific
@@ -170,6 +179,8 @@ page_levels:
   "https://computerscience.nmsu.edu/grad-students/master-in-bioinformatics.html": graduate
   "https://gradschool.nmsu.edu/":                                               graduate
   "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html": graduate
+  "https://gradschool.nmsu.edu/scholarships-and-tuition/awards-and-funding.html": graduate
+  "https://dataanalytics.nmsu.edu/facultydirectory/index.html":                 graduate
   "https://dataanalytics.nmsu.edu/application-admission.html":                  graduate
   "https://dataanalytics.nmsu.edu/courses/roadmap-fall.html":                   graduate
   "https://dataanalytics.nmsu.edu/courses/roadmap-spring.html":                 graduate
