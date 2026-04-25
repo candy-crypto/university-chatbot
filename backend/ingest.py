@@ -151,6 +151,72 @@ def extract_page_data(page, url: str, config: dict) -> dict:
                 curParts = [];
             }
 
+            // Serialize an HTML table preserving column context.
+            // Each data row becomes one line:
+            //   "CSCI 4120 Operating Systems I: FA26, FA27, FA28"
+            //   "CSCI 1110 Computer Science Principles: Offered every semester"
+            // Header rows (thead or repeated inline headers) are skipped.
+            function serializeTable(tableNode) {
+                // Extract column headers from thead
+                let headers = [];
+                const headCells = tableNode.querySelectorAll('thead tr th');
+                if (headCells.length) {
+                    headers = Array.from(headCells).map(
+                        th => th.innerText.replace(/[\\u00a0\\s]+/g, ' ').trim()
+                    );
+                }
+
+                const lines = [];
+                const rows  = tableNode.querySelectorAll('tbody tr, tr');
+
+                for (const row of rows) {
+                    const cells = Array.from(row.querySelectorAll('td, th'));
+                    if (!cells.length) continue;
+
+                    // Normalise cell text: collapse whitespace, strip nbsp
+                    const texts = cells.map(c =>
+                        c.innerText.replace(/[\\u00a0]+/g, '').replace(/\\s+/g, ' ').trim()
+                    );
+
+                    // Skip repeated inline header rows (all <th>, or first cell
+                    // matches the known "Course" header)
+                    const allTh = cells.every(c => c.tagName === 'TH');
+                    const looksLikeHeader = texts[0] === 'Course' && texts[2] === 'SP26';
+                    if (allTh || looksLikeHeader) {
+                        if (!headers.length) headers = texts;
+                        continue;
+                    }
+
+                    // Build course name from first two cells (code + title)
+                    const courseName = texts.slice(0, 2).filter(Boolean).join(' ');
+                    if (!courseName) continue;
+
+                    // Colspan cell: "Offered every semester", "Rare", "No set schedule"
+                    const semCell = cells[2];
+                    if (semCell && semCell.colSpan > 1) {
+                        const spanText = texts[2];
+                        if (spanText) lines.push(courseName + ': ' + spanText);
+                        continue;
+                    }
+
+                    // Map semester columns (index 2 onward) to header labels
+                    const marked = [];
+                    for (let i = 2; i < cells.length; i++) {
+                        if (texts[i]) {                      // non-empty = checkmark
+                            const label = i < headers.length ? headers[i] : '';
+                            marked.push(label || texts[i]);
+                        }
+                    }
+
+                    if (marked.length) {
+                        lines.push(courseName + ': ' + marked.join(', '));
+                    }
+                    // All-empty semester cells: omit — no schedule data available
+                }
+
+                return lines.join('\\n');
+            }
+
             function walk(node) {
                 if (node.nodeType === 3) {
                     const t = node.textContent.replace(/\\s+/g, ' ').trim();
@@ -161,6 +227,12 @@ def extract_page_data(page, url: str, config: dict) -> dict:
                     if (SPLIT.has(tag)) {
                         flush();
                         curHeading = node.innerText.replace(/\\s+/g, ' ').trim();
+                        return;
+                    }
+                    if (tag === 'table') {
+                        // Tables get structured serialization; don't walk children
+                        const tableText = serializeTable(node);
+                        if (tableText) curParts.push(tableText);
                         return;
                     }
                     for (const child of node.childNodes) walk(child);
