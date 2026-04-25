@@ -70,6 +70,8 @@ Items marked **[re-ingest needed]** require a pipeline re-run to take effect.
 
 - [ ] **Two-column PDF parsing — cross-page section boundaries** — pp.41-42 and pp.213-214 split across page boundaries. Requires restructuring `lines_to_text()` — deferred. *(req_012, deg_009)*
 
+- [ ] **Bioinformatics entrance requirements not chunked** — catalog p.566 contains "Entrance Requirements for Graduate Study in Bioinformatics" (GRE not required, BS in computational/life sciences, 3.2 GPA, career statement, 3 reference letters). This section in the CS dept block was not extracted as a separate chunk by `chunk_dept_intro()`. *(pol_003)*
+
 ---
 
 ## cs.yaml
@@ -94,4 +96,4 @@ Items marked **[re-ingest needed]** require a pipeline re-run to take effect.
 
 - [x] **Full review pass completed** — pol_001 through other_001 reviewed and recorded (2026-04-24)
 
-- [ ] **TBD chunk IDs** — multiple entries have TBD chunk IDs; ingests now complete, ready to update
+- [x] **TBD chunk IDs** — resolved 2026-04-24; 3 remain as known chunker gaps (adv_001 p.447 CAASS, pol_003 p.566 bioinformatics entrance, fac_003 dynamic faculty rendering)

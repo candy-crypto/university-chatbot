@@ -17,7 +17,7 @@
   expected_chunk_ids:
     - "https://advising.nmsu.edu/#chunk-0"          # full name in page header; retrieval gap — nav boilerplate dilutes ranking
     - "116b9e42d133cddf"                             # catalog p41 — CAASS mentioned in overload policy text
-    - "TBD_catalog_p447_college_of_arts_sciences"   # catalog p447-449 — College of A&S header contains full CAASS name; re-run ingest to get ID
+    # TBD: catalog p447-449 — College of A&S chunk exists (40a536a6c3a1e458) but does not contain "CAASS" or "Advising"; full name not present in that chunk; chunker gap
   expected_source_type: "web"
   applicable_groups:
     - "prospective_undergrad"
@@ -227,7 +227,7 @@
   expected_chunk_ids:
     - "35b87bcfa4e68b97"  # glossary chunk — Gen Ed definition; ranks #1 currently
     - "758a8cf629f64251"  # glossary chunk — Gen Ed Certification definition
-    - "TBD_catalog_p241_gen_ed_vww"  # policy chunk pp.241-244 — detailed area requirements; available after catalog re-ingest
+    - "45eb0bef0400c391"  # NMSU Viewing a Wider World Requirements — spans pp.241-242; definitive area requirements
   retrieval_note: "glossary boost working well — two glossary chunks in top 5; pp.241-244 policy chunk not yet ingested; VWW is not defined in glossary (only Gen Ed is)"
   expected_source_type: "catalog"
   applicable_groups:
@@ -242,7 +242,7 @@
     - "VWW courses are all upper-division (300/400 level)"
     - "Should be taken in junior and/or senior year"
   expected_chunk_ids:
-    - "TBD_catalog_p241_gen_ed_vww"  # policy chunk pp.241-244 — definitive answer ('junior and/or senior year'); available after catalog re-ingest
+    - "45eb0bef0400c391"  # NMSU Viewing a Wider World Requirements — pp.241-242; states VWW courses are upper-division (junior/senior year)
   retrieval_note: "current top 5 are degree_requirement and study_plan chunks with 0.28 metadata boost from degree metadata; policy chunk from pp.241-244 will only get 0.08 boost and may not break into top 5 — policy chunk_type needs a boost for VWW/Gen Ed queries (deferred post-demo); study_plan chunks may show VWW in year 3/4 but don't state the rule explicitly"
   expected_source_type: "catalog"
   applicable_groups:
@@ -353,9 +353,9 @@
     - "CSCI 4440 Generative Artificial Intelligence: covers ethical consequences of generative AI"
   expected_chunk_ids:
     - "2dd3ef533673839b"   # CSCI 4110 Computing Ethics — confirmed rank 1
-    - "TBD_CSCI_3410"      # Introduction to Intelligent Agents Using Science Fiction — missing from top 5
-    - "TBD_CSCI_4440"      # Generative Artificial Intelligence — missing from top 5
-    - "TBD_CSCI_4245"      # Computer Networks I (covers Internet governance) — missing from top 5
+    - "6e812bb0213d9f4f"   # CSCI 3410 — Introduction to Intelligent Agents Using Science Fiction
+    - "96ed44c75c847eb2"   # CSCI 4440 — Generative Artificial Intelligence
+    - "14ca18cad3cdd826"   # CSCI 4245 — Computer Networks I
   retrieval_note: "study_plan chunks (ranks 3-5) displaced 3 of 4 expected course_description chunks; course_description boost (+0.15) added for 'courses + topic verb' queries; re-run retrieval after boost to confirm TBD IDs"
   expected_source_type: "catalog"
   banner_redirect_expected: false
@@ -370,9 +370,9 @@
     - "E E 465 Machine Learning I (3 credits): undergraduate-level ML algorithms, supervised and unsupervised learning"
   expected_chunk_ids:
     - "96ed44c75c847eb2"   # CSCI 4440 Generative AI — confirmed rank 5
-    - "TBD_CSCI_3410"      # Intelligent Agents — missing from top 5
-    - "TBD_CE_490"         # C E 490 AI for Civil Engineers — missing from top 5
-    - "TBD_EE_465"         # E E 465 Machine Learning I — missing from top 5
+    - "6e812bb0213d9f4f"   # CSCI 3410 — Introduction to Intelligent Agents Using Science Fiction
+    - "9011642945907701"   # C E 490 — Introduction to AI for Civil Engineers
+    - "0ff179760fbded70"   # E E 465 — Machine Learning I
   retrieval_note: "graduate courses CSCI 5405/5750 and ACCT 558 (500/5000-level) displaced undergrad courses; level penalty (-0.20) added for graduate chunks on undergrad queries; hard Weaviate level filter planned post-demo; LLM system prompt updated with NMSU course numbering convention"
   expected_source_type: "catalog"
   banner_redirect_expected: false
@@ -917,7 +917,7 @@
     - "Graduate: returned to good standing when both cumulative GPA and most recent semester GPA both exceed 3.0"
   expected_chunk_ids:
     - "509e68e295bb0a3e"  # Removal of Academic Probation (undergrad) — direct answer
-    - "TBD"  # Graduate academic probation removal — catalog p.53; chunk ID not yet assigned
+    - "64138944f5cf6d00"  # Graduate Academic Probation and Suspension — catalog p.53
   retrieval_note: "rank 1 correct; graduate removal chunk (catalog p.53) missing from top 5 — no graduate-specific probation chunk surfaced; ranks 2-4 are background context (what probation is, not how to exit it)"
   expected_source_type: "catalog"
   banner_redirect_expected: false
@@ -945,11 +945,11 @@
     - "Bioinformatics MS: BS from accredited institution in computational or life sciences field, min 3.2 GPA, Career statement, minimum 3 letters of reference"
     - "Data Analytics MS: see dataanalytics.nmsu.edu/application-admission.html for specific requirements"
   expected_chunk_ids:
-    - "TBD"  # catalog p.76 — application dates and deadlines
-    - "TBD"  # catalog p.129 — MAP application process (timing, dept approval, then grad school)
-    - "TBD"  # catalog p.566 — bioinformatics entrance requirements
-    - "TBD"  # https://computerscience.nmsu.edu/grad-students/graduate-degrees.html — application links
-    - "TBD"  # https://dataanalytics.nmsu.edu/application-admission.html — data analytics application
+    - "7f41f569d43c744a"  # Application Dates and Deadlines — catalog p.76
+    - "59d2177c1209b227"  # Master's Accelerated Program (MAP) — catalog p.76; general MAP eligibility; CS-specific process (p.129) not chunked separately (chunker gap)
+    - "https://computerscience.nmsu.edu/grad-students/graduate-degrees.html#chunk-2"  # Master's Degrees — lists available CS graduate programs
+    - "https://dataanalytics.nmsu.edu/application-admission.html#chunk-0"  # Data Analytics application requirements
+    # TBD: catalog p.566 bioinformatics entrance requirements — content exists but not chunked (nmsu_catalog_chunker.py gap)
   retrieval_note: "retrieval failure — all 5 expected chunks absent from top 5; ranks 2-3 (CS minor FAQ, MAP FAQ) inflated by 'cs' abbreviation matching in heading boost, now fixed; catalog enrollment chunks still not surfacing due to vocabulary mismatch ('apply' in query vs formal catalog language about 'application dates and deadlines'); enrollment chunk_type boost for apply/application queries may be needed"
   expected_source_type: "either"
   applicable_groups:
@@ -992,7 +992,7 @@
     - "Graduate School must be notified of results in all cases"
     - "After passing: advisor and department head appoint doctoral committee and prepare preliminary program of study"
   expected_chunk_ids:
-    - "TBD"  # catalog p.39 — qualifying examination policy
+    - "62de7b59204f39f8"  # Doctoral Degrees — catalog p.37; qualifying examination section is within this large policy chunk (pp.37-50+)
   retrieval_note: "key_facts corrected — prior version contained ECE-specific content (ECE faculty, MSEE) sourced in error; correct source is catalog p.39; rank 1 FAQ chunk (newly admitted students) may contain qualifying exam Q&A within a large mixed chunk — will split after re-ingest; rank 4 catalog Doctoral Degrees chunk is adjacent but not the specific qualifying exam section"
   expected_source_type: "catalog"
   applicable_groups:
@@ -1009,7 +1009,7 @@
     - "MAP is specific to the BS→MS in Computer Science accelerated path; not available for all graduate degrees"
     - "Preferred response: state that no Cybersecurity graduate program exists, list the available CS graduate programs, and invite the student to ask about a specific program"
   expected_chunk_ids:
-    - "TBD"  # https://computerscience.nmsu.edu/grad-students/graduate-degrees.html — lists available CS graduate programs; LLM infers absence of Cybersecurity from this list
+    - "https://computerscience.nmsu.edu/grad-students/graduate-degrees.html#chunk-2"  # Master's Degrees — lists available CS graduate programs; LLM infers absence of Cybersecurity
   retrieval_note: "no chunk explicitly states there is no Cybersecurity grad program; LLM must infer from graduate program list; MAP chunks (ranks 1-3) are relevant secondary context if student follows up about MS CS; graduate-degrees.html page not in top 5 — needed to ground the full program list"
   expected_source_type: "web"
   applicable_groups:
@@ -1064,13 +1064,13 @@
     - "Graduate CS minor: 9 credits of graduate-level CS, excluding CSCI 4540 Computer Science I Transition"
     - "Graduate Bioinformatics minor: 9 credits (MS) or 12 credits (PhD) including BIOL 550; jointly offered with Molecular Biology; contact Molecular Biology Program for current requirements"
   expected_chunk_ids:
-    - "TBD"  # catalog p.567 — Minors for the Department overview (lists all 6 options)
-    - "TBD"  # minor_requirement: Algorithm Theory undergraduate minor
-    - "TBD"  # minor_requirement: Bioinformatics undergraduate minor
-    - "TBD"  # minor_requirement: Computer Systems undergraduate minor
-    - "TBD"  # minor_requirement: Software Development undergraduate minor
-    - "b1a889c06156e3e9"  # minor_requirement: Computer Science Graduate Minor
-    - "TBD"  # minor_requirement: Bioinformatics Graduate Minor
+    - "ef83f65275f8cd78"  # minor_index p.567 — lists all 6 minor options (eligibility rules, one minor limit)
+    - "bf84d94f705af510"  # Algorithm Theory - Undergraduate Minor
+    - "61024f0564e7f4cb"  # Bioinformatics - Undergraduate Minor (p.608)
+    - "2eb0733f90bc7c3e"  # Computer Systems - Undergraduate Minor
+    - "df872e79162198e8"  # Software Development - Undergraduate Minor
+    - "b1a889c06156e3e9"  # Computer Science - Graduate Minor
+    - "7efab94ffc416388"  # Bioinformatics (with Computer Science) - Graduate Minor (p.230)
     - "ef83f65275f8cd78"  # minor_index — eligibility rules (non-CS majors only, one minor limit)
   retrieval_note: "question requires 6+ chunks to answer fully (one per minor option); top 5 skewed toward graduate minor and general overview; all 4 undergraduate minor_requirement chunks absent; effective TOP_K needs to be higher for 'what are my options' + 'differences' queries about minors — consider raising to 10-12 when 'minor' in query and comparison vocabulary present"
   expected_source_type: "either"
@@ -1112,7 +1112,8 @@
     - "CSCI 1110 Computer Science Principles: alternative option; requires MATH 1215; is a prerequisite for CSCI 1720"
     - "If math prerequisites are not met, take the appropriate Math course first and postpone CSCI 1115G"
   expected_chunk_ids:
-    - "TBD"  # catalog pp.606-607 — standalone BS in Cybersecurity degree requirements
+    - "14f0a41f77e90fb4"  # Cybersecurity - Bachelor of Science [degree_requirement] p.606
+    - "80a28b47eeacb905"  # Cybersecurity - Bachelor of Science [study_plan] p.607
     - "482e154e99b5dc92"  # CS Cybersecurity concentration requirements
   retrieval_note: "retrieval failure — standalone BS Cybersecurity chunk (pp.606-607) absent; CS concentration chunk (rank 1) is a different program; student saying 'Cybersecurity major' means the standalone degree, no disambiguation needed"
   expected_source_type: "catalog"
@@ -1149,7 +1150,7 @@
     - "Note: 'AI' in query = Artificial Intelligence concentration within BS CS; fixed via acronym expansion"
   expected_chunk_ids:
     - "482e154e99b5dc92"  # CS Cybersecurity concentration requirements
-    - "TBD"              # CS Artificial Intelligence concentration requirements — absent before acronym expansion fix
+    - "2a0530dddd6f6cec"  # Computer Science (Artificial Intelligence) - Bachelor of Science — concentration requirements
   retrieval_note: "rank 1 (BS vs BA comparison) is noise; rank 2 (Cybersecurity concentration) is correct; AI concentration chunk absent before fix — 'AI' had no BM25 match for 'Artificial Intelligence'; fixed by appending full form in expand_acronyms(); correct LLM behavior: state job data unavailable, offer concentration requirement comparison instead"
   expected_source_type: "catalog"
   applicable_groups:
