@@ -202,6 +202,8 @@ _ACRONYM_MAP = {
     # catalog; only the full name "Center for Academic Advising and Student Support"
     # appears on the CS advising FAQ and the College of A&S intro pages.
     r"\bCAASS\b": "Center for Academic Advising and Student Support",
+    # VWW never appears verbatim in catalog headings — only the full phrase does.
+    r"\bVWW\b":   "Viewing a Wider World",
 }
 
 
@@ -555,10 +557,14 @@ def _build_hard_filters(query: str, tokens: set) -> "Filter | None":
         )
     elif ("courses" in tokens
           and tokens.intersection(_COURSE_TOPIC_TERMS)
+          and not tokens.intersection(_POLICY_QUERY_TERMS)
           and not _COURSE_CODE_RE.search(query.upper())):
         # Topic queries ("what courses teach X?" — no specific course code):
         # restrict to course_description so degree/minor chunks don't displace
         # relevant courses. TOP_K is raised in search_chunks() for these queries.
+        # Exception: when policy/VWW terms are present (e.g. "what courses meet
+        # my VWW requirements?"), do NOT restrict — the policy chunk must be
+        # reachable even though "courses" and a topic verb are in the query.
         filters.append(Filter.by_property("chunk_type").equal("course_description"))
 
     if not filters:
@@ -627,6 +633,13 @@ def search_chunks(query: str, department_id: str, top_k: int = TOP_K) -> List[Di
                 and tokens.intersection(_COURSE_TOPIC_TERMS)
                 and not _COURSE_CODE_RE.search(query.upper())):
             effective_top_k = max(effective_top_k, 12)
+
+        # Policy/VWW queries: raise TOP_K so policy chunks have room to surface
+        # before metadata re-ranking. With alpha=0.75 (vector-dominant), the
+        # extra words in a VWW query (year, courses, when) can push the policy
+        # chunk below rank 5 even when BM25 matches on the heading.
+        if tokens.intersection(_POLICY_QUERY_TERMS):
+            effective_top_k = max(effective_top_k, 10)
 
         response = collection.query.hybrid(
             query=query,
