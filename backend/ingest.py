@@ -414,6 +414,7 @@ def crawl_site(config: dict, max_pages: int = 60) -> list:
                 if url in visited:
                     continue
 
+                page = context.new_page()
                 try:
                     data = extract_page_data(page, url, config)
                     visited.add(url)
@@ -441,6 +442,8 @@ def crawl_site(config: dict, max_pages: int = 60) -> list:
                 except Exception as e:
                     print(f"Skipping {url}: {e}")
                     visited.add(url)
+                finally:
+                    page.close()
 
         finally:
             context.close()

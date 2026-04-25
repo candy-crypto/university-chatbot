@@ -23,12 +23,12 @@ seed_urls:
   - "https://dataanalytics.nmsu.edu/application-admission.html"
   - "https://dataanalytics.nmsu.edu/courses/roadmap-fall.html"
   - "https://dataanalytics.nmsu.edu/courses/roadmap-spring.html"
-  - "https://ece.nmsu.edu/grad-study/teaching-assistants.html"
   - "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html"
   - "https://gradschool.nmsu.edu/scholarships-and-tuition/awards-and-funding.html"
   - "https://miniapps.nmsu.edu/transfer"
   - "https://tpal.nmsu.edu/degree-programs/assistantships.html"
-  - "https://www.nmsu.edu/degree-programs/graduate/computer-science.html"
+  # www.nmsu.edu/degree-programs/graduate/computer-science.html — removed;
+  # page redirects to chrome-error://chromewebdata/ and corrupts the crawl session.
 
 allowed_domains:
   - "computerscience.nmsu.edu"
@@ -37,7 +37,6 @@ allowed_domains:
   - "gradschool.nmsu.edu"
   - "dataanalytics.nmsu.edu"
   - "tpal.nmsu.edu"
-  - "ece.nmsu.edu"
   - "www.nmsu.edu"
   - "miniapps.nmsu.edu"
   - "apply.nmsu.edu"
@@ -142,10 +141,9 @@ pages:
 
   # ── Financial aid & assistantships (external) ───────────────────────────────
   "https://tpal.nmsu.edu/degree-programs/assistantships.html":              financial_aid
-  "https://ece.nmsu.edu/grad-study/teaching-assistants.html":               financial_aid
 
   # ── NMSU main site (external) ───────────────────────────────────────────────
-  "https://www.nmsu.edu/degree-programs/graduate/computer-science.html":    degree_overview
+  # www.nmsu.edu/degree-programs/graduate/computer-science.html — removed; redirects to chrome error page
   "https://miniapps.nmsu.edu/transfer":                                      enrollment
 
   # ── Admissions application portal (external) ────────────────────────────────
@@ -185,8 +183,7 @@ page_levels:
   "https://dataanalytics.nmsu.edu/courses/roadmap-fall.html":                   graduate
   "https://dataanalytics.nmsu.edu/courses/roadmap-spring.html":                 graduate
   "https://tpal.nmsu.edu/degree-programs/assistantships.html":                  graduate
-  "https://ece.nmsu.edu/grad-study/teaching-assistants.html":                   graduate
-  "https://www.nmsu.edu/degree-programs/graduate/computer-science.html":        graduate
+  # www.nmsu.edu/degree-programs/graduate/computer-science.html — removed
 
 
 # ── Degree type classification ─────────────────────────────────────────────────
@@ -200,4 +197,4 @@ page_degree_types:
   "https://dataanalytics.nmsu.edu/application-admission.html":                    ms
   "https://dataanalytics.nmsu.edu/courses/roadmap-fall.html":                     ms
   "https://dataanalytics.nmsu.edu/courses/roadmap-spring.html":                   ms
-  "https://www.nmsu.edu/degree-programs/graduate/computer-science.html":          ms
+  # www.nmsu.edu/degree-programs/graduate/computer-science.html — removed
