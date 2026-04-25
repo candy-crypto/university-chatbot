@@ -475,6 +475,22 @@ def metadata_boost(query: str, chunk: Dict[str, Any]) -> float:
             if not query_tokens.intersection(concentration_tokens):
                 boost -= 0.20
 
+    # Penalize concentration_requirement chunks when the parent degree is not
+    # mentioned in the query and the query doesn't explicitly say "concentration".
+    # This distinguishes "BS in Cybersecurity" (standalone degree) from
+    # "Computer Science Cybersecurity concentration" — both use the word
+    # "Cybersecurity" so the metadata boost alone cannot differentiate them.
+    # E.g. "specialty BS in Cybersecurity" → parent degree is "Computer Science"
+    # which is not in the query → concentration chunk penalized → standalone
+    # Cybersecurity degree_requirement chunk wins instead.
+    # Exception: if the student explicitly says "concentration", the query is
+    # unambiguously about a concentration track, so no penalty.
+    if chunk.get("chunk_type") == "concentration_requirement":
+        if "concentration" not in query_tokens:
+            parent_degree_tokens = set(tokenize(chunk.get("degree_full_title", "")))
+            if parent_degree_tokens and not query_tokens.intersection(parent_degree_tokens):
+                boost -= 0.15
+
     # Slight preference for catalog content, which tends to be more authoritative.
     if chunk.get("content_source") == "catalog":
         boost += 0.02
