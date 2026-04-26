@@ -9,11 +9,14 @@ Usage:
     python eval/harness.py --no-judge                     # skip LLM judge (faster)
 
 Outputs (written to backend/eval/results/):
-    eval_results_{run_id}.jsonl   — one JSON record per question
+    eval_results_{run_id}.jsonl   — one JSON record per question (full detail)
+    eval_answers_{run_id}.csv     — question_id, question, answer, passed
+    eval_scores_{run_id}.csv      — question_id, scores, judge reasoning
     eval_summary_{run_id}.json    — aggregate metrics and category breakdown
 """
 
 import argparse
+import csv
 import json
 import os
 import re
@@ -533,6 +536,32 @@ def print_summary(summary: dict) -> None:
     print(f"{'='*60}\n")
 
 
+# ── CSV export ────────────────────────────────────────────────────────────────
+
+_CSV_ANSWERS_FIELDS = [
+    "question_id", "category", "question", "passed", "system_answer",
+]
+
+_CSV_SCORES_FIELDS = [
+    "question_id", "category", "passed",
+    "retrieval_score", "judge_total",
+    "retrieval_hit", "top1_match", "source_type_correct",
+    "faithfulness", "completeness", "hallucination", "response_quality",
+    "latency_ms", "judge_reasoning",
+]
+
+
+def _write_csv(results: list, answers_path: Path, scores_path: Path) -> None:
+    with open(answers_path, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=_CSV_ANSWERS_FIELDS, extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(results)
+    with open(scores_path, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=_CSV_SCORES_FIELDS, extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(results)
+
+
 # ── Entry point ───────────────────────────────────────────────────────────────
 
 def main():
@@ -566,8 +595,10 @@ def main():
     run_timestamp = datetime.now(timezone.utc).isoformat()
 
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
-    results_path = RESULTS_DIR / f"eval_results_{run_id}.jsonl"
-    summary_path = RESULTS_DIR / f"eval_summary_{run_id}.json"
+    results_path  = RESULTS_DIR / f"eval_results_{run_id}.jsonl"
+    answers_path  = RESULTS_DIR / f"eval_answers_{run_id}.csv"
+    scores_path   = RESULTS_DIR / f"eval_scores_{run_id}.csv"
+    summary_path  = RESULTS_DIR / f"eval_summary_{run_id}.json"
 
     print(f"Run ID: {run_id}")
     print(f"Questions: {len(records)}  |  Judge: {'yes' if use_judge else 'no'}")
@@ -599,8 +630,12 @@ def main():
     with open(summary_path, "w", encoding="utf-8") as f:
         json.dump(summary, f, indent=2, ensure_ascii=False)
 
+    _write_csv(results, answers_path, scores_path)
+
     print_summary(summary)
     print(f"Summary → {summary_path}")
+    print(f"Answers → {answers_path}")
+    print(f"Scores  → {scores_path}")
 
 
 if __name__ == "__main__":
