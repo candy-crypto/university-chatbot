@@ -79,6 +79,129 @@ def is_allowed_url(url: str, config: dict) -> bool:
 
 # ── Page extraction ────────────────────────────────────────────────────────────
 
+# JavaScript DOM walker used to extract structured sections from a rendered page.
+# Extracted as a module-level constant so it can be re-evaluated after each
+# pagination click without duplicating the source.
+_SECTION_WALKER_JS = """
+() => {
+    const SKIP  = new Set(['script','style','nav','footer','header','noscript']);
+    const SPLIT = new Set(['h2','h3']);
+    const root  = document.querySelector('main')
+               || document.querySelector('article')
+               || document.querySelector('#content')
+               || document.body;
+
+    const result = [];
+    let curHeading = '';
+    let curParts   = [];
+
+    function flush() {
+        const t = curParts.join(' ').replace(/\\s+/g, ' ').trim();
+        if (t) result.push({ heading: curHeading, text: t });
+        curParts = [];
+    }
+
+    // Serialize an HTML table preserving column context.
+    // Each data row becomes one line:
+    //   "CSCI 4120 Operating Systems I: FA26, FA27, FA28"
+    //   "CSCI 1110 Computer Science Principles: Offered every semester"
+    // Header rows (thead or repeated inline headers) are skipped.
+    function serializeTable(tableNode) {
+        // Extract column headers from thead
+        let headers = [];
+        const headCells = tableNode.querySelectorAll('thead tr th');
+        if (headCells.length) {
+            headers = Array.from(headCells).map(
+                th => th.innerText.replace(/[\\u00a0\\s]+/g, ' ').trim()
+            );
+        }
+
+        const lines = [];
+        const rows  = tableNode.querySelectorAll('tbody tr, tr');
+
+        for (const row of rows) {
+            const cells = Array.from(row.querySelectorAll('td, th'));
+            if (!cells.length) continue;
+
+            // Normalise cell text: collapse whitespace, strip nbsp
+            const texts = cells.map(c =>
+                c.innerText.replace(/[\\u00a0]+/g, '').replace(/\\s+/g, ' ').trim()
+            );
+
+            // Skip repeated inline header rows (all <th>, or first cell
+            // matches the known "Course" header)
+            const allTh = cells.every(c => c.tagName === 'TH');
+            const looksLikeHeader = texts[0] === 'Course' && texts[2] === 'SP26';
+            if (allTh || looksLikeHeader) {
+                if (!headers.length) headers = texts;
+                continue;
+            }
+
+            // Build course name from first two cells (code + title)
+            const courseName = texts.slice(0, 2).filter(Boolean).join(' ');
+            if (!courseName) continue;
+
+            // Colspan cell: "Offered every semester", "Rare", "No set schedule"
+            const semCell = cells[2];
+            if (semCell && semCell.colSpan > 1) {
+                const spanText = texts[2];
+                if (spanText) lines.push(courseName + ': ' + spanText);
+                continue;
+            }
+
+            // Map semester columns (index 2 onward) to header labels
+            const marked = [];
+            for (let i = 2; i < cells.length; i++) {
+                if (texts[i]) {                      // non-empty = checkmark
+                    const label = i < headers.length ? headers[i] : '';
+                    marked.push(label || texts[i]);
+                }
+            }
+
+            if (marked.length) {
+                lines.push(courseName + ': ' + marked.join(', '));
+            }
+            // All-empty semester cells: omit — no schedule data available
+        }
+
+        return lines.join('\\n');
+    }
+
+    function walk(node) {
+        if (node.nodeType === 3) {
+            const t = node.textContent.replace(/\\s+/g, ' ').trim();
+            if (t) curParts.push(t);
+        } else if (node.nodeType === 1) {
+            const tag = node.tagName.toLowerCase();
+            if (SKIP.has(tag)) return;
+            if (SPLIT.has(tag)) {
+                flush();
+                curHeading = node.innerText.replace(/\\s+/g, ' ').trim();
+                return;
+            }
+            if (tag === 'table') {
+                // Tables get structured serialization; don't walk children
+                const tableText = serializeTable(node);
+                if (tableText) curParts.push(tableText);
+                return;
+            }
+            for (const child of node.childNodes) walk(child);
+        }
+    }
+
+    for (const child of root.childNodes) walk(child);
+    flush();
+    return result;
+}
+"""
+
+# CS faculty directory uses AngularJS client-side pagination: all 31 entries
+# are spread across 3 pages on a single URL with no URL change on page turn.
+# We click through each numbered page button and re-run the DOM walker to
+# collect faculty entries from all pages.
+_PAGINATED_FACULTY_URL = "computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html"
+
+
 def extract_page_data(page, url: str, config: dict) -> dict:
     """
     Render the page with Playwright and extract:
@@ -132,118 +255,26 @@ def extract_page_data(page, url: str, config: dict) -> dict:
     body_text = normalize_text(page.locator("body").inner_text(timeout=5000))
 
     # Structured sections split on h2/h3 for chunking
-    sections = page.evaluate("""
-        () => {
-            const SKIP  = new Set(['script','style','nav','footer','header','noscript']);
-            const SPLIT = new Set(['h2','h3']);
-            const root  = document.querySelector('main')
-                       || document.querySelector('article')
-                       || document.querySelector('#content')
-                       || document.body;
+    sections = page.evaluate(_SECTION_WALKER_JS)
 
-            const result = [];
-            let curHeading = '';
-            let curParts   = [];
-
-            function flush() {
-                const t = curParts.join(' ').replace(/\\s+/g, ' ').trim();
-                if (t) result.push({ heading: curHeading, text: t });
-                curParts = [];
-            }
-
-            // Serialize an HTML table preserving column context.
-            // Each data row becomes one line:
-            //   "CSCI 4120 Operating Systems I: FA26, FA27, FA28"
-            //   "CSCI 1110 Computer Science Principles: Offered every semester"
-            // Header rows (thead or repeated inline headers) are skipped.
-            function serializeTable(tableNode) {
-                // Extract column headers from thead
-                let headers = [];
-                const headCells = tableNode.querySelectorAll('thead tr th');
-                if (headCells.length) {
-                    headers = Array.from(headCells).map(
-                        th => th.innerText.replace(/[\\u00a0\\s]+/g, ' ').trim()
-                    );
-                }
-
-                const lines = [];
-                const rows  = tableNode.querySelectorAll('tbody tr, tr');
-
-                for (const row of rows) {
-                    const cells = Array.from(row.querySelectorAll('td, th'));
-                    if (!cells.length) continue;
-
-                    // Normalise cell text: collapse whitespace, strip nbsp
-                    const texts = cells.map(c =>
-                        c.innerText.replace(/[\\u00a0]+/g, '').replace(/\\s+/g, ' ').trim()
-                    );
-
-                    // Skip repeated inline header rows (all <th>, or first cell
-                    // matches the known "Course" header)
-                    const allTh = cells.every(c => c.tagName === 'TH');
-                    const looksLikeHeader = texts[0] === 'Course' && texts[2] === 'SP26';
-                    if (allTh || looksLikeHeader) {
-                        if (!headers.length) headers = texts;
-                        continue;
-                    }
-
-                    // Build course name from first two cells (code + title)
-                    const courseName = texts.slice(0, 2).filter(Boolean).join(' ');
-                    if (!courseName) continue;
-
-                    // Colspan cell: "Offered every semester", "Rare", "No set schedule"
-                    const semCell = cells[2];
-                    if (semCell && semCell.colSpan > 1) {
-                        const spanText = texts[2];
-                        if (spanText) lines.push(courseName + ': ' + spanText);
-                        continue;
-                    }
-
-                    // Map semester columns (index 2 onward) to header labels
-                    const marked = [];
-                    for (let i = 2; i < cells.length; i++) {
-                        if (texts[i]) {                      // non-empty = checkmark
-                            const label = i < headers.length ? headers[i] : '';
-                            marked.push(label || texts[i]);
-                        }
-                    }
-
-                    if (marked.length) {
-                        lines.push(courseName + ': ' + marked.join(', '));
-                    }
-                    // All-empty semester cells: omit — no schedule data available
-                }
-
-                return lines.join('\\n');
-            }
-
-            function walk(node) {
-                if (node.nodeType === 3) {
-                    const t = node.textContent.replace(/\\s+/g, ' ').trim();
-                    if (t) curParts.push(t);
-                } else if (node.nodeType === 1) {
-                    const tag = node.tagName.toLowerCase();
-                    if (SKIP.has(tag)) return;
-                    if (SPLIT.has(tag)) {
-                        flush();
-                        curHeading = node.innerText.replace(/\\s+/g, ' ').trim();
-                        return;
-                    }
-                    if (tag === 'table') {
-                        // Tables get structured serialization; don't walk children
-                        const tableText = serializeTable(node);
-                        if (tableText) curParts.push(tableText);
-                        return;
-                    }
-                    for (const child of node.childNodes) walk(child);
-                }
-            }
-
-            for (const child of root.childNodes) walk(child);
-            flush();
-            return result;
-        }
-    """)
+    # For the CS faculty directory, the full list is spread across 3 pages of
+    # AngularJS client-side pagination. Click each numbered page button and
+    # append the sections from that page to capture all faculty entries.
+    if _PAGINATED_FACULTY_URL in url:
+        try:
+            page_buttons = page.locator("ul.pagination a.page-link.ng-binding").all()
+            for btn in page_buttons:
+                num = btn.inner_text().strip()
+                if num == "1":
+                    continue  # Already captured page 1
+                btn.click()
+                try:
+                    page.wait_for_load_state("networkidle", timeout=5000)
+                except PlaywrightTimeoutError:
+                    page.wait_for_timeout(2000)
+                sections.extend(page.evaluate(_SECTION_WALKER_JS))
+        except Exception as exc:
+            print(f"  [warn] faculty pagination failed: {exc}")
 
     # Collect allowed links for the crawl queue
     hrefs = page.locator("a[href]").evaluate_all(
