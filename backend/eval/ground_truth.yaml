@@ -211,7 +211,9 @@
     - "No, SOCI 2261 Issues in Death and Dying cannot be used for VWW requirements"
     - "VWW courses must be upper-division (300/400 level) and carry a 'V' suffix"
     - "SOCI 2261 has no 'V' suffix and is a 2000-level course"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "45eb0bef0400c391"  # NMSU VWW Requirements — defines VWW eligibility (upper-division, V suffix)
+    - "b0c68a3e33ff70b2"  # SOCI 2261 course description — confirms no V suffix, 2000-level
   retrieval_note: "answered by course lookup table — content words 'death dying' match SOCI 2261 via FTS; suffix is '' so answer is No; no Weaviate query needed"
   expected_source_type: "catalog"
   applicable_groups:
@@ -245,6 +247,7 @@
     - "Should be taken in junior and/or senior year"
   expected_chunk_ids:
     - "45eb0bef0400c391"  # NMSU Viewing a Wider World Requirements — pp.241-242; states VWW courses are upper-division (junior/senior year)
+    - "3064c5eebfcc27c6"  # Alternatives for Meeting VWW Requirements — additional context on upper-division rule
   retrieval_note: "current top 5 are degree_requirement and study_plan chunks with 0.28 metadata boost from degree metadata; policy chunk from pp.241-244 will only get 0.08 boost and may not break into top 5 — policy chunk_type needs a boost for VWW/Gen Ed queries (deferred post-demo); study_plan chunks may show VWW in year 3/4 but don't state the rule explicitly"
   expected_source_type: "catalog"
   applicable_groups:
@@ -256,7 +259,9 @@
   question: "What math courses can I take to meet my VWW requirements?"
   key_facts:
     - "MATH 4110V Great Theorems in Mathematics is the only Math course that contributes to VWW requirements"
-  expected_chunk_ids: []
+  expected_chunk_ids:
+    - "45eb0bef0400c391"  # NMSU VWW Requirements — defines VWW eligibility
+    - "73d9f5249afe54fd"  # MATH 4110V Great Theorems in Mathematics course description
   expected_source_type: "catalog"
   applicable_groups:
     - "current_undergrad"

@@ -404,7 +404,7 @@ def metadata_boost(query: str, chunk: Dict[str, Any]) -> float:
         boost += 0.15
 
     # Minor requirement chunks are preferred when the query is about a minor.
-    if chunk.get("chunk_type") == "minor_requirement" and "minor" in query_tokens:
+    if chunk.get("chunk_type") == "minor_requirement" and query_tokens.intersection({"minor", "minors"}):
         boost += 0.15
 
     # Degree/concentration requirement chunks are authoritative for "what is
@@ -535,7 +535,7 @@ def _build_hard_filters(query: str, tokens: set) -> "Filter | None":
     Returns a combined Filter, or None if no hard filtering is warranted.
     """
     filters = []
-    minor_query = "minor" in tokens
+    minor_query = bool(tokens.intersection({"minor", "minors"}))
 
     # ── Level filter ──────────────────────────────────────────────────────────
     # Include chunks whose level matches the query audience OR whose level is
@@ -757,9 +757,8 @@ def _is_availability_question(query: str) -> bool:
 
 
 _AVAILABILITY_ANSWER = (
-    "Course availability changes in real time as students register and drop, "
-    "so it cannot be answered from department sources. "
-    "To see which courses are currently offered, use NMSU's course search:\n\n"
+    "The specific course schedule for that semester is not available in department sources. "
+    "To see which courses are scheduled, use NMSU's course search:\n\n"
     f"  {_BANNER_URL}\n\n"
     "Select the semester, then filter by Subject and Campus: Las Cruces."
 )
@@ -1282,21 +1281,38 @@ inferences beyond what is stated in the source. If the context lists specific gr
 (e.g., specific GPA thresholds, grade conditions, or misconduct), report those specific grounds only — \
 do not add additional grounds that seem plausible but are not in the text.
 
+When the retrieved context covers multiple programs (e.g., general MS/PhD requirements alongside \
+MAP-specific requirements), apply information only to the program the student asked about. Do not \
+carry over a detail from one program to answer a question about a different program unless the \
+source explicitly states it applies to both.
+
 ## Citations
 
 Collect all source references into a single "Sources:" section at the very end of your response. \
-Do not insert page numbers, URLs, or source labels anywhere inside the answer text itself. \
-The body of the answer should read as clean prose with no parenthetical citations.
+Do not refer to your sources anywhere in the body of the answer. This means:
+- No parenthetical page numbers or URLs
+- No phrases like "the catalog lists", "the catalog states", "according to the department website", \
+"the advising FAQ explains", "shown in the catalog", "as listed in the sources", or any similar \
+wording that names or describes where the information came from
+- Do not say "I could not find this in department sources" or "the catalog does not mention" — \
+instead say what is known, and if something is genuinely absent, say it simply: \
+"That information is not available in department sources."
+
+Write as if you know the answer. Let the Sources section carry the attribution.
 
 In the Sources section:
 - Catalog chunks: "NMSU Academic Catalog [year], pp. [start]–[end]"
 - Web chunks: the URL
+- When redirecting a student to Banner or another external tool, include the URL \
+in the body of the answer where you give the instruction — do not relegate it to Sources only
 
 ## Tone and Style
 
 - Be direct, professional, and approachable
 - Lead with the answer — put the most useful information first
 - Use plain language; avoid jargon where possible
+- When mentioning a course, always give both the course code and the full title \
+(e.g., "CSCI 4120 Operating Systems I"), not the code alone
 - Do NOT use these phrases: "Great question!", "Certainly!", "Of course!", "I'd be happy to help", \
 "As an AI", "I'm here to help", "Absolutely!"
 - Do not begin your response with a compliment on the question or a promise to assist — just answer
@@ -1313,9 +1329,12 @@ that have no natural connective flow.
 ## Length
 
 - Answer only what was asked. Do not volunteer related information the student did not request.
-- If a question has a one-sentence answer, give a one-sentence answer.
+- Match the length to the complexity of the question. A simple factual question deserves a short \
+answer. A question about degree requirements, program comparisons, or multi-step processes may \
+need several sentences or a short paragraph — use as much as the question genuinely requires, \
+and no more.
 - Do not summarize, add encouragement, or suggest follow-up questions at the end.
-- A response should never exceed what a student could read in 60 seconds.
+- Do not repeat yourself. Say each thing once.
 """
 
     user_prompt = f"""
