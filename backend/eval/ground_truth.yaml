@@ -886,13 +886,16 @@
 
 - question_id: "fac_002"
   category: "faculty"
-  question: "Which computer science faculty focus on statistical computing and what are their email addresses?"
+  question: "Which computer science faculty members focus on logic programming, and what are their email addresses?"
   key_facts:
-    - "Dr. Joe Song (joemsong@nmsu.edu) focuses on statistical computing"
+    - "Dr. Enrico Pontelli focuses on logic programming (full expertise: Knowledge Representation and Reasoning, Parallel Processing, Programming Languages, Constraint Programming, Logic Programming, Assistive Technologies, Bioinformatics, Multi-Agent Systems)"
+    - "Dr. Son Tran focuses on logic programming (full expertise: Knowledge Representation and Reasoning, Planning and Plan Verification, Intelligent Agents, Logic Programming, Commonsense Reasoning)"
+    - "Dr. Inna Pivkina focuses on logic programming (full expertise: Computer Science Education, Knowledge Representation and Reasoning, Logic Programming, Data Mining Applications)"
+    - "Emails are in the faculty directory — chunk IDs TBD until post-ingest (all three are on pages 2-3 of the paginated directory)"
   expected_chunk_ids:
-    - "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html#chunk-0"  # CS faculty directory — confirmed final rank 1 (0.8312); lists all faculty with research areas and emails
-    - "ff1a31a3918ec2d7"  # catalog faculty chunk — confirmed final rank 3 (0.7537); lists faculty names only, no emails or research detail
-  retrieval_note: "final rank 1 correct (stale rank was 2 — re-sort fixes display); faculty directory chunk-0 contains the answer if Dr. Song's research area and email are in that section; catalog faculty chunk (rank 3) supplements with names but lacks email and research detail; ranks 2/4/5 are irrelevant"
+    - "ff1a31a3918ec2d7"  # catalog faculty chunk — lists expertise for Pontelli, Tran, Pivkina (no emails)
+    # TBD: faculty directory page 2/3 chunks for Pivkina, Pontelli, Tran emails — update after re-ingest
+  retrieval_note: "all three logic programming faculty (Pivkina P, Pontelli P, Tran T) are on pages 2-3 of the JS-paginated directory; not in index until ingest fix deployed; catalog chunk has expertise but not emails"
   expected_source_type: "web"
   banner_redirect_expected: false
 
@@ -911,12 +914,24 @@
   category: "faculty"
   question: "Which professors have interests in cryptography?"
   key_facts:
-    - "Dr. Roopa Vishwanathan: expertise in cryptographic protocol design, applied cryptography for decentralized finance and blockchain applications, redaction in blockchains"
-    - "Dr. Gaurav Panwar: expertise in cryptography"
+    - "Dr. Roopa Vishwanathan: Blockchain interoperability, Cross-chain swaps, Payment channel networks, Layer-2 protocols, Cryptographic protocol design, Applied cryptography for decentralized finance and blockchain-enabled applications, Redaction in blockchains, Cryptography"
+    - "Dr. Gaurav Panwar: Privacy, Wireless and Mobile System Security, Network and Web Security, Blockchain, Distributed Systems, Cryptography"
   expected_chunk_ids:
     - "ff1a31a3918ec2d7"  # faculty directory chunk — contains both Vishwanathan and Panwar
     - "https://computerscience.nmsu.edu/research/groups-labs.html#chunk-5"  # CrySPR lab — Vishwanathan
     - "https://computerscience.nmsu.edu/research/groups-labs.html#chunk-7"  # PRISM lab — Panwar
+  expected_source_type: "web"
+  banner_redirect_expected: false
+
+- question_id: "fac_005"
+  category: "faculty"
+  question: "Who is the head of the computer science department, and what is his/her field of expertise?"
+  key_facts:
+    - "Dr. Son Tran is the Department Head"
+    - "Expertise: Knowledge Representation and Reasoning, Planning and Plan Verification, Intelligent Agents, Logic Programming, Commonsense Reasoning"
+  expected_chunk_ids:
+    - "ff1a31a3918ec2d7"  # catalog faculty chunk — lists Tran as Department Head with full expertise
+    # TBD: faculty directory page 2/3 chunk for Tran — update after re-ingest
   expected_source_type: "web"
   banner_redirect_expected: false
 

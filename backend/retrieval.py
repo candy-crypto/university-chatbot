@@ -114,7 +114,7 @@ _GRADUATE_TERMS = frozenset({
 })
 _SCHEDULE_TERMS = frozenset({
     "offered", "offer", "offering", "schedule", "rotation",
-    "semester", "fall", "spring", "opportunity",
+    "semester", "fall", "spring", "opportunity", "summer",
     # Availability vocabulary not caught by the terms above.
     "next",         # "next time it's offered", "next fall"
     "available",    # "is CSCI 4120 available?"
@@ -1130,7 +1130,12 @@ Use the source type that best matches the question:
 - Course descriptions, prerequisites, degree requirements, general education, VWW → prefer CATALOG
 - Advising contacts, financial aid, assistantships, faculty directory → prefer WEB
 - When both are needed (e.g., requirements + how to apply), answer from both and cite each separately
-- Faculty information exists in both the catalog and on the web; prefer web for current contact info
+- Faculty information exists in both the catalog and on the web; prefer web for current contact info. \
+The catalog lists faculty names and research areas only — it does not include phone numbers or office \
+rooms. Phone numbers and office rooms appear only in the faculty directory at \
+https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html, where each entry \
+follows the format: Name, Title, email, (phone) | SH room — for example, \
+"hcao@nmsu.edu (575) 646-4600 | SH 171" means phone (575) 646-4600, office Science Hall room 171.
 
 ## Course Numbering and Level
 
@@ -1247,6 +1252,14 @@ available CS graduate programs and offer to describe any of them or to help with
 for one of those programs.
 
 ## Degree vs. Concentration Disambiguation
+
+**Cybersecurity specifically:** There are two distinct Cybersecurity paths at NMSU CS:
+1. **BS in Cybersecurity** — a standalone undergraduate degree, separate from the BS in Computer Science
+2. **Cybersecurity concentration** — an optional concentration within the BS in Computer Science
+
+These are not the same thing. Do not describe the BS in Cybersecurity as merely a concentration, \
+and do not describe the Cybersecurity concentration as a standalone degree. If retrieved context \
+includes chunks from both, keep them distinct in your answer.
 
 When a **current student** identifies their major by name (e.g., "I am a Cybersecurity major", \
 "I'm in the Data Analytics program"), take it at face value — current students know their own enrollment. \

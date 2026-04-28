@@ -69,7 +69,7 @@ def load_ground_truth(
 
 # ── Deterministic metrics ─────────────────────────────────────────────────────
 
-def compute_retrieval_hit(chunks: list[dict], expected_ids: list[str]) -> bool:
+def compute_recall_at_k(chunks: list[dict], expected_ids: list[str]) -> bool:
     """True if at least one expected chunk_id appears in the top-5 results."""
     if not expected_ids:
         return False
@@ -77,7 +77,7 @@ def compute_retrieval_hit(chunks: list[dict], expected_ids: list[str]) -> bool:
     return bool(retrieved_ids.intersection(expected_ids))
 
 
-def compute_top1_match(chunks: list[dict], expected_ids: list[str]) -> bool:
+def compute_precision_at_1(chunks: list[dict], expected_ids: list[str]) -> bool:
     """True if the rank-1 chunk is one of the expected chunk IDs."""
     if not expected_ids or not chunks:
         return False
@@ -138,14 +138,14 @@ def compute_citation_format_valid(chunks: list[dict], answer: str) -> bool:
 
 
 def compute_retrieval_score(
-    retrieval_hit: bool,
-    top1_match: bool,
+    recall_at_k: bool,
+    precision_at_1: bool,
     source_type_correct: bool,
 ) -> float:
     """Weighted retrieval score: hit×0.4 + top1×0.3 + source_correct×0.3."""
     return (
-        (0.4 if retrieval_hit else 0.0) +
-        (0.3 if top1_match else 0.0) +
+        (0.4 if recall_at_k else 0.0) +
+        (0.3 if precision_at_1 else 0.0) +
         (0.3 if source_type_correct else 0.0)
     )
 
@@ -168,7 +168,7 @@ _OPENER_RE = re.compile(
 )
 
 
-def compute_key_fact_coverage(answer: str, key_facts: list[str]) -> float:
+def compute_context_recall(answer: str, key_facts: list[str]) -> float:
     """Fraction of key facts whose significant terms appear in the answer.
 
     A key fact is considered 'covered' if at least half of its non-stopword
@@ -314,14 +314,14 @@ def evaluate_question(record: dict, use_judge: bool) -> dict:
         "system_sources": None,
         "retrieved_chunks": None,
         # deterministic retrieval metrics
-        "retrieval_hit":  None,
-        "top1_match":     None,
+        "recall_at_k":  None,
+        "precision_at_1":     None,
         "source_type_correct": None,
         "banner_redirect_triggered": None,
         "citation_format_valid": None,
         "retrieval_score": None,
         # deterministic content metrics
-        "key_fact_coverage": None,
+        "context_recall": None,
         "filler_detected": None,
         "leads_with_answer": None,
         "course_entity_valid": None,
@@ -377,22 +377,22 @@ def evaluate_question(record: dict, use_judge: bool) -> dict:
     ]
 
     # ── Deterministic metrics ─────────────────────────────────────────────────
-    retrieval_hit = compute_retrieval_hit(chunks, expected_ids)
-    top1_match = compute_top1_match(chunks, expected_ids)
+    recall_at_k = compute_recall_at_k(chunks, expected_ids)
+    precision_at_1 = compute_precision_at_1(chunks, expected_ids)
     source_type_correct = compute_source_type_correct(chunks, expected_source_type)
     banner_triggered = compute_banner_redirect_triggered(answer)
     citation_valid = compute_citation_format_valid(chunks, answer)
-    ret_score = compute_retrieval_score(retrieval_hit, top1_match, source_type_correct)
+    ret_score = compute_retrieval_score(recall_at_k, precision_at_1, source_type_correct)
 
-    result["retrieval_hit"] = retrieval_hit
-    result["top1_match"] = top1_match
+    result["recall_at_k"] = recall_at_k
+    result["precision_at_1"] = precision_at_1
     result["source_type_correct"] = source_type_correct
     result["banner_redirect_triggered"] = banner_triggered if banner_redirect_expected else None
     result["citation_format_valid"] = citation_valid
     result["retrieval_score"] = ret_score
 
     # ── Deterministic content metrics ─────────────────────────────────────────
-    result["key_fact_coverage"]     = compute_key_fact_coverage(answer, key_facts)
+    result["context_recall"]        = compute_context_recall(answer, key_facts)
     result["filler_detected"]       = compute_filler_detected(answer)
     result["leads_with_answer"]     = compute_leads_with_answer(answer)
     result["course_entity_valid"]   = compute_course_entity_valid(answer, key_facts)
@@ -545,7 +545,7 @@ _CSV_ANSWERS_FIELDS = [
 _CSV_SCORES_FIELDS = [
     "question_id", "category", "passed",
     "retrieval_score", "judge_total",
-    "retrieval_hit", "top1_match", "source_type_correct",
+    "recall_at_k", "precision_at_1", "source_type_correct",
     "faithfulness", "completeness", "hallucination", "response_quality",
     "latency_ms", "judge_reasoning",
 ]

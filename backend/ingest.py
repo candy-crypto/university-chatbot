@@ -650,6 +650,16 @@ def upsert_pages_to_weaviate(pages: list, department_id: str, crawl_version: str
 # ── Entry point ────────────────────────────────────────────────────────────────
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="Crawl and ingest department web pages.")
+    parser.add_argument(
+        "--url",
+        metavar="URL",
+        help="Re-ingest a single URL instead of running the full crawl. "
+             "The URL must already be listed in the department config.",
+    )
+    args = parser.parse_args()
+
     config_path = "configs/departments/cs.yaml"
     config      = load_department_config(config_path)
 
@@ -658,7 +668,19 @@ def main():
 
     init_db()
 
-    pages = crawl_site(config, max_pages=60)
+    if args.url:
+        # Single-URL mode: restrict the crawl to exactly one page.
+        pages_cfg = config.get("pages") or config.get("page_types", {})
+        if args.url not in pages_cfg:
+            print(f"Warning: {args.url} is not listed in the config — "
+                  "it will be crawled with default metadata.")
+        config["seed_urls"] = [args.url]
+        config["pages"]     = {args.url: pages_cfg.get(args.url, {})}
+        max_pages = 1
+    else:
+        max_pages = 60
+
+    pages = crawl_site(config, max_pages=max_pages)
 
     chunks_indexed = upsert_pages_to_weaviate(
         pages=pages,
