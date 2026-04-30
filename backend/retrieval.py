@@ -745,15 +745,27 @@ _SEMESTER_SIGNALS = {
     "next summer", "this semester", "next semester", "current semester",
     "fall semester", "spring semester", "summer session",
 }
+# If the query is asking about requirements (which courses satisfy X), retrieval must
+# run first to name the courses — the Banner short-circuit should not fire.
+_REQUIREMENT_SIGNALS = {
+    "gen ed", "general education", "requirement", "requirements",
+    "need to take", "need to complete", "i need", "satisfy", "satisfies",
+    "fulfills", "fulfill", "count toward", "counts toward",
+}
 
 
 def _is_availability_question(query: str) -> bool:
     """Return True if the query is about current-semester course availability
-    or open seats — something only Banner can answer in real time."""
+    or open seats — something only Banner can answer in real time.
+
+    Does NOT fire for requirement questions (e.g. "which gen ed courses are offered
+    this fall?") because those need retrieval to identify the courses first.
+    """
     q = query.lower()
     has_availability = bool(set(re.findall(r"[a-z]+", q)).intersection(_AVAILABILITY_SIGNALS))
     has_semester = any(sig in q for sig in _SEMESTER_SIGNALS)
-    return has_availability and has_semester
+    has_requirement = any(sig in q for sig in _REQUIREMENT_SIGNALS)
+    return has_availability and has_semester and not has_requirement
 
 
 _AVAILABILITY_ANSWER = (
@@ -1238,9 +1250,10 @@ happens to be scheduled each Fall in this window, but some courses are not sched
 Do not tell a student a course "is offered every Fall" — say it is scheduled \
 in FA26, FA27, and FA28 per the current three-year plan.
 - **"Next offering"**: use the current semester (injected below) to find the first listed semester \
-that is equal to or later than the current semester. The semester sequence in order is: \
-SP26 → FA26 → SP27 → FA27 → SP28 → FA28 → SP29. If all listed semesters are already past, \
-the table does not show any future offerings; direct the student to the department.
+that is **strictly after** the current semester — the current semester is already in progress and \
+cannot be the "next" opportunity. The semester sequence in order is: \
+SP26 → FA26 → SP27 → FA27 → SP28 → FA28 → SP29. If all listed semesters are the current semester \
+or already past, the table does not show any future offerings; direct the student to the department.
 - **"Rare"** and **"No set schedule"**: the department has not committed to specific dates. Advise \
 the student to contact the CS department directly rather than waiting for a scheduled offering.
 

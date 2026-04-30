@@ -28,11 +28,18 @@ openai_client = OpenAI(api_key=OPENAI_API_KEY)
 RUBRIC = """
 Score each criterion on a 0–3 integer scale.
 
+Semester abbreviation convention used in rotation tables:
+  SP = Spring, FA = Fall, followed by 2-digit year.
+  Examples: SP26 = Spring 2026, FA26 = Fall 2026, SP27 = Spring 2027, FA27 = Fall 2027.
+
 FAITHFULNESS — Every factual claim in the answer traces to the retrieved context.
   3 = All claims are supported by the provided context.
   2 = Minor unsupported details; core claims are grounded.
   1 = Some significant claims lack support in context.
   0 = Answer invents facts not present in the context.
+  Note: Facts that match the Ground Truth Key Facts are considered grounded — do NOT
+  penalize faithfulness for facts that align with the key facts even if they do not
+  appear verbatim in the Retrieved Context.
 
 COMPLETENESS — The answer covers the key facts from the ground truth.
   3 = All key facts are present.
@@ -94,7 +101,8 @@ def build_judge_prompt(
             "(https://banner-public.nmsu.edu/StudentRegistrationSsb/ssb/term/termSelection?mode=search) "
             "and should NOT attempt to answer from context. "
             "If the answer includes that URL and instructs the user to check there, "
-            "score faithfulness=3 and hallucination=3 regardless of other content."
+            "score faithfulness=3, source_preference=3, citation_quality=3, and hallucination=3 "
+            "regardless of other content."
         )
 
     return f"""You are evaluating a university department chatbot response.

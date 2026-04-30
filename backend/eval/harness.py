@@ -546,7 +546,8 @@ _CSV_SCORES_FIELDS = [
     "question_id", "category", "passed",
     "retrieval_score", "judge_total",
     "recall_at_k", "precision_at_1", "source_type_correct",
-    "faithfulness", "completeness", "hallucination", "response_quality",
+    "faithfulness", "completeness", "source_preference", "citation_quality",
+    "hallucination", "response_quality",
     "latency_ms", "judge_reasoning",
 ]
 
