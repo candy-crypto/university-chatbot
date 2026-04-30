@@ -46,6 +46,105 @@ COURSE_CODE_RE = re.compile(r'\b([A-Z][A-Z\s]{0,5}\s+\d{3,4}[A-Z]?)\b')
 # Used to split FAQ-style pages into one chunk per Q&A pair.
 _QA_MARKER_RE = re.compile(r'(?<!\w)Q\d+(?=[\s.])')
 
+# ── Faculty entry splitter ────────────────────────────────────────────────────
+# Faculty directory pages (CS and Data Analytics) concatenate all entries on a
+# page into one large text blob. These patterns split that blob into one block
+# per person so that name/office/expertise queries can match precisely.
+
+# Recognized faculty/staff title patterns that immediately follow a person's name.
+_FAC_TITLE_PAT = (
+    r'(?:College\s+)?'                          # e.g. "College Assistant Professor"
+    r'(?:Emeritus\s+)?'                          # e.g. "Emeritus Professor"
+    r'(?:Assistant\s+|Associate\s+|Senior\s+)?'  # rank prefix
+    r'Professor'
+    r'|Department\s+Head'
+    r'|System\s+Support\s+Manager'
+    r'|Senior\s+System\s+(?:Analyst|Administrator)'
+    r'|Program\s+Manager'
+    r'|Department\s+Administrative\s+(?:Assistant|Manager)'
+)
+# Name: 2–4 title-case words (handles initials like "A." and hyphens like "Mora-Monge")
+_FAC_NAME_PAT = r'[A-Z][a-zA-Z\'-]+(?:\s+[A-Z][a-zA-Z\'.\-]+){1,3}'
+
+# Zero-width lookahead: finds every position where a name+title match starts.
+# Intentionally broad — sub-name positions (e.g. "Abo" and "Shakra" within
+# "Mai Abo Shakra") are produced; _split_faculty_entries() filters them out.
+_FAC_ENTRY_RE = re.compile(rf'(?={_FAC_NAME_PAT}\s+(?:{_FAC_TITLE_PAT}))')
+
+# Non-lookahead version used to measure name span for overlap filtering.
+_FAC_NAME_CAPTURE_RE = re.compile(rf'({_FAC_NAME_PAT})\s+(?:{_FAC_TITLE_PAT})')
+
+# Words that cannot legitimately be the first word of a faculty name.
+# Prevents section headings like "Research Faculty" or expertise phrases like
+# "Online Communities Roger Hartley" from being mistaken for name+title matches.
+_FAC_NOT_FIRST_WORD: frozenset[str] = frozenset({
+    # Navigation / page chrome
+    "faculty", "tenure", "track", "adjunct", "emeriti", "leadership",
+    "staff", "all", "affiliated", "skip", "connect", "main",
+    # Rank/title words — never someone's first name
+    "professor", "associate", "assistant", "senior", "college",
+    # Research area words commonly capitalized in expertise descriptions
+    "research", "computing", "reasoning", "biology", "vision", "mining", "learning",
+    "programming", "processing", "analytics", "integration", "representation",
+    "verification", "planning", "blockchain", "cryptography", "privacy",
+    "security", "network", "data", "machine", "deep", "artificial", "parallel",
+    "distributed", "statistical", "quantitative", "commonsense",
+    "animal", "applied", "sciences", "management", "sociology",
+    # Additional expertise words observed in CS/DA faculty pages
+    "online", "communities", "education", "maintenance", "community",
+    "cooperative", "collaborative", "citizen", "digital", "game", "live",
+    "folk", "politics", "theories", "activism", "quantification", "databases",
+    "software", "engineering", "reliable", "component", "systems", "large",
+    "graph", "probabilistic", "time", "spatial", "temporal", "concurrent",
+    "logic", "constraint", "knowledge", "semantic", "natural", "language",
+    "human", "computer", "interaction", "supported", "centered",
+    "algorithmic", "media", "culture", "play", "design",
+})
+
+
+def _split_faculty_entries(text: str) -> list[str]:
+    """Split a concatenated faculty listing into one text block per person.
+
+    Works on both the CS department directory and the Data Analytics faculty
+    page. Navigation boilerplate before the first faculty entry is discarded.
+    Returns an empty list if no recognizable faculty entries are found.
+
+    Overlap filtering: the broad name pattern generates candidate positions
+    for every title-case subsequence, including interior words of multi-word
+    names (e.g. "Abo" and "Shakra" within "Mai Abo Shakra"). We suppress any
+    candidate whose position falls inside the name span of the most recently
+    accepted entry, so each person produces exactly one chunk.
+    """
+    candidate_positions = [m.start() for m in _FAC_ENTRY_RE.finditer(text)]
+    if not candidate_positions:
+        return []
+
+    kept: list[int] = []
+    exclude_before = 0  # positions < this fall within a previous name span
+
+    for pos in candidate_positions:
+        if pos < exclude_before:
+            continue  # inside a previously matched name — skip
+
+        first_word = text[pos:].split()[0].lower() if text[pos:] else ""
+        if first_word in _FAC_NOT_FIRST_WORD:
+            continue  # section heading word, not a person's first name
+
+        # Measure the name span so we can exclude sub-matches within it.
+        m = _FAC_NAME_CAPTURE_RE.match(text, pos)
+        if m:
+            exclude_before = pos + len(m.group(1))
+
+        kept.append(pos)
+
+    entries = []
+    for i, start in enumerate(kept):
+        end = kept[i + 1] if i + 1 < len(kept) else len(text)
+        entry = text[start:end].strip()
+        if entry:
+            entries.append(entry)
+    return entries
+
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
@@ -359,6 +458,27 @@ def chunk_page(sections: list, chunk_type: str,
     # split it into one section per Q&A pair before applying size guardrails.
     sections = _expand_qa_sections(sections)
 
+    # faculty: split each section into one chunk per person.
+    # The DOM walker collapses all entries on a paginated page into one blob;
+    # _split_faculty_entries() re-cuts at individual name+title boundaries.
+    # Boilerplate sections (LOCATION, CONTACT US, pure navigation text) yield
+    # no matches and are silently discarded.
+    if chunk_type == "faculty":
+        result = []
+        seen_keys: set[str] = set()
+        for section in sections:
+            for entry in _split_faculty_entries(section.get("text", "")):
+                # Deduplicate in case pagination re-emits the same person.
+                key = entry[:60]
+                if key in seen_keys:
+                    continue
+                seen_keys.add(key)
+                # Use the person's name (words before the title) as the heading.
+                name_match = re.match(rf'({_FAC_NAME_PAT})\s+(?:{_FAC_TITLE_PAT})', entry)
+                heading = name_match.group(1) if name_match else ""
+                result.append({"heading": heading, "text": entry})
+        return result
+
     # course_schedule: one coherent document, keep whole if possible
     if chunk_type == "course_schedule":
         full = " ".join(
@@ -567,10 +687,20 @@ def delete_department_chunks(collection, department_id: str):
     )
 
 
-def upsert_pages_to_weaviate(pages: list, department_id: str, crawl_version: str) -> int:
+def upsert_pages_to_weaviate(
+    pages: list,
+    department_id: str,
+    crawl_version: str,
+    only_url: str | None = None,
+) -> int:
     """
     Chunk pages by section boundaries, embed with OpenAI, and store in Weaviate.
     Falls back to full-text single chunk if structured chunking yields nothing.
+
+    If only_url is set (single-URL re-ingest mode), only the chunks for that
+    URL are deleted before re-insertion — other department web chunks are
+    preserved.  If only_url is None, all web chunks for the department are
+    replaced (full-crawl mode).
     """
     normalized_department_id = (department_id or "").strip().lower()
 
@@ -579,7 +709,16 @@ def upsert_pages_to_weaviate(pages: list, department_id: str, crawl_version: str
         ensure_collection(client)
         collection = get_collection(client)
 
-        delete_department_chunks(collection, normalized_department_id)
+        if only_url:
+            collection.data.delete_many(
+                where=(
+                    Filter.by_property("department_id").equal(normalized_department_id)
+                    & Filter.by_property("content_source").equal("web")
+                    & Filter.by_property("source").equal(only_url)
+                )
+            )
+        else:
+            delete_department_chunks(collection, normalized_department_id)
 
         objects = []
 
@@ -674,6 +813,10 @@ def main():
         if args.url not in pages_cfg:
             print(f"Warning: {args.url} is not listed in the config — "
                   "it will be crawled with default metadata.")
+        # Override root_url so the crawl queue starts with the target URL
+        # (not the department homepage) — prevents max_pages=1 from visiting
+        # the wrong page.
+        config["root_url"]  = args.url
         config["seed_urls"] = [args.url]
         config["pages"]     = {args.url: pages_cfg.get(args.url, {})}
         max_pages = 1
@@ -686,6 +829,7 @@ def main():
         pages=pages,
         department_id=department_id,
         crawl_version=crawl_version,
+        only_url=args.url,
     )
 
     log_crawl_run(

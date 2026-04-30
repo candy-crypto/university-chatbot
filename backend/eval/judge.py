@@ -28,6 +28,10 @@ openai_client = OpenAI(api_key=OPENAI_API_KEY)
 RUBRIC = """
 Score each criterion on a 0–3 integer scale.
 
+Degree name alias: "Master of Data Analytics", "MS in Data Analytics", and "PMS in Data Analytics"
+are catalog aliases for the "Professional M.S. in Computational Data Analytics". Treat these as
+equivalent — do not penalize an answer for using the catalog name instead of the web name or vice versa.
+
 Semester abbreviation convention used in rotation tables:
   SP = Spring, FA = Fall, followed by 2-digit year.
   Examples: SP26 = Spring 2026, FA26 = Fall 2026, SP27 = Spring 2027, FA27 = Fall 2027.

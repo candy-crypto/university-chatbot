@@ -1164,6 +1164,7 @@ The official NMSU CS graduate degrees are:
 - Doctor of Philosophy in Computer Science
 - Master of Science in Computer Science
 - Professional Master of Science in Computational Data Analytics
+  (catalog alias: Master of Data Analytics / MS in Data Analytics / PMS in Data Analytics — all refer to the same degree)
 - Master of Science in Bioinformatics
 
 Note that there is no MS or PhD in Cybersecurity or Artificial Intelligence.
