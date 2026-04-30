@@ -87,15 +87,28 @@ COURSE_ENTRY_RE = re.compile(
 # Any course code appearing in text (for referenced_courses metadata)
 COURSE_CODE_RE = re.compile(r'\b([A-Z][A-Z\s]{0,5}\s+\d{3,4}[A-Z]?)\b')
 
+# Text patterns that indicate the regex-matched "title" is actually the tail of the
+# previous course's description (e.g. "EPWS 471. May be repeated..." after a line
+# ending with "Same as HORT 471 and").  These strings never begin a real course title.
+_NONTITLE_RE = re.compile(
+    r'^(?:May\s+be\b|Cannot\s+be\b|\d+\s*(?:to|[-\u2013])\s*\d+\s+Credit|'
+    r'Prerequisite[s]?\b|Cross[\s-]listed|Formerly\b)',
+    re.IGNORECASE,
+)
+
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # PAGE EXTRACTION
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def _page_lines(page) -> list[str]:
+def _page_lines(page) -> list[tuple[str, bool]]:
     """
     Text lines from one page in reading order: L-col top→bottom, then R-col.
     Running headers stripped.
+
+    Returns a list of (text, bold_start) tuples where bold_start is True when
+    the first character of the line is in a bold font.  Course-entry headings in
+    the NMSU catalog are always bold; cross-reference text ("Same as …") is not.
     """
     raw = defaultdict(list)
     for c in page.chars:
@@ -114,7 +127,8 @@ def _page_lines(page) -> list[str]:
         avg_top = sum(c["top"] for c in lc) / len(lc)
         if avg_top < 45 and HEADER_RE.match(text):
             continue
-        lines.append(text)
+        bold_start = "bold" in (lc[0].get("fontname") or "").lower()
+        lines.append((text, bold_start))
     return lines
 
 
@@ -176,9 +190,24 @@ def _chunk_block(pdf_path: str, start: int, end: int) -> list[CatalogChunk]:
     with pdfplumber.open(pdf_path) as pdf:
         total = len(pdf.pages)
         for pg in range(start, min(end + 1, total)):
-            for line in _page_lines(pdf.pages[pg]):
+            for line, bold_start in _page_lines(pdf.pages[pg]):
                 m = COURSE_ENTRY_RE.match(line)
-                if m:
+                # A genuine course entry heading is bold AND matches COURSE_ENTRY_RE.
+                # Neither condition alone is sufficient:
+                #   • bold alone: "Prerequisite:" / "Corequisite:" labels are also bold
+                #   • regex alone: cross-reference tails like "EPWS 471. May be repeated…"
+                #                  match the DEPT NNN. pattern but are not bold
+                # Two additional text-based guards catch edge cases where font metadata
+                # may be unreliable:
+                #   (a) previous line ends with a conjunction — we are mid-sentence
+                #   (b) the matched "title" starts with a known non-title fragment
+                mid_sentence = bool(
+                    cur_lines and
+                    cur_lines[-1].rstrip().endswith((' and', ' or', ' &'))
+                )
+                if (m and bold_start
+                        and not mid_sentence
+                        and not _NONTITLE_RE.match(m.group(2))):
                     flush()
                     cur_lines = [line]
                     cur_page  = pg
