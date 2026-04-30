@@ -168,6 +168,29 @@
   expected_source_type: "redirect"
   banner_redirect_expected: true
 
+- question_id: "avail_010"
+  category: "course_availability"
+  question: "When is the next time that CSCI 5215 will be offered?"
+  key_facts:
+    - "CSCI 5215 Parallel Programming is the graduate-level version of CSCI 4215/5215 Parallel Programming"
+    - "The rotation table lists the course as CSCI 4215/5215 — the system must match the query '5215' to this dual-numbered entry"
+    - "CSCI 4215/5215 appears 3 times in the SP26–SP29 rotation window"
+    - "Next offering after SP26: Spring 2027 (SP27)"
+  expected_chunk_ids:
+    - "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-1"  # rotation table — contains CSCI 4215/5215 entry
+    - "dd9b90e2914e24a4"  # CSCI 5215 Parallel Programming course description
+    - "1dcea72dc91031be"  # CSCI 4215 Parallel Programming course description
+  retrieval_note: "Key retrieval test: BM25 must match '5215' within the '4215/5215' token in the rotation table chunk. The table text is flattened by the DOM walker — checkmarks are not column-labeled, so the LLM must infer semester positions from surrounding header rows. The course description chunks may also surface and confirm the course title."
+  expected_source_type: "web"
+  applicable_groups:
+    - "current_undergrad"
+    - "current_ms_coursework"
+    - "current_ms_thesis"
+    - "prospective_phd"
+    - "current_phd"
+  banner_redirect_expected: false
+  notes: "The '5215' → '4215/5215' matching is the primary retrieval question. Next offering verified as SP27 from the live rotation table."
+
 # ── Course Requirements ───────────────────────────────────────────────────────
 
 - question_id: "req_001"
@@ -1082,6 +1105,40 @@
     - "prospective_map"
   banner_redirect_expected: false
   notes: "Unanswerable from context — specific count not in any indexed source. Correct LLM behavior: state what is known (recommendations required) and redirect to CS department."
+
+- question_id: "pol_009"
+  category: "policy"
+  question: "How do I apply to NMSU's Graduate School?"
+  key_facts:
+    - "Apply at https://apply.nmsu.edu/apply"
+    - "This URL covers all NMSU graduate programs including CS MS and PhD"
+    - "For MAP: pre-application is on the CS department intranet (login required); see https://computerscience.nmsu.edu/grad-students/graduate-degrees.html"
+  expected_chunk_ids:
+    - "7f41f569d43c744a"  # Application Dates and Deadlines — catalog p.76; contains apply.nmsu.edu/apply URL
+  expected_source_type: "redirect"
+  applicable_groups:
+    - "prospective_ms"
+    - "prospective_phd"
+    - "prospective_map"
+  banner_redirect_expected: false
+  notes: "Simpler phrasing than pol_003 — tests that the system provides the apply.nmsu.edu/apply URL directly without requiring CS-specific details. Correct behavior: give the URL and briefly note CS-specific requirements are available if needed."
+
+- question_id: "pol_010"
+  category: "policy"
+  question: "Give me information about dissertation formatting requirements."
+  key_facts:
+    - "Do not answer formatting specifics from context"
+    - "Guidelines are maintained by the Graduate School at their SharePoint page for Doctoral Dissertation Students"
+    - "URL: https://eltnmsu.sharepoint.com/sites/GraduateSchool/SitePages/Doctoral-Dissertation-Students.aspx"
+    - "Login required to access the SharePoint page"
+  expected_chunk_ids:
+    - "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-8"  # FAQ Q108 — redirects to SharePoint
+  expected_source_type: "redirect"
+  applicable_groups:
+    - "current_phd"
+    - "current_ms_thesis"
+  banner_redirect_expected: false
+  notes: "Variant of pol_004 — tests that the system prompt redirect rule fires even when the user asks to 'give information' rather than asking where to find it. Correct behavior: provide the SharePoint URL and note login is required; do not attempt to answer formatting specifics from retrieved context."
 
 # ── Minors ────────────────────────────────────────────────────────────────────
 
