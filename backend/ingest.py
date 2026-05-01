@@ -99,6 +99,12 @@ _FAC_NOT_FIRST_WORD: frozenset[str] = frozenset({
     "logic", "constraint", "knowledge", "semantic", "natural", "language",
     "human", "computer", "interaction", "supported", "centered",
     "algorithmic", "media", "culture", "play", "design",
+    # Words observed as entry-boundary false starts in NMSU CS directory
+    # (expertise items that appear immediately before a faculty name)
+    "user", "modeling", "model", "query", "optimization", "memory",
+    "visualization", "accessibility", "wireless", "mobile", "formal",
+    "intelligent", "autonomous", "geospatial", "numeric", "symbolic",
+    "bayesian", "neural", "multi", "agent", "assistive", "bioinformatics",
 })
 
 

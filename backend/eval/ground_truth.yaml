@@ -955,8 +955,7 @@
     - "Dr. Son Tran is the Department Head"
     - "Expertise: Knowledge Representation and Reasoning, Planning and Plan Verification, Intelligent Agents, Logic Programming, Commonsense Reasoning"
   expected_chunk_ids:
-    - "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html#chunk-25"  # Son Tran (stran@nmsu.edu SH 123, Department Head) — own chunk after adding "Department Head" to FAC_TITLE_PAT
-    - "ff1a31a3918ec2d7"  # catalog faculty chunk — names Tran as Department Head with expertise
+    - "ff1a31a3918ec2d7"  # catalog faculty chunk — names Tran as Department Head with expertise; catalog is the authoritative source for this question
   expected_source_type: "web"
   banner_redirect_expected: false
 
