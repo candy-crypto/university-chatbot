@@ -363,13 +363,17 @@
     - "ENGL 1110G Composition I is the recommended English gen ed course for CS majors"
     - "ENGL 2210G Professional and Technical Communication is the other required English gen ed course for CS majors"
     - "Check NMSU's course search for current semester availability of these courses"
-  expected_chunk_ids: []
-  retrieval_note: "availability question — should short-circuit to Banner redirect before retrieval; try_availability_redirect() added to detect 'offered/available/open/register' + semester signal ('this fall' etc.); no chunks expected"
-  expected_source_type: "redirect"
+  expected_chunk_ids:
+    - "7c883ac8660d5cdd"  # CS AI study plan p.591 — ENGL 1110G in year 1, ENGL 2210G in year 2
+    - "e03e64a89750695b"  # CS Networking study plan p.596 — same ENGL courses
+    - "38523fd8f6fa217f"  # CS Cybersecurity study plan p.598 — same ENGL courses
+    - "ecc0329a35c1aae4"  # CS HCI study plan p.601 — same ENGL courses
+    - "46ca071638ec0fc8"  # CS Software Dev study plan p.605 — same ENGL courses
+  retrieval_note: "hybrid question: catalog study plans identify the required English courses (ENGL 1110G, ENGL 2210G); Banner redirect needed for current semester availability; system should do both"
+  expected_source_type: "catalog"
   banner_redirect_expected: true
   applicable_groups:
     - "current_undergrad"
-  banner_redirect_expected: true
   notes: "Catalog identifies which courses satisfy requirement; course search needed to confirm availability"
 
 # ── Course Descriptions ───────────────────────────────────────────────────────
@@ -914,10 +918,9 @@
     - "Dr. Inna Pivkina focuses on logic programming (full expertise: Computer Science Education, Knowledge Representation and Reasoning, Logic Programming, Data Mining Applications)"
     - "Pivkina email: inna@nmsu.edu; Pontelli email: epontell@nmsu.edu; Tran email: stran@nmsu.edu"
   expected_chunk_ids:
-    - "ff1a31a3918ec2d7"  # catalog faculty chunk — lists expertise for Pontelli, Tran, Pivkina (no emails)
-    - "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html#chunk-21"  # Pivkina (inna@nmsu.edu SH 172) + Pontelli (epontell@nmsu.edu SH 163) absorbed into same entry
-    - "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html#chunk-25"  # Son Tran (stran@nmsu.edu SH 123, Department Head) — own chunk after adding "Department Head" to FAC_TITLE_PAT
-  retrieval_note: "per-person chunks; Pontelli absorbed into Pivkina chunk-21 (splitter missed his entry boundary); Tran now has own chunk-25 after Department Head title added to splitter"
+    - "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html#chunk-21"  # Pivkina (inna@nmsu.edu SH 172) + Pontelli (epontell@nmsu.edu SH 163) absorbed into same entry — emails and expertise both present
+    - "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html#chunk-25"  # Son Tran (stran@nmsu.edu SH 123, Department Head)
+  retrieval_note: "Pontelli absorbed into Pivkina chunk-21 (splitter misses his title 'Dean of AS, Regents Professor'); chunk-21 still contains all required emails and expertise; catalog chunk removed as redundant"
   expected_source_type: "web"
   banner_redirect_expected: false
 
@@ -939,10 +942,8 @@
     - "Dr. Roopa Vishwanathan: Blockchain interoperability, Cross-chain swaps, Payment channel networks, Layer-2 protocols, Cryptographic protocol design, Applied cryptography for decentralized finance and blockchain-enabled applications, Redaction in blockchains, Cryptography"
     - "Dr. Gaurav Panwar: Privacy, Wireless and Mobile System Security, Network and Web Security, Blockchain, Distributed Systems, Cryptography"
   expected_chunk_ids:
-    - "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html#chunk-19"  # Panwar (gpanwar@nmsu.edu SH 160; heading "Query Optimization Gaurav Panwar")
-    - "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html#chunk-27"  # Vishwanathan (roopav@nmsu.edu SH 142; heading "User Modeling Roopa Vishwanathan")
-    - "https://computerscience.nmsu.edu/research/groups-labs.html#chunk-5"  # CrySPR lab — Vishwanathan
-    - "https://computerscience.nmsu.edu/research/groups-labs.html#chunk-7"  # PRISM lab — Panwar
+    - "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html#chunk-19"  # Panwar — expertise includes Cryptography, Privacy, Wireless Security
+    - "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html#chunk-27"  # Vishwanathan — expertise includes Cryptography, Blockchain, Applied Cryptography
   expected_source_type: "web"
   banner_redirect_expected: false
 
@@ -1078,9 +1079,9 @@
     - "Deadline to apply for summer graduate diploma: July 6, 2026"
     - "Check the Graduate School calendar for current deadlines as these change each year"
   expected_chunk_ids:
-    - "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html#chunk-6"  # Spring 2026 calendar chunk — contains summer degree application deadline (July 6)
-    - "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html#chunk-7"  # Summer 2026 session dates — also retrieved and used in 2026-04-25 eval (judge=0.83)
-  retrieval_note: "Summer 2026 calendar chunk absent from top 5 before temporal expansion fix; after fix, 'this summer' → 'Summer 2026' in query, giving BM25 hits on the summer chunk heading; Fall/Spring calendar chunks were outranking it due to shared 'degree application deadline' vocabulary with no temporal discrimination"
+    - "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html#chunk-7"  # Summer 2026 part 1 — contains July 6 degree application deadline
+    - "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html#chunk-8"  # Summer 2026 part 2 — July 22 ProQuest deadline
+  retrieval_note: "chunk-7 and chunk-8 are the Summer 2026 section after fresh ingest with serializeTable 2-column fix; previously calendar table rows were silently dropped producing empty chunks"
   expected_source_type: "web"
   applicable_groups:
     - "current_ms_coursework"
