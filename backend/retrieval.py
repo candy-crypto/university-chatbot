@@ -165,6 +165,12 @@ _ENROLLMENT_TERMS = frozenset({
     "admission", "admissions", "admit", "admitted",
     "enroll", "enrollment", "register", "registration",
 })
+# Graduation-context terms — suppress the enrollment boost when the query is
+# about degree conferral (applying for a diploma) rather than course enrollment.
+# Deliberately excludes "graduate" and "degree" — both are too ambiguous.
+_GRADUATION_TERMS = frozenset({
+    "diploma", "graduation", "commencement", "convocation",
+})
 # "between X and Y", "X vs Y" — student is comparing named specific items;
 # default TOP_K is sufficient since the named chunks will score highly.
 _SPECIFIC_COMPARISON_TERMS = frozenset({"between", "vs", "versus"})
@@ -445,8 +451,11 @@ def metadata_boost(query: str, chunk: Dict[str, Any]) -> float:
     # Enrollment chunks are preferred for apply/admission/registration queries.
     # Vocabulary mismatch: "apply" in a user query rarely appears verbatim in
     # formal catalog enrollment chunks, so BM25 misses them without this boost.
+    # Exception: suppress the boost when the query is about degree conferral
+    # (e.g. "apply for a diploma") rather than course enrollment or admission.
     if (chunk.get("chunk_type") == "enrollment"
-            and query_tokens.intersection(_ENROLLMENT_TERMS)):
+            and query_tokens.intersection(_ENROLLMENT_TERMS)
+            and not query_tokens.intersection(_GRADUATION_TERMS)):
         boost += 0.12
 
     # Level match — boost chunks whose level matches the audience implied by the

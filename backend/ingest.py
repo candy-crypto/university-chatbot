@@ -265,8 +265,13 @@ _SECTION_WALKER_JS = """
 
             if (marked.length) {
                 lines.push(courseName + ': ' + marked.join(', '));
+            } else if (cells.length <= 2) {
+                // 2-column table (e.g. date | action calendar): preserve content
+                // instead of silently dropping rows that have no semester columns.
+                const line = texts[0] && texts[1] ? texts[0] + ': ' + texts[1] : courseName;
+                if (line) lines.push(line);
             }
-            // All-empty semester cells: omit — no schedule data available
+            // else: all-empty semester cells in a multi-column rotation table — omit
         }
 
         return lines.join('\\n');
