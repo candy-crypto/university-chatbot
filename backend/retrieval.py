@@ -214,6 +214,14 @@ _ACRONYM_MAP = {
     # B.S./BS → "bachelor" in tokens, caught by _UNDERGRAD_TERMS and degree vocab.
     r"(?i)\bB\.?S\.?(?!\w)": "Bachelor of Science",
     r"(?i)\bB\.?A\.?(?!\w)": "Bachelor of Arts",
+    # "computer science course(s)" / "CS course(s)" → append "CSCI" so BM25
+    # prefers CSCI-prefixed chunks over same-topic courses from other departments.
+    r"(?i)\bcomputer\s+science\s+courses?\b": "CSCI",
+    r"(?i)\bcs\s+courses?\b":                 "CSCI",
+    # Ethics/ethical cross-expansion — BM25 does not stem, so "ethics" in a
+    # query misses chunks that say "ethical" and vice versa.
+    r"(?i)\bethics\b":   "ethical",
+    r"(?i)\bethical\b":  "ethics",
 }
 
 
@@ -651,11 +659,10 @@ def search_chunks(query: str, department_id: str, top_k: int = TOP_K) -> List[Di
         ensure_collection(client)
         collection = get_collection(client)
 
-        # Always filter by department. Add optional hard filters for level
-        # and chunk_type based on query signals.
-        base_filter = Filter.by_property("department_id").equal(department_id)
-        extra = _build_hard_filters(query, tokens)
-        weaviate_filter = base_filter if extra is None else base_filter & extra
+        # Build optional hard filters for level and chunk_type based on query
+        # signals. Department ID is not used as a filter — all chunks in this
+        # collection share the same department_id and it adds no discriminating power.
+        weaviate_filter = _build_hard_filters(query, tokens)
 
         # Raise TOP_K when the query mentions a multi-item category without
         # naming specific items. The presence of "between/vs/versus" indicates
@@ -687,7 +694,7 @@ def search_chunks(query: str, department_id: str, top_k: int = TOP_K) -> List[Di
         if ("courses" in tokens
                 and tokens.intersection(_COURSE_TOPIC_TERMS)
                 and not _COURSE_CODE_RE.search(query.upper())):
-            effective_top_k = max(effective_top_k, 12)
+            effective_top_k = max(effective_top_k, 15)
 
         # Policy/VWW queries: raise TOP_K so policy chunks have room to surface
         # before metadata re-ranking. With alpha=0.75 (vector-dominant), the

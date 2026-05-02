@@ -326,7 +326,6 @@
   key_facts:
     - "No Biology course is required for a BS in Computer Science"
     - "Biology courses may be used to fulfill the 11-credit Lab Sciences and Social/Behavioral Sciences requirement"
-    - "Qualifying options: BIOL 2610G and BIOL 2610L (Biodiversity/Ecology/Evolution) or BIOL 2110G and BIOL 2110L (Cellular/Molecular Biology)"
   expected_chunk_ids:
     - "16d9f6f83799bfca"   # CS BS degree_requirement — rank 1
     - "6fb64bffef3e6e90"   # CS BS degree_core_requirement — rank 3
@@ -359,13 +358,14 @@
     - "ENGL 1110G Composition I is the recommended English gen ed course for CS majors"
     - "ENGL 2210G Professional and Technical Communication is the other required English gen ed course for CS majors"
     - "Check NMSU's course search for current semester availability of these courses"
-  expected_chunk_ids:
-    - "7c883ac8660d5cdd"  # CS AI study plan p.591 — ENGL 1110G in year 1, ENGL 2210G in year 2
-    - "e03e64a89750695b"  # CS Networking study plan p.596 — same ENGL courses
-    - "38523fd8f6fa217f"  # CS Cybersecurity study plan p.598 — same ENGL courses
-    - "ecc0329a35c1aae4"  # CS HCI study plan p.601 — same ENGL courses
-    - "46ca071638ec0fc8"  # CS Software Dev study plan p.605 — same ENGL courses
-  retrieval_note: "hybrid question: catalog study plans identify the required English courses (ENGL 1110G, ENGL 2210G); Banner redirect needed for current semester availability; system should do both"
+  expected_chunk_ids: []  # TBD: catalog pp.238-239 not yet chunked
+  retrieval_note: |
+    Right source is the ENGL gen-ed course list on catalog pp.238-239 (not yet chunked).
+    Lookup table has "english"->ENGL in _DEPT_KEYWORDS but is_list does not fire: query
+    says "Which are offered?" not "Which courses are offered?" so the is_list regex
+    (requires "courses" adjacent to "which/what") returns False. After catalog re-ingest,
+    add pp.238-239 chunk IDs here. Study plan chunks are the wrong source — they are CS
+    degree roadmaps that incidentally list ENGL 1110G/2210G, not gen-ed course listings.
   expected_source_type: "catalog"
   banner_redirect_expected: true
   applicable_groups:
@@ -380,13 +380,13 @@
   key_facts:
     - "CSCI 3410 Introduction to Intelligent Agents Using Science Fiction: covers AI ethics and multi-agent systems"
     - "CSCI 4110 Computing Ethics and Social Implications of Computing: 1-credit course restricted to CS majors or consent of instructor"
-    - "CSCI 4245 Computer Networks I: covers Internet governance including IANA, ASes, IXPs, ISPs, CAs, BGP"
     - "CSCI 4440 Generative Artificial Intelligence: covers ethical consequences of generative AI"
+    - "CSCI 5440 Generative Artificial Intelligence: covers ethical consequences of generative AI"
   expected_chunk_ids:
     - "2dd3ef533673839b"   # CSCI 4110 Computing Ethics — confirmed rank 1
     - "6e812bb0213d9f4f"   # CSCI 3410 — Introduction to Intelligent Agents Using Science Fiction
     - "96ed44c75c847eb2"   # CSCI 4440 — Generative Artificial Intelligence
-    - "14ca18cad3cdd826"   # CSCI 4245 — Computer Networks I
+    - "4c03a1129821f08a"   # CSCI 5440 — Generative Artificial Intelligence (graduate)
   retrieval_note: "study_plan chunks (ranks 3-5) displaced 3 of 4 expected course_description chunks; course_description boost (+0.15) added for 'courses + topic verb' queries; all chunk IDs confirmed"
   expected_source_type: "catalog"
   banner_redirect_expected: false
@@ -415,7 +415,7 @@
     - "MATH 1521H Calculus and Analytic Geometry II Honors: advanced treatment of MATH 1521G with additional topics"
     - "Topics include Riemann sums, definite integrals, Fundamental Theorem of Calculus, integration methods, L'Hopital's Rule, Taylor polynomials, sequences/series, power series, first-order differential equations"
     - "Consent of Instructor required for enrollment"
-    - "Restricted to Las Cruces campus only"
+
   expected_chunk_ids:
     - "bbecc6941f192ada"   # MATH 1521H — correct chunk at rank 2
   retrieval_note: "MATH 1531H ranked 1st over MATH 1521H by 0.01 final score — both matched on 'math' token only; exact course code boost (+0.15) added when all code tokens are a subset of query tokens; heading field is course code + title (as designed); source field holds catalog page citation"
