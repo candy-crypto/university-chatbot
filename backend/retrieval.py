@@ -610,13 +610,22 @@ def _build_hard_filters(query: str, tokens: set) -> "Filter | None":
         # and "is course X required?" questions — course_description stays in
         # the pool so specific course lookups within a requirement query work.
         if tokens.intersection(_REQUIREMENT_TERMS):
+            allowed = [
+                "degree_requirement", "degree_core_requirement",
+                "degree_overview", "study_plan", "advising",
+                "course_description", "policy", "grad_program_info",
+            ]
+            # Include concentration chunks only when the query explicitly
+            # names a concentration — either with the word "concentration"
+            # or with parenthetical notation: "BS in CS (Cybersecurity)".
+            # Without this guard, "BS in Cybersecurity" retrieves the CS
+            # Cybersecurity concentration chunk instead of the standalone
+            # Cybersecurity BS degree_requirement chunk.
+            if ("concentration" in tokens or "concentrations" in tokens
+                    or re.search(r'\([^)\d]+\)', query)):
+                allowed.append("concentration_requirement")
             filters.append(
-                Filter.by_property("chunk_type").contains_any([
-                    "degree_requirement", "degree_core_requirement",
-                    "concentration_requirement", "degree_overview",
-                    "study_plan", "advising", "course_description",
-                    "policy", "grad_program_info",
-                ])
+                Filter.by_property("chunk_type").contains_any(allowed)
             )
     elif ("courses" in tokens
           and tokens.intersection(_COURSE_TOPIC_TERMS)
@@ -690,6 +699,13 @@ def search_chunks(query: str, department_id: str, top_k: int = TOP_K) -> List[Di
             elif tokens.intersection({"scholarship", "scholarships",
                                       "financial", "funding", "aid"}):
                 effective_top_k = max(top_k, 10)
+        else:
+            # Specific comparison ("difference between X and Y"): both named
+            # targets need to appear in the pool. Raise TOP_K for degree
+            # comparisons so neither degree is crowded out by the other.
+            if tokens.intersection({"degree", "degrees", "program", "programs",
+                                    "bachelor", "master", "phd"}):
+                effective_top_k = max(top_k, 20)
 
         if ("courses" in tokens
                 and tokens.intersection(_COURSE_TOPIC_TERMS)

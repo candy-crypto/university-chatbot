@@ -430,7 +430,7 @@
   key_facts:
     - "CSCI 2410 Practical Programming (3 credits): teaches how to code"
     - "CSCI 3710/4575 Software Development (4 credits): teaches how to work in teams to build, test, and maintain systems"
-    - "Practical Programming is 2000-level; Software Development is 3000/4000-level"
+
   expected_chunk_ids:
     - "d15a83ecc9c69fc0"   # CSCI 2410 Practical Programming — rank 1
     - "eeaf6086e70999b1"   # CSCI 3710 Software Development — rank 3
@@ -550,18 +550,18 @@
 
 # ── Degree Choice and Requirements ────────────────────────────────────────────
 
-- question_id: "deg_001"
+- question_id: "n"
   category: "degree_choice"
   question: "What is the difference between a BS in Computer Science and a BS in Cybersecurity?"
   key_facts:
     - "BS CS is broad with 7 optional concentration tracks; BS Cybersecurity has a tighter, specialized required curriculum"
     - "BS CS is a single-department degree (all CSCI); Cybersecurity is cross-departmental (EE, Engineering Tech, Criminal Justice, BCIS)"
-    - "BS CS requires Calculus I and II plus Linear Algebra plus upper-division math elective plus statistics; Cybersecurity allows MATH 1430G in place of Calculus I and requires no upper-division math elective"
-    - "Both require CSCI 4205 Computer Security and CSCI 4225 Introduction to Cryptography"
-    - "Cybersecurity adds: CSCI 4235, CSCI 4240, CSCI 4130, CSCI 4245, plus cross-departmental courses"
+    - "BS in CS requires upper-division math courses; BS in Cybersecurity does not"
+    - "Required CSCI courses differ between the two degrees"
     - "BS CS is ABET-accredited (Computing Accreditation Commission); BS Cybersecurity does not mention ABET accreditation"
   expected_chunk_ids:
     - "16d9f6f83799bfca"   # CS BS degree_requirement — missing from top 5
+    - "6fb64bffef3e6e90"   # CS BS degree_core_requirement — missing from top 5
     - "14f0a41f77e90fb4"   # Cybersecurity BS degree_requirement — missing from top 5
   retrieval_note: "both correct chunks missing; rank 1 is CS Cybersecurity concentration_requirement (482e154e99b5dc92) — wrong chunk, this is a concentration not the standalone Cybersecurity BS; system prompt chunk type hierarchy helps LLM flag the distinction but can't answer without correct chunks; bidirectional filter (degree_requirement for 'difference between degrees' queries) planned post-demo"
   expected_source_type: "catalog"
