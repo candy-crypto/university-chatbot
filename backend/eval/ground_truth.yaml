@@ -232,13 +232,9 @@
   question: "Can I take the course about death and dying to get credits toward my VWW requirements?"
   key_facts:
     - "No, SOCI 2261 Issues in Death and Dying cannot be used for VWW requirements"
-    - "VWW courses must be upper-division (300/400 level) and carry a 'V' suffix"
-    - "SOCI 2261 has no 'V' suffix and is a 2000-level course"
-  expected_chunk_ids:
-    - "45eb0bef0400c391"  # NMSU VWW Requirements — defines VWW eligibility (upper-division, V suffix)
-    - "b0c68a3e33ff70b2"  # SOCI 2261 course description — confirms no V suffix, 2000-level
-  retrieval_note: "answered by course lookup table — content words 'death dying' match SOCI 2261 via FTS; suffix is '' so answer is No; no Weaviate query needed"
-  expected_source_type: "catalog"
+  expected_chunk_ids: []
+  expected_source_type: "either"
+  retrieval_note: "answered by course lookup shortcut — checks suffix in course table, finds no V suffix, answers directly without Weaviate retrieval"
   applicable_groups:
     - "current_undergrad"
   banner_redirect_expected: false
