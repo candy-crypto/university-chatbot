@@ -244,14 +244,13 @@
   question: "What are the General Education requirements for undergraduates?"
   key_facts:
     - "Gen Ed courses are identified by the 'G' suffix in the course code"
-    - "Students must select courses from 4 of 6 content areas for 12-14 total credits"
-    - "Content areas: Communications, Creative and Fine Arts, Humanities, Laboratory Sciences, Mathematics, Social/Behavioral Sciences"
-    - "Nine credits of institutional-level electives are included in the Gen Ed model"
+    - "Content areas include: Communications, Creative and Fine Arts, Humanities, Laboratory Sciences, Mathematics, Social/Behavioral Sciences"
+    - "For Area III (Laboratory Sciences) and Area IV (Social/Behavioral Sciences), students must take one course from each for a total of 7 credits"
+    - "Students then take an additional course in either Area III or Area IV for 3-4 credits depending on selection (Area III is 4 credits, Area IV is 3 credits)"
   expected_chunk_ids:
-    - "35b87bcfa4e68b97"  # glossary chunk — Gen Ed definition; ranks #1 currently
+    - "35b87bcfa4e68b97"  # glossary chunk — Gen Ed definition
     - "758a8cf629f64251"  # glossary chunk — Gen Ed Certification definition
-    - "45eb0bef0400c391"  # NMSU Viewing a Wider World Requirements — spans pp.241-242; definitive area requirements
-  retrieval_note: "glossary boost working well — two glossary chunks in top 5; pp.241-244 policy chunk not yet ingested; VWW is not defined in glossary (only Gen Ed is)"
+  retrieval_note: "pp.238-239 not yet indexed (EXPLICIT_SECTIONS range corrected to start at 238; needs catalog re-ingest); once indexed, the p.238 policy chunk should replace or join the glossary chunks as primary expected source"
   expected_source_type: "catalog"
   applicable_groups:
     - "prospective_undergrad"

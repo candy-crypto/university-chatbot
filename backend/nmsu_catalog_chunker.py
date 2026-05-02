@@ -1157,12 +1157,16 @@ EXPLICIT_SECTIONS = [
     (31,  55,  "policy",   {"dept_name": ""}),
     (60,  73,  "policy",   {"dept_name": ""}),
     # ── General Education & VWW (undergraduate only) ─────────────────────────
-    # p241: Gen Ed intro paragraph + Area I-IV course lists
+    # p238: Gen Ed intro paragraph — content areas, credit totals, footnotes
+    #       with Area III/IV rules (must take one from each; additional course
+    #       in either Area III or IV)
+    # p239: footnotes continued + Gen Ed course list start
+    # p241: Gen Ed course lists continued + Area I-IV
     # p242: Area V-VI + 9-credit rule + VWW definition paragraph + alternatives
     # pp243-244: VWW course lists by college
     # Course lists are redundant with G/V-suffix course descriptions but the
     # definitional paragraphs are essential for "What are VWW requirements?" queries.
-    (241, 244, "policy",   {"topic": "General Education and Viewing a Wider World Requirements",
+    (238, 244, "policy",   {"topic": "General Education and Viewing a Wider World Requirements",
                             "degree_level": "undergraduate"}),
     # ── Academic Advising / CAASS ─────────────────────────────────────────────
     # p41: CAASS mentioned in passing within registration policy — keep for retrieval.
