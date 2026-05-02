@@ -162,12 +162,14 @@ page_levels:
   "https://computerscience.nmsu.edu/majors/undergraduate-advising.html":     undergraduate
   "https://computerscience.nmsu.edu/majors/undergraduate-financial-aid.html": undergraduate
   "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html": undergraduate
-  "https://computerscience.nmsu.edu/non-majors/gen-ed.html":                 undergraduate
-  "https://computerscience.nmsu.edu/non-majors/learn-to-code.html":          undergraduate
   # non-majors/minors.html covers both undergrad and grad CS minors — untagged
   # so graduate students are not penalized when asking about minor value/options.
   # "https://computerscience.nmsu.edu/non-majors/minors.html":              undergraduate
   "https://advising.nmsu.edu/":                                               undergraduate
+
+  # Non-major-specific
+  "https://computerscience.nmsu.edu/non-majors/gen-ed.html":        nonmajor
+  "https://computerscience.nmsu.edu/non-majors/learn-to-code.html": nonmajor
 
   # Graduate-specific
   "https://computerscience.nmsu.edu/grad-students/prospective-graduates.html": graduate

@@ -210,6 +210,10 @@ _ACRONYM_MAP = {
     r"\bCAASS\b": "Center for Academic Advising and Student Support",
     # VWW never appears verbatim in catalog headings — only the full phrase does.
     r"\bVWW\b":   "Viewing a Wider World",
+    # Degree abbreviations with or without periods, any case.
+    # B.S./BS → "bachelor" in tokens, caught by _UNDERGRAD_TERMS and degree vocab.
+    r"(?i)\bB\.?S\.?(?!\w)": "Bachelor of Science",
+    r"(?i)\bB\.?A\.?(?!\w)": "Bachelor of Arts",
 }
 
 
@@ -223,7 +227,7 @@ def expand_acronyms(query: str) -> str:
     """
     additions = []
     for pattern, expansion in _ACRONYM_MAP.items():
-        if re.search(pattern, query):
+        if re.search(pattern, query, re.IGNORECASE):
             additions.append(expansion)
     if additions:
         return query + " " + " ".join(additions)
@@ -552,13 +556,20 @@ def _build_hard_filters(query: str, tokens: set) -> "Filter | None":
     # NOTE: Filter.by_property("level").equal("") causes Weaviate hybrid BM25
     # to fail with "only stopwords provided". Use not_equal on the opposite
     # level instead — semantically equivalent and avoids the empty-string bug.
+    #
+    # level values: "undergraduate", "graduate", "nonmajor", "" (no restriction).
+    # With an explicit audience signal, exclude the other named audiences.
+    # With no signal, apply no level filter — a non-major asking about their
+    # course professor deserves the same faculty chunks as anyone else.
     if tokens.intersection(_UNDERGRAD_TERMS):
         filters.append(
-            Filter.by_property("level").not_equal("graduate")
+            Filter.by_property("level").not_equal("graduate") &
+            Filter.by_property("level").not_equal("nonmajor")
         )
     elif tokens.intersection(_GRADUATE_TERMS):
         filters.append(
-            Filter.by_property("level").not_equal("undergraduate")
+            Filter.by_property("level").not_equal("undergraduate") &
+            Filter.by_property("level").not_equal("nonmajor")
         )
 
     # ── chunk_type filter ─────────────────────────────────────────────────────
@@ -580,16 +591,24 @@ def _build_hard_filters(query: str, tokens: set) -> "Filter | None":
                 "minor_requirement", "minor_index",
             ])
         )
-        # Degree-structure queries (comparing/explaining tracks, requirements, or
-        # degree types) also exclude course_description — other-department course
-        # descriptions (e.g. EDUC "Master's Thesis", SPED "Master's Thesis") match
-        # on degree vocabulary and pollute results without adding useful signal.
-        # Guard: only when the student is NOT asking about specific courses
-        # ("what courses are required?" keeps course_description in scope).
-        if ("courses" not in tokens and "course" not in tokens
-                and tokens.intersection(_REQUIREMENT_TERMS)):
+        # Exclude nonmajor-level content from degree queries. The level filter
+        # above handles this when undergrad/grad terms are present; this catches
+        # degree-vocab queries with no explicit audience signal (e.g. "BS program").
+        filters.append(Filter.by_property("level").not_equal("nonmajor"))
+        # Requirement queries: whitelist chunk types that can answer "what is
+        # required". Naturally excludes general/nonmajor web pages that match
+        # on subject vocabulary but lack authoritative requirement information.
+        # degree_requirement is the primary source for both "what is required?"
+        # and "is course X required?" questions — course_description stays in
+        # the pool so specific course lookups within a requirement query work.
+        if tokens.intersection(_REQUIREMENT_TERMS):
             filters.append(
-                Filter.by_property("chunk_type").contains_none(["course_description"])
+                Filter.by_property("chunk_type").contains_any([
+                    "degree_requirement", "degree_core_requirement",
+                    "concentration_requirement", "degree_overview",
+                    "study_plan", "advising", "course_description",
+                    "policy", "grad_program_info",
+                ])
             )
     elif ("courses" in tokens
           and tokens.intersection(_COURSE_TOPIC_TERMS)
