@@ -851,7 +851,10 @@ _DEPT_KEYWORDS = {
 def _detect_question_type(query: str) -> str:
     """Return 'gen_ed', 'vww', 'credits', 'list_gen_ed', 'list_vww', or ''."""
     q = query.lower()
-    is_list = ("what " in q or "which " in q) and "courses" in q
+    # Require "what/which" to be adjacent to "courses" (with at most one word
+    # between) so "in which year...should I be taking courses" is not treated
+    # as a list request.
+    is_list = bool(re.search(r'\b(what|which)\b\s+(?:\w+\s+)?courses\b', q))
     for term in _GEN_ED_TERMS:
         if term in q:
             return "list_gen_ed" if is_list else "gen_ed"
@@ -969,19 +972,22 @@ def try_course_lookup(query: str) -> Dict[str, Any] | None:
     if not question_type:
         return None
 
-    # List queries: return all courses with the matching suffix for a department.
-    if question_type in ("list_gen_ed", "list_vww"):
-        suffix = "G" if question_type == "list_gen_ed" else "V"
+    # List Gen Ed queries: lookup table is reliable (dept keywords work well,
+    # "gen ed" is rarely typed in all-caps so dept prefix extraction is safe).
+    if question_type == "list_gen_ed":
         dept_prefix = _extract_dept_prefix(query)
-        courses = lookup_courses_by_suffix(suffix, dept_prefix)
-        answer = _format_course_list(courses, suffix, dept_prefix)
-        source = f"NMSU Academic Catalog (course lookup table)"
+        courses = lookup_courses_by_suffix("G", dept_prefix)
+        answer = _format_course_list(courses, "G", dept_prefix)
         return {
             "answer":         answer,
-            "sources":        [source],
+            "sources":        ["NMSU Academic Catalog (course lookup table)"],
             "chunks":         [],
             "prompt_context": "",
         }
+
+    # list_vww falls through to Weaviate — VWW is an acronym users often
+    # capitalize, which causes _extract_dept_prefix to misread "VWW" as a
+    # department code. The catalog pp.241-244 VWW chunks are a better source.
 
     course = None
 

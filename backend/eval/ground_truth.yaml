@@ -278,8 +278,9 @@
   key_facts:
     - "MATH 4110V Great Theorems in Mathematics is the only Math course that contributes to VWW requirements"
   expected_chunk_ids:
-    - "45eb0bef0400c391"  # NMSU VWW Requirements — defines VWW eligibility
+    - "3e9f670719039738"  # VWW course list p.242 College of Arts and Sciences — contains MATH 4110V
     - "73d9f5249afe54fd"  # MATH 4110V Great Theorems in Mathematics course description
+  retrieval_note: "list_vww queries now fall through to Weaviate (removed from lookup shortcut); p.242 chunk has MATH 4110V in the Arts and Sciences VWW list; course description chunk provides credits and details"
   expected_source_type: "catalog"
   applicable_groups:
     - "current_undergrad"
