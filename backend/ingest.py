@@ -55,9 +55,11 @@ _QA_MARKER_RE = re.compile(r'(?<!\w)Q\d+(?=[\s.])')
 _FAC_TITLE_PAT = (
     r'(?:College\s+)?'                          # e.g. "College Assistant Professor"
     r'(?:Emeritus\s+)?'                          # e.g. "Emeritus Professor"
+    r'(?:Regents\s+)?'                           # e.g. "Regents Professor"
     r'(?:Assistant\s+|Associate\s+|Senior\s+)?'  # rank prefix
     r'Professor'
     r'|Department\s+Head'
+    r'|Dean(?:\s+of\s+\w+(?:\s+\w+)*)?'         # e.g. "Dean", "Dean of Arts and Sciences"
     r'|System\s+Support\s+Manager'
     r'|Senior\s+System\s+(?:Analyst|Administrator)'
     r'|Program\s+Manager'
