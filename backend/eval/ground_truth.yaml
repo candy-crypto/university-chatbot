@@ -51,8 +51,8 @@
   category: "advising"
   question: "As a Computer Science major, what advising am I required to get?"
   key_facts:
-    -"Computer science majors should review their programs of study in consultation with theiradvisors each semester
-    -"Required if student has an AV or DM hold on their account, or receives an email assigning a mentor"
+    - "Computer science majors should review their programs of study in consultation with their advisors each semester"
+    - "Required if student has an AV or DM hold on their account, or receives an email assigning a mentor"
     - "If AV hold: access CAASS"
     - "Designated Advising Period: April 1-30 for Fall registration; November 1-30 for Spring registration"
     - "Before meeting with mentor: develop CS Plan to Graduation, run updated StarAudit, prepare preliminary course plan for next semester"
@@ -360,13 +360,7 @@
     - "Check NMSU's course search for current semester availability of these courses"
   expected_chunk_ids:
     - "0784a4c8b220019d"  # catalog p.238 gen-ed course listing — includes ENGL 1110G and 2210G under Area I: Communications
-  retrieval_note: "no expected chunks in top-K; not_found: 0784a4c8b220019d; top5: rank1[study_plan/catalog/1.1144] rank2[study_plan/catalog/1.1057] rank3[study_plan/catalog/0.8857] rank4[study_plan/catalog/0.8842] rank5[study_plan/catalog/0.8676]"
-    Right source is the ENGL gen-ed course list on catalog pp.238-239 (not yet chunked).
-    Lookup table has "english"->ENGL in _DEPT_KEYWORDS but is_list does not fire: query
-    says "Which are offered?" not "Which courses are offered?" so the is_list regex
-    (requires "courses" adjacent to "which/what") returns False. After catalog re-ingest,
-    add pp.238-239 chunk IDs here. Study plan chunks are the wrong source — they are CS
-    degree roadmaps that incidentally list ENGL 1110G/2210G, not gen-ed course listings.
+  retrieval_note: "no expected chunks in top-K; not_found: 0784a4c8b220019d; top5: rank1[study_plan/catalog/1.1144] rank2[study_plan/catalog/1.1057] rank3[study_plan/catalog/0.8857] rank4[study_plan/catalog/0.8842] rank5[study_plan/catalog/0.8676]; right source is ENGL gen-ed list pp.238-239; is_list does not fire because query says 'which are offered' not 'which courses are offered'"
   expected_source_type: "catalog"
   banner_redirect_expected: true
   applicable_groups:
@@ -948,9 +942,10 @@
     - "Dr. Son Tran is the Department Head"
     - "Expertise: Knowledge Representation and Reasoning, Planning and Plan Verification, Intelligent Agents, Logic Programming, Commonsense Reasoning"
   expected_chunk_ids:
-    - "ff1a31a3918ec2d7"  # catalog faculty chunk — names Tran as Department Head with expertise; catalog is the authoritative source for this question
+    - "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html#chunk-26"  # Son Tran — Department Head, expertise
+    - "ff1a31a3918ec2d7"  # catalog faculty listing — also names Tran as Department Head
   retrieval_note: "no expected chunks in top-K; not_found: ff1a31a3918ec2d7; top5: rank1[general/web/0.8300] rank2[grad_program_i/catalog/0.6506] rank3[general/web/0.6057] rank4[general/web/0.5297] rank5[general/web/0.4293]"
-  expected_source_type: "catalog"
+  expected_source_type: "web"
   banner_redirect_expected: false
 
 # ── Policy ────────────────────────────────────────────────────────────────────

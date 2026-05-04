@@ -162,7 +162,6 @@ _FACULTY_TERMS = frozenset({
     "faculty", "professor", "instructor", "dr", "doctor",
     "who", "office", "email", "contact", "research", "teaches",
     "advisor", "adviser",
-    "head",   # "department head" / "head of the department"
 })
 # Enrollment / application terms — trigger boost for enrollment chunk_type.
 _ENROLLMENT_TERMS = frozenset({
@@ -486,6 +485,13 @@ def metadata_boost(query: str, chunk: Dict[str, Any]) -> float:
             and query_tokens.intersection(_FACULTY_TERMS)):
         boost += 0.15
 
+    # "Department head" queries need the catalog faculty chunk, whose heading
+    # is just "faculty" and misses the heading-intersection boost. Add extra
+    # signal when the query explicitly asks about a leadership role.
+    if (chunk.get("chunk_type") == "faculty"
+            and {"head", "department"}.issubset(query_tokens)):
+        boost += 0.10
+
     # Enrollment chunks are preferred for apply/admission/registration queries.
     # Vocabulary mismatch: "apply" in a user query rarely appears verbatim in
     # formal catalog enrollment chunks, so BM25 misses them without this boost.
@@ -744,6 +750,14 @@ def search_chunks(query: str, department_id: str, top_k: int = TOP_K) -> List[Di
         # chunk below rank 5 even when BM25 matches on the heading.
         if tokens.intersection(_POLICY_QUERY_TERMS):
             effective_top_k = max(effective_top_k, 10)
+
+        # Faculty queries: catalog faculty chunks compete with web general pages
+        # that also mention faculty names. Widening the pool ensures the catalog
+        # chunk (which carries full expertise details) can surface before
+        # metadata re-ranking promotes it.
+        if (tokens.intersection(_FACULTY_TERMS)
+                or {"head", "department"}.issubset(tokens)):
+            effective_top_k = max(effective_top_k, 12)
 
         # Absolute-semester + courses queries ("starting Spring 2027, what courses?"):
         # the rotation chunk must compete with study_plan / degree_requirement chunks
@@ -1060,9 +1074,23 @@ def try_course_lookup(query: str) -> Dict[str, Any] | None:
             "prompt_context": "",
         }
 
-    # list_vww falls through to Weaviate — VWW is an acronym users often
-    # capitalize, which causes _extract_dept_prefix to misread "VWW" as a
-    # department code. The catalog pp.241-244 VWW chunks are a better source.
+    # List VWW queries: use lookup table with keyword-only dept extraction.
+    # Cannot use _extract_dept_prefix directly — it finds uppercase "VWW" before
+    # it reaches keyword matching, producing a bogus dept code.
+    if question_type == "list_vww":
+        q_lower = query.lower()
+        dept_prefix = next(
+            (prefix for keyword, prefix in _DEPT_KEYWORDS.items() if keyword in q_lower),
+            "",
+        )
+        courses = lookup_courses_by_suffix("V", dept_prefix)
+        answer = _format_course_list(courses, "V", dept_prefix)
+        return {
+            "answer":         answer,
+            "sources":        ["NMSU Academic Catalog (course lookup table)"],
+            "chunks":         [],
+            "prompt_context": "",
+        }
 
     course = None
 
