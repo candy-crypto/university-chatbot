@@ -7,6 +7,7 @@ Usage:
     python eval/harness.py --questions adv_001 adv_002   # run specific questions
     python eval/harness.py --category financial_aid       # run one category
     python eval/harness.py --no-judge                     # skip LLM judge (faster)
+    python eval/harness.py --update-notes                 # refresh retrieval_note in ground_truth.yaml
 
 Outputs (written to backend/eval/results/):
     eval_results_{run_id}.jsonl   — one JSON record per question (full detail)
@@ -449,6 +450,126 @@ def evaluate_question(record: dict, use_judge: bool) -> dict:
     return result
 
 
+# ── Retrieval note auto-generation ────────────────────────────────────────────
+
+def _short_id(cid: str) -> str:
+    """Display-friendly short form of a chunk_id."""
+    if cid.startswith("http"):
+        parts = re.split(r"[/#]", cid)
+        tail = next((p for p in reversed(parts) if p), cid)
+        return tail[:24]
+    return cid  # hex IDs are already 16 chars
+
+
+def build_retrieval_note(result: dict) -> str:
+    """
+    Generate a concise factual retrieval note from one eval result.
+
+    Format: found/not-found summary + top-5 chunk-type/source/score.
+    Returns "" for questions with no expected_chunk_ids or evaluation errors.
+    """
+    if result.get("error"):
+        return f"evaluation error: {result['error']}"
+
+    expected_ids = result.get("expected_chunk_ids") or []
+    if not expected_ids:
+        return ""
+
+    retrieved    = result.get("retrieved_chunks") or []
+    expected_set = set(expected_ids)
+    retrieved_id_set = {c.get("chunk_id", "") for c in retrieved}
+
+    found_parts = []
+    for chunk in retrieved:
+        cid = chunk.get("chunk_id", "")
+        if cid in expected_set:
+            rank  = chunk.get("rank", "?")
+            score = chunk.get("final_score")
+            s = f"{score:.4f}" if score is not None else "?"
+            found_parts.append(f"{_short_id(cid)}@rank{rank}({s})")
+
+    not_found = [_short_id(cid) for cid in expected_ids if cid not in retrieved_id_set]
+
+    top5 = []
+    for chunk in retrieved[:5]:
+        cid   = chunk.get("chunk_id", "")
+        rank  = chunk.get("rank", "?")
+        ctype = (chunk.get("chunk_type") or "?")[:14]
+        src   = chunk.get("content_source") or "?"
+        score = chunk.get("final_score")
+        s     = f"{score:.4f}" if score is not None else "?"
+        marker = " EXP" if cid in expected_set else ""
+        top5.append(f"rank{rank}[{ctype}/{src}/{s}{marker}]")
+
+    parts = []
+    parts.append("found: " + ", ".join(found_parts) if found_parts else "no expected chunks in top-K")
+    if not_found:
+        parts.append("not_found: " + ", ".join(not_found))
+    if top5:
+        parts.append("top5: " + " ".join(top5))
+
+    return "; ".join(parts)
+
+
+def write_retrieval_notes(notes_by_qid: dict, yaml_path: Path) -> int:
+    """
+    Write auto-generated retrieval notes back into ground_truth.yaml in-place.
+
+    For each question in notes_by_qid:
+      - Existing retrieval_note line: replaced.
+      - No existing retrieval_note: inserted before expected_source_type /
+        banner_redirect_expected / applicable_groups / notes (whichever comes
+        first in the block).
+
+    All other content — inline comments, field ordering, blank lines — is
+    preserved exactly.  Returns count of notes written.
+    """
+    _INSERT_BEFORE_RE = re.compile(
+        r"\s*(?:expected_source_type|banner_redirect_expected|applicable_groups|notes):"
+    )
+    written = 0
+
+    for qid, note in notes_by_qid.items():
+        if not note:
+            continue
+
+        escaped       = note.replace("\\", "\\\\").replace('"', '\\"')
+        note_yaml_line = f'  retrieval_note: "{escaped}"\n'
+
+        lines = yaml_path.read_text(encoding="utf-8").splitlines(keepends=True)
+
+        in_block       = False
+        note_line_i    = None
+        insert_i       = None
+
+        for i, line in enumerate(lines):
+            if re.match(rf'[-\s]*question_id:\s*"{re.escape(qid)}"', line):
+                in_block = True
+                continue
+            if in_block:
+                if line.startswith("- question_id:"):
+                    break
+                if re.match(r"\s*retrieval_note:", line):
+                    note_line_i = i
+                if insert_i is None and _INSERT_BEFORE_RE.match(line):
+                    insert_i = i
+
+        if not in_block:
+            continue  # qid not found in file
+
+        if note_line_i is not None:
+            lines[note_line_i] = note_yaml_line
+        elif insert_i is not None:
+            lines.insert(insert_i, note_yaml_line)
+        else:
+            lines.append(note_yaml_line)
+
+        yaml_path.write_text("".join(lines), encoding="utf-8")
+        written += 1
+
+    return written
+
+
 # ── Summary builder ───────────────────────────────────────────────────────────
 
 def build_summary(results: list[dict], run_id: str, run_timestamp: str) -> dict:
@@ -579,6 +700,11 @@ def main():
         "--no-judge", action="store_true",
         help="Skip LLM-as-judge (faster, deterministic metrics only)"
     )
+    parser.add_argument(
+        "--update-notes", action="store_true",
+        help="Overwrite retrieval_note in ground_truth.yaml for every evaluated "
+             "question with a freshly generated factual note (old notes removed)"
+    )
     args = parser.parse_args()
 
     use_judge = not args.no_judge
@@ -637,6 +763,11 @@ def main():
     print(f"Summary → {summary_path}")
     print(f"Answers → {answers_path}")
     print(f"Scores  → {scores_path}")
+
+    if args.update_notes:
+        notes = {r["question_id"]: build_retrieval_note(r) for r in results}
+        n_written = write_retrieval_notes(notes, GROUND_TRUTH_PATH)
+        print(f"Notes   → updated {n_written} retrieval_note fields in {GROUND_TRUTH_PATH.name}")
 
 
 if __name__ == "__main__":

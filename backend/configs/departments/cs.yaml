@@ -170,6 +170,7 @@ page_levels:
   # Non-major-specific
   "https://computerscience.nmsu.edu/non-majors/gen-ed.html":        nonmajor
   "https://computerscience.nmsu.edu/non-majors/learn-to-code.html": nonmajor
+  "https://computerscience.nmsu.edu/non-majors/minors.html":        nonmajor
 
   # Graduate-specific
   "https://computerscience.nmsu.edu/grad-students/prospective-graduates.html": graduate

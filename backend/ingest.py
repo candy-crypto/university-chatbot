@@ -42,9 +42,10 @@ CHUNK_MAX_LEN = int(os.getenv("CHUNK_MAX_LEN", "2000"))
 # e.g. CSCI 1115G, MATH 1511G, E E 1110
 COURSE_CODE_RE = re.compile(r'\b([A-Z][A-Z\s]{0,5}\s+\d{3,4}[A-Z]?)\b')
 
-# FAQ Q-marker pattern: matches Q1, Q7, Q101, Q201 etc. at a word boundary.
-# Used to split FAQ-style pages into one chunk per Q&A pair.
-_QA_MARKER_RE = re.compile(r'(?<!\w)Q\d+(?=[\s.])')
+# FAQ Q-marker pattern: matches Q1., Q7., Q101. etc. — requires a period so
+# inline cross-references like "see Q102 and its answer" are not treated as
+# question starts.
+_QA_MARKER_RE = re.compile(r'(?<!\w)Q\d+\.')
 
 # ── Faculty entry splitter ────────────────────────────────────────────────────
 # Faculty directory pages (CS and Data Analytics) concatenate all entries on a

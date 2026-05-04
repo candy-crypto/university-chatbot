@@ -136,6 +136,9 @@ def make_level(chunk) -> str:
     course_level = getattr(chunk, "course_number_level", "")
     if course_level:
         return "graduate" if course_level == "graduate" else "undergraduate"
+    chunk_type = getattr(chunk, "chunk_type", "")
+    if chunk_type in ("minor_index", "minor_requirement"):
+        return "nonmajor"
     degree_level = getattr(chunk, "degree_level", "")
     if degree_level in ("ms", "phd"):
         return "graduate"

@@ -378,6 +378,8 @@ def chunk_generic_pages(
     topic:       str = "",
     degree_level: str = "",
     split_at_size: float = HEADING_SIZE_MIN,
+    heading_to_type: dict = None,
+    degree_full_title: str = "",
 ) -> list[CatalogChunk]:
     """
     General-purpose chunker for policy, grad_program_info, and research pages.
@@ -389,6 +391,10 @@ def chunk_generic_pages(
       "Research Initiatives in the College of Health, Education"
       "and Social Transformation"
     are stored as one label rather than the second line overwriting the first.
+
+    heading_to_type: optional mapping of exact heading text → chunk_type override.
+    Used to reclassify specific sections (e.g. financial aid headings within a
+    grad_program_info range) without splitting the section table entry.
     """
     chunks     = []
     cur_lines  = []
@@ -401,19 +407,21 @@ def chunk_generic_pages(
         text = "\n".join(cur_lines).strip()
         if len(text) < 120:
             return
+        effective_type = (heading_to_type or {}).get(cur_topic, chunk_type)
         # Drop preamble fragments before the first heading in policy/research
         if chunk_type in ("research", "policy", "grad_program_info") and not cur_topic:
             return
         c = CatalogChunk(
             text=text,
-            chunk_type=chunk_type,
+            chunk_type=effective_type,
             catalog_page=cur_page,
             dept_name=dept_name,
-            policy_topic=cur_topic if chunk_type in ("policy", "grad_program_info") else "",
-            lab_name=cur_topic if chunk_type == "research" else lab_name,
+            policy_topic=cur_topic if effective_type in ("policy", "grad_program_info", "financial_aid") else "",
+            lab_name=cur_topic if effective_type == "research" else lab_name,
             degree_level=degree_level,
+            degree_full_title=degree_full_title,
             referenced_courses=find_referenced_courses(text),
-            is_research_related=(chunk_type == "research"),
+            is_research_related=(effective_type == "research"),
         )
         chunks.append(c)
 
@@ -657,7 +665,7 @@ def chunk_cs_bs_core(
         chunk_type="degree_core_requirement",
         catalog_page=cur_page,
         catalog_page_end=end,
-        degree_full_title=degree_full_title,
+        degree_full_title=_parent_degree_title(degree_full_title),
         degree_type=degree_type,
         concentration="general",
         degree_level=degree_level,
@@ -722,7 +730,7 @@ def chunk_degree_section(
             chunk_type=cur_type,
             catalog_page=cur_page,
             catalog_page_end=end,
-            degree_full_title=degree_full_title,
+            degree_full_title=_parent_degree_title(degree_full_title),
             degree_type=degree_type,
             concentration=concentration,
             degree_level=degree_level,
@@ -1046,6 +1054,16 @@ def chunk_course_descriptions(pdf, start: int, end: int) -> list[CatalogChunk]:
 # HELPERS
 # ═══════════════════════════════════════════════════════════════════════════════
 
+def _parent_degree_title(title: str) -> str:
+    """Strip concentration name from degree title, keeping only the parent degree.
+
+    "Computer Science (Cybersecurity) - Bachelor of Science"
+      → "Computer Science - Bachelor of Science"
+    "Cybersecurity - Bachelor of Science"  → unchanged (no parenthetical)
+    """
+    return re.sub(r'\s*\([^)]+\)', '', title).strip()
+
+
 def _parse_degree_meta(title: str) -> tuple[str, str, str]:
     """
     Extract (degree_type, concentration, degree_level) from a degree title.
@@ -1166,8 +1184,12 @@ EXPLICIT_SECTIONS = [
     # pp243-244: VWW course lists by college
     # Course lists are redundant with G/V-suffix course descriptions but the
     # definitional paragraphs are essential for "What are VWW requirements?" queries.
-    (238, 244, "policy",   {"topic": "General Education and Viewing a Wider World Requirements",
-                            "degree_level": "undergraduate"}),
+    (238, 241, "policy",   {"topic": "General Education and Viewing a Wider World Requirements",
+                            "degree_level": "undergraduate",
+                            "degree_full_title": "General Education"}),
+    (242, 244, "policy",   {"topic": "Viewing a Wider World Requirements",
+                            "degree_level": "undergraduate",
+                            "degree_full_title": "Viewing a Wider World"}),
     # ── Academic Advising / CAASS ─────────────────────────────────────────────
     # p41: CAASS mentioned in passing within registration policy — keep for retrieval.
     # p447-449: College of Arts and Sciences intro — contains the full CAASS name in
@@ -1318,14 +1340,27 @@ def run_pipeline(
                 add(chunk_generic_pages(pdf, start, end, "policy",
                                         dept_name=cfg.get("dept_name", ""),
                                         topic=cfg.get("topic", ""),
-                                        degree_level=cfg.get("degree_level", "")))
+                                        degree_level=cfg.get("degree_level", ""),
+                                        degree_full_title=cfg.get("degree_full_title", "")))
 
             elif handler == "glossary":
                 add(chunk_generic_pages(pdf, start, end, "glossary",
                                         topic=cfg.get("topic", "Glossary")))
 
             elif handler == "grad_info":
-                add(chunk_generic_pages(pdf, start, end, "grad_program_info"))
+                add(chunk_generic_pages(pdf, start, end, "grad_program_info",
+                    heading_to_type={
+                        # p.74 — financial aid warnings/appeals
+                        "Financial Aid Warning":    "financial_aid",
+                        "Financial Aid Suspension": "financial_aid",
+                        "The Appeal Process":       "financial_aid",
+                        # p.78-79 — funding, assistantships, scholarships
+                        "Funding Opportunities for Graduate Students":                         "financial_aid",
+                        "Assistantships":                                                      "financial_aid",
+                        "Diversity Graduate Assistantships\xa0 for Ph.D. Students":           "financial_aid",
+                        "Outstanding Graduate Scholarship Award":                              "financial_aid",
+                        "State of New Mexico Department of Higher Education (NMHED) Graduate Scholarship Program": "financial_aid",
+                    }))
 
             elif handler == "research":
                 add(chunk_generic_pages(pdf, start, end, "research"))

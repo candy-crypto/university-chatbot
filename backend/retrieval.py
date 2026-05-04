@@ -124,6 +124,10 @@ _SCHEDULE_TERMS = frozenset({
 # Covers "when is X offered?", "when will X run?", "when does X meet?" without
 # removing "when" from the stopword list (which would cause false boosts elsewhere).
 _WHEN_RE = re.compile(r'\bwhen\b', re.IGNORECASE)
+# Matches an absolute semester reference: "Spring 2027", "Fall 2026", "Summer 2025".
+# Applied to the temporally-expanded query, so relative refs ("next fall") are already
+# resolved before this fires.
+_ABS_SEMESTER_RE = re.compile(r'\b(spring|fall|summer)\s+\d{4}\b', re.IGNORECASE)
 # Degree/requirement trigger terms — includes comparison vocabulary so the
 # degree_requirement boost fires for "difference between X and Y" queries.
 _REQUIREMENT_TERMS = frozenset({
@@ -158,6 +162,7 @@ _FACULTY_TERMS = frozenset({
     "faculty", "professor", "instructor", "dr", "doctor",
     "who", "office", "email", "contact", "research", "teaches",
     "advisor", "adviser",
+    "head",   # "department head" / "head of the department"
 })
 # Enrollment / application terms — trigger boost for enrollment chunk_type.
 _ENROLLMENT_TERMS = frozenset({
@@ -222,6 +227,17 @@ _ACRONYM_MAP = {
     # query misses chunks that say "ethical" and vice versa.
     r"(?i)\bethics\b":   "ethical",
     r"(?i)\bethical\b":  "ethics",
+    # "Financial aid" queries miss assistantship chunks because BM25 does exact
+    # token matching. Scholarships/fellowships already rank naturally without help.
+    r"(?i)\bfinancial\s+aid\b": "assistantships",
+    # CS undergrad advising pages use "mentor"/"mentoring" throughout, not "advisor".
+    r"(?i)\badvisor\b": "mentor",
+    # "cybersecurity" in a query should prefer chunks that say "cyber" — not generic
+    # "security" courses (data security, network security) whose vectors are similar
+    # but whose content is unrelated to cyber-specific topics.  Appending "cyber"
+    # raises BM25 scores for CSEC/BCIS course descriptions that contain the word
+    # "cyber" while leaving pure-"security" chunks (ICT, CTEC) unaffected.
+    r"(?i)\bcybersecurity\b": "cyber",
 }
 
 
@@ -419,6 +435,16 @@ def metadata_boost(query: str, chunk: Dict[str, Any]) -> float:
         query_tokens.intersection(_SCHEDULE_TERMS)
         or _WHEN_RE.search(query)
     ):
+        boost += 0.15
+
+    # Absolute-semester planning queries: "starting in Spring 2027, what courses
+    # should I enroll in?" After temporal expansion, relative refs are already
+    # resolved, so this catches both "Spring 2027" and "next spring" (→ "Spring 2027").
+    # A named semester + course vocabulary is a reliable signal that the rotation
+    # table is needed to confirm which entry courses actually run that term.
+    if (chunk.get("chunk_type") == "course_schedule"
+            and _ABS_SEMESTER_RE.search(query)
+            and "courses" in query_tokens):
         boost += 0.15
 
     # Minor requirement chunks are preferred when the query is about a minor.
@@ -717,6 +743,13 @@ def search_chunks(query: str, department_id: str, top_k: int = TOP_K) -> List[Di
         # extra words in a VWW query (year, courses, when) can push the policy
         # chunk below rank 5 even when BM25 matches on the heading.
         if tokens.intersection(_POLICY_QUERY_TERMS):
+            effective_top_k = max(effective_top_k, 10)
+
+        # Absolute-semester + courses queries ("starting Spring 2027, what courses?"):
+        # the rotation chunk must compete with study_plan / degree_requirement chunks
+        # that score well on program vocabulary. Widening the pool ensures it is
+        # reachable before metadata re-ranking promotes it.
+        if _ABS_SEMESTER_RE.search(query) and "courses" in tokens:
             effective_top_k = max(effective_top_k, 10)
 
         response = collection.query.hybrid(
