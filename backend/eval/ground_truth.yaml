@@ -1214,6 +1214,23 @@
 
 # ── Other ─────────────────────────────────────────────────────────────────────
 
+- question_id: "other_002"
+  category: "other"
+  question: "What is the main phone number for the computer science department?"
+  key_facts:
+    - "CS department main phone number is 575-646-3723"
+  expected_chunk_ids:
+    - "TBD"  # contact-information.html or faculty-staff-directory.html — locate after ingest
+  retrieval_note: "TBD after ingest"
+  expected_source_type: "web"
+  applicable_groups:
+    - "prospective_undergrad"
+    - "current_undergrad"
+    - "prospective_grad"
+    - "current_grad"
+    - "other"
+  banner_redirect_expected: false
+
 - question_id: "other_001"
   category: "other"
   question: "What is the difference in job opportunities between a BS in Cybersecurity and one in AI?"
