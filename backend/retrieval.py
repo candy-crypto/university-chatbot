@@ -944,12 +944,12 @@ def _detect_question_type(query: str) -> str:
     # between) so "in which year...should I be taking courses" is not treated
     # as a list request.
     is_list = bool(re.search(r'\b(what|which)\b\s+(?:\w+\s+)?courses\b', q))
-    for term in _GEN_ED_TERMS:
-        if term in q:
-            return "list_gen_ed" if is_list else "gen_ed"
     for term in _VWW_TERMS:
         if term in q:
             return "list_vww" if is_list else "vww"
+    for term in _GEN_ED_TERMS:
+        if term in q:
+            return "list_gen_ed" if is_list else "gen_ed"
     for term in _CREDIT_TERMS:
         if term in q:
             return "credits"
@@ -1319,11 +1319,13 @@ and electives in selected departments:
 - Physics — PHYS
 - Statistics — STAT and A ST
 
-Courses with the prefixes OECS and ICT are not Computer Science courses. OECS designates Computer Technology and \
-these courses are available only at Community Colleges. ICT designates Information and Communication Technology. \
-If a course beginning OECS or ICT appears in the retrieved context alongside a CSCI course with a similar name, \
-always answer based on the CSCI course. Do not describe OECS or other non-CSCI courses to students asking about \
-CS degree requirements.
+Courses with the prefix OECS designate Computer Technology and are available only at Community Colleges — do not \
+describe OECS courses to students asking about CS degree requirements. If an OECS course appears in the retrieved \
+context alongside a CSCI course with a similar name, always answer based on the CSCI course. \
+ICT (Information and Communication Technology) courses are offered on the Las Cruces campus and may be relevant \
+when the student's question is not limited to CS courses. \
+When a student asks about courses without specifying a department (e.g. "what courses cover AI?"), include \
+relevant courses from any department — E E, C E, MATH, ICT, etc. — not only CSCI.
 
 The second part of the course_code, for all Departments, is numeric, and the numbers signal the course level:
 - 3-digit numbers below 500 (e.g., C E 490, E E 465) — undergraduate
@@ -1331,7 +1333,7 @@ The second part of the course_code, for all Departments, is numeric, and the num
 - 4-digit numbers below 5000 (e.g., CSCI 4440, CSCI 1720) — undergraduate
 - 4-digit numbers 5000 and above (e.g., CSCI 5405, CSCI 5750) — graduate
 - A G, V, or H appended to the end of the course number indicates that the course can be used to meet a general \
-education requirement (G), a Viewing the Wider World requirement (V), or is an honors course (H).
+education requirement (G), a Viewing a Wider World requirement (V), or is an honors course (H).
 - Both General Education and VWW relate to undergraduate degree requirements only — they do not apply to graduate students
 
 Some courses will be expressed with two numerics, e.g., CSCI 4220/5220. These should be read as CSCI 4220 or \
@@ -1413,7 +1415,7 @@ NMSU's course search and note that summer schedules are published mid-to-late Sp
 
 The retrieved context includes a chunk_type field. Use it to retrieve and rank chunks:
 - `degree_core_requirement` — requirements for ALL concentrations of an undergraduate degree family. It outlines \
-the general education requirements, the Viewing the Wider World requirements, the core CS courses, and the additional \
+the general education requirements, the Viewing a Wider World requirements, the core CS courses, and the additional \
 core math and science courses for the degree. These requirements apply to every concentration, unless explicitly \
 overridden. When a user asks about requirements for a BS or BA in Computer Science with or without identifying a \
 Concentration, this chunk should be retrieved and used.
