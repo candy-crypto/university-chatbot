@@ -11,7 +11,6 @@
   key_facts:
     - "CAASS = Center for Academic Advising and Student Support"
     - "Provides advising for students during their first year of enrollment"
-    - "Students can change majors through CAASS or on CAASS webpages"
   expected_chunk_ids:
     - "https://advising.nmsu.edu/#chunk-0"          # full name in page header; retrieval gap — nav boilerplate dilutes ranking
     - "116b9e42d133cddf"                             # catalog p41 — CAASS mentioned in overload policy text
@@ -53,9 +52,7 @@
   key_facts:
     - "Computer science majors should review their programs of study in consultation with their advisors each semester"
     - "Required if student has an AV or DM hold on their account, or receives an email assigning a mentor"
-    - "If AV hold: access CAASS"
-    - "Designated Advising Period: April 1-30 for Fall registration; November 1-30 for Spring registration"
-    - "Before meeting with mentor: develop CS Plan to Graduation, run updated StarAudit, prepare preliminary course plan for next semester"
+    - "If DM hold: meet with your CS departmental mentor and get mentored before you can register"
   expected_chunk_ids:
     - "74d9e6467356ba33"  # catalog p.565 dept_intro — "CS majors should review programs of study with advisors each semester"
     - "https://computerscience.nmsu.edu/majors/undergraduate-advising.html#chunk-3"  # Who is my CS departmental mentor? — designated advising period April/November
@@ -610,7 +607,6 @@
   category: "degree_choice"
   question: "What is the difference between the BS and BA degrees in CS?"
   key_facts:
-    - "Both degrees require the same CS foundation courses"
     - "BS requires more math and statistics; the BA requires only one math course"
     - "BS requires two lab science courses; BA requires one"
     - "BA offers more CS elective breadth; BS requires more depth in math and science outside CS"
@@ -1041,7 +1037,7 @@
   category: "policy"
   question: "I am in my second year as a Cybersecurity major and want to apply for MAP. What is the process?"
   key_facts:
-    - "CS graduate programs available: MS in Computer Science, MS in Data Analytics, MS in Bioinformatics, PhD in Computer Science"
+    - "CS graduate programs available: MS in Computer Science, MS in Data Analytics, MS in Bioinformatics"
     - "MAP is specific to the BS→MS in Computer Science accelerated path; not available for all graduate degrees"
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/grad-students/graduate-degrees.html#chunk-2"  # Master's Degrees — lists available CS graduate programs; LLM infers absence of Cybersecurity

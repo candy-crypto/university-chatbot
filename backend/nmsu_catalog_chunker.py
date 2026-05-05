@@ -830,7 +830,7 @@ def chunk_degree_section(
                         if CONC_SPEC_RE.search(norm_txt):
                             in_conc_spec = True
                             cur_type     = "concentration_requirement"
-                            cur_lines    = [degree_full_title, txt]
+                            cur_lines    = [_parent_degree_title(degree_full_title), txt]
                             cur_page     = pg
                         # else: skip — this is the repeated shared requirements table
                     elif is_concentration and in_conc_spec:

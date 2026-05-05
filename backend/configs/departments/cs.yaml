@@ -95,6 +95,7 @@ pages:
   "https://computerscience.nmsu.edu/majors/why-cs-at-nmsu.html":            general
   "https://computerscience.nmsu.edu/majors/prospective-undergraduates.html": advising
   "https://computerscience.nmsu.edu/majors/undergraduate-degrees.html":      degree_overview
+  "https://computerscience.nmsu.edu/majors/bs-in-ai.html":                   degree_requirement
   "https://computerscience.nmsu.edu/majors/undergraduate-advising.html":     advising
   "https://computerscience.nmsu.edu/majors/undergraduate-financial-aid.html": financial_aid
   "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html": course_schedule
@@ -159,6 +160,7 @@ page_levels:
   # Undergraduate-specific
   "https://computerscience.nmsu.edu/majors/prospective-undergraduates.html": undergraduate
   "https://computerscience.nmsu.edu/majors/undergraduate-degrees.html":      undergraduate
+  "https://computerscience.nmsu.edu/majors/bs-in-ai.html":                   undergraduate
   "https://computerscience.nmsu.edu/majors/undergraduate-advising.html":     undergraduate
   "https://computerscience.nmsu.edu/majors/undergraduate-financial-aid.html": undergraduate
   "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html": undergraduate
