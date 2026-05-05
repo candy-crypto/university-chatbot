@@ -885,10 +885,18 @@
   category: "faculty"
   question: "Which faculty are affiliated with the data analytics concentration?"
   key_facts:
-    - "Dr. Huiping Cao and Dr. Tuan Le are affiliated with the Data Analytics concentration"
-  expected_chunk_ids: []  # catalog chunk(s) retrieved provide a complete answer; DA web directory not surfaced in top-5
+    - "Dr. Carlo A. Mora-Monge is affiliated with the Data Analytics program"
+    - "Dr. Charlotte Gard is affiliated with the Data Analytics program"
+    - "Dr. Clint Loest is affiliated with the Data Analytics program"
+    - "Dr. Hansuk Sohn is affiliated with the Data Analytics program"
+    - "Dr. Marshall Taylor is affiliated with the Data Analytics program"
+    - "Dr. Huiping Cao is affiliated with the Data Analytics program"
+    - "Dr. Tuan Le is affiliated with the Data Analytics program"
+  expected_chunk_ids:
+    - "https://dataanalytics.nmsu.edu/facultydirectory/index.html#chunk-4"  # Huiping Cao — verify chunk number after re-ingest
+    - "https://dataanalytics.nmsu.edu/facultydirectory/index.html#chunk-6"  # Tuan Le — verify chunk number after re-ingest
   retrieval_note: "system retrieves catalog context that correctly names all affiliated faculty; DA web directory chunks (chunk-4=Cao, chunk-6=Le) not retrieved; passing on judge quality alone"
-  expected_source_type: "catalog"
+  expected_source_type: "web"
   banner_redirect_expected: false
 
 - question_id: "fac_002"
