@@ -607,9 +607,11 @@ def _build_hard_filters(query: str, tokens: set) -> "Filter | None":
             Filter.by_property("level").not_equal("nonmajor")
         )
     elif tokens.intersection(_GRADUATE_TERMS):
+        # Exclude undergraduate-only content. Do NOT exclude nonmajor — a
+        # graduate student asking about a CS minor is a non-major in CS and
+        # needs access to non-major pages (e.g. non-majors/minors.html).
         filters.append(
-            Filter.by_property("level").not_equal("undergraduate") &
-            Filter.by_property("level").not_equal("nonmajor")
+            Filter.by_property("level").not_equal("undergraduate")
         )
 
     # ── chunk_type filter ─────────────────────────────────────────────────────
