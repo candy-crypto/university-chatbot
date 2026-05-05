@@ -76,6 +76,7 @@ HALLUCINATION — No invented specifics (course numbers, names, URLs, page numbe
   1 = At least one clear hallucination.
   0 = Multiple hallucinations or a seriously misleading invented fact.
   Note: This is an inverted criterion — higher is better (no hallucinations).
+  Note: Inferring the current or upcoming semester from the student's own language (e.g. "this Fall" → "Fall 2026") is valid reasoning, not hallucination.
 
 RESPONSE_QUALITY — Direct, professional, well-organized; no filler or extraneous preamble.
   3 = Leads with the answer; concise; appropriate tone; no filler phrases.
@@ -105,8 +106,11 @@ def build_judge_prompt(
             "(https://banner-public.nmsu.edu/StudentRegistrationSsb/ssb/term/termSelection?mode=search) "
             "and should NOT attempt to answer from context. "
             "If the answer includes that URL and instructs the user to check there, "
-            "score faithfulness=3, source_preference=3, citation_quality=3, and hallucination=3 "
-            "regardless of other content."
+            "you MUST score faithfulness=3, source_preference=3, citation_quality=3, and hallucination=3. "
+            "Do NOT apply the hallucination rubric to this answer — override it entirely. "
+            "In particular, do not penalize the answer for naming the current or upcoming semester "
+            "(e.g. 'Fall 2026') when the student's question references 'this Fall' or 'this semester' — "
+            "that is valid temporal reasoning from the student's own words, not hallucination."
         )
 
     return f"""You are evaluating a university department chatbot response.
