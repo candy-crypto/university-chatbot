@@ -161,7 +161,7 @@ _GEN_ED_TERMS = frozenset({
 _FACULTY_TERMS = frozenset({
     "faculty", "professor", "instructor", "dr", "doctor",
     "who", "office", "email", "contact", "research", "teaches",
-    "advisor", "adviser",
+    "advisor", "adviser", "expertise", "specialization", "field",
 })
 # Enrollment / application terms — trigger boost for enrollment chunk_type.
 _ENROLLMENT_TERMS = frozenset({

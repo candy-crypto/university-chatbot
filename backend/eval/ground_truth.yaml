@@ -14,7 +14,6 @@
   expected_chunk_ids:
     - "https://advising.nmsu.edu/#chunk-0"          # full name in page header; retrieval gap — nav boilerplate dilutes ranking
     - "116b9e42d133cddf"                             # catalog p41 — CAASS mentioned in overload policy text
-    # TBD: catalog p447-449 — College of A&S chunk exists (40a536a6c3a1e458) but does not contain "CAASS" or "Advising"; full name not present in that chunk; chunker gap
   retrieval_note: "found: chunk-0@rank2(0.7207); not_found: 116b9e42d133cddf; top5: rank1[advising/web/1.0800] rank2[advising/web/0.7207 EXP] rank3[advising/web/0.5403] rank4[advising/web/0.5257] rank5[course_descrip/catalog/0.5169]"
   expected_source_type: "web"
   applicable_groups:
@@ -547,7 +546,7 @@
 
 # ── Degree Choice and Requirements ────────────────────────────────────────────
 
-- question_id: "n"
+- question_id: "deg_001"
   category: "degree_choice"
   question: "What is the difference between a BS in Computer Science and a BS in Cybersecurity?"
   key_facts:
@@ -709,7 +708,7 @@
     - "Must form a thesis committee within one year of passing qualifying exams"
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/grad-students/graduate-degrees.html#chunk-1"  # PhD milestones — "identify thesis advisor within one semester of passing qualifying exams"
-    # TBD: catalog p.39 not yet indexed — contains qualifying exam timing rules (12-credit and pre-semester thresholds)
+    # TBD: catalog p.39 is within the (31-55) policy block — chunk ID unknown; locate after ingest
   retrieval_note: "no expected chunks in top-K; not_found: chunk-1; top5: rank1[advising/web/0.9908] rank2[course_descrip/catalog/0.9884] rank3[course_descrip/catalog/0.9630] rank4[course_descrip/catalog/0.9031] rank5[policy/catalog/0.8856]"
   expected_source_type: "either"
   applicable_groups:
@@ -893,8 +892,13 @@
     - "Dr. Huiping Cao is affiliated with the Data Analytics program"
     - "Dr. Tuan Le is affiliated with the Data Analytics program"
   expected_chunk_ids:
-    - "https://dataanalytics.nmsu.edu/facultydirectory/index.html#chunk-4"  # Huiping Cao — verify chunk number after re-ingest
-    - "https://dataanalytics.nmsu.edu/facultydirectory/index.html#chunk-6"  # Tuan Le — verify chunk number after re-ingest
+    - "https://dataanalytics.nmsu.edu/facultydirectory/index.html#chunk-0"  # Carlo A. Mora-Monge
+    - "https://dataanalytics.nmsu.edu/facultydirectory/index.html#chunk-1"  # Charlotte Gard
+    - "https://dataanalytics.nmsu.edu/facultydirectory/index.html#chunk-2"  # Clint Loest
+    - "https://dataanalytics.nmsu.edu/facultydirectory/index.html#chunk-3"  # Hansuk Sohn
+    - "https://dataanalytics.nmsu.edu/facultydirectory/index.html#chunk-4"  # Huiping Cao
+    - "https://dataanalytics.nmsu.edu/facultydirectory/index.html#chunk-5"  # Marshall Taylor
+    - "https://dataanalytics.nmsu.edu/facultydirectory/index.html#chunk-6"  # Tuan Le
   retrieval_note: "system retrieves catalog context that correctly names all affiliated faculty; DA web directory chunks (chunk-4=Cao, chunk-6=Le) not retrieved; passing on judge quality alone"
   expected_source_type: "web"
   banner_redirect_expected: false
@@ -946,8 +950,7 @@
     - "Dr. Son Tran is the Department Head"
     - "Expertise: Knowledge Representation and Reasoning, Planning and Plan Verification, Intelligent Agents, Logic Programming, Commonsense Reasoning"
   expected_chunk_ids:
-    - "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html#chunk-26"  # Son Tran — Department Head, expertise
-    - "ff1a31a3918ec2d7"  # catalog faculty listing — also names Tran as Department Head
+    - "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html#chunk-26"  # Son Tran — Department Head, full expertise
   retrieval_note: "no expected chunks in top-K; not_found: ff1a31a3918ec2d7; top5: rank1[general/web/0.8300] rank2[grad_program_i/catalog/0.6506] rank3[general/web/0.6057] rank4[general/web/0.5297] rank5[general/web/0.4293]"
   expected_source_type: "web"
   banner_redirect_expected: false
