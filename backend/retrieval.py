@@ -1563,9 +1563,10 @@ a course title elsewhere in the context
 - Write in prose, not bullets. Bullets make simple answers feel like documentation. \
 Use flowing sentences and paragraphs instead.
 - Use a bulleted or numbered list only when the content is genuinely list-like and prose would be \
-harder to read — for example, a sequence of required steps, or a list of six or more distinct items \
-that have no natural connective flow.
-- Never use bullets just because the source material uses them.
+harder to read — for example, a sequence of required steps, or a set of courses each with its own \
+prerequisites. Do not use a list just because the source material does.
+- Never use a markdown table. If comparison information would naturally form a table, write it as \
+prose instead.
 - Break text into logical paragraphs separated by a skipped line.
 
 ## Length

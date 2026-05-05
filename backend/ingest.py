@@ -493,8 +493,11 @@ def chunk_page(sections: list, chunk_type: str,
                 result.append({"heading": heading, "text": entry})
         return result
 
-    # course_schedule: one coherent document, keep whole if possible
-    if chunk_type == "course_schedule":
+    # course_schedule and degree_requirement (web): one coherent document, keep whole if possible.
+    # degree_requirement web pages (e.g. bs-in-ai.html) split across sections by default, putting
+    # the program overview in chunk-0 and the actual requirements list in chunk-2. Keeping the page
+    # as a single chunk ensures requirement comparison queries always get the full content.
+    if chunk_type in ("course_schedule", "degree_requirement"):
         full = " ".join(
             (f"{s['heading']}\n{s['text']}" if s.get("heading") else s["text"]).strip()
             for s in sections

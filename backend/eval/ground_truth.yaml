@@ -104,7 +104,6 @@
     - "Next offering: Fall 2026"
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-1"  # rotation table showing FA-only pattern
-    - "b6698dedb6cd09ea"  # CSCI 4120 course description — confirms course identity
   retrieval_note: "found: chunk-1@rank1(1.0906), b6698dedb6cd09ea@rank2(0.9692); top5: rank1[course_schedul/web/1.0906 EXP] rank2[course_descrip/catalog/0.9692 EXP] rank3[course_descrip/catalog/0.6951] rank4[course_descrip/catalog/0.6890] rank5[course_descrip/catalog/0.6614]"
   expected_source_type: "web"
   banner_redirect_expected: false
@@ -117,7 +116,6 @@
     - "Next offering: Fall 2027"
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-1"  # rotation table — authoritative source for next offering
-    - "ae3b5c5184016f32"  # CSCI 3790 course description — confirms course identity
   retrieval_note: "found: ae3b5c5184016f32@rank1(1.0550), chunk-1@rank3(0.7353); top5: rank1[course_descrip/catalog/1.0550 EXP] rank2[course_descrip/catalog/0.7531] rank3[course_schedul/web/0.7353 EXP] rank4[course_descrip/catalog/0.7036] rank5[course_descrip/catalog/0.6484]"
   expected_source_type: "web"
   banner_redirect_expected: false
@@ -127,6 +125,7 @@
   category: "course_availability"
   question: "Is the Operating Systems course offered every semester?"
   key_facts:
+    - "No, there is no course about Operating Systems that is offered every semester"
     - "CSCI 4120 Operating Systems will next be offered in Fall 2026"
     - "CSCI 5605 Operating Systems II will next be offered in Spring 2027"
   expected_chunk_ids:
@@ -285,8 +284,8 @@
     - "Cybersecurity centers on security-oriented computing topics"
     - "Human Computer Interaction focuses on how people interact with computing systems."
   expected_chunk_ids:
-    - "d77f0feecfc6884d"   # HCI concentration_requirement — rank 1
-    - "482e154e99b5dc92"   # Cybersecurity concentration_requirement — rank 2
+    - "e5fb437360229239"   # CS BS HCI degree_requirement — rank 1
+    - "4369bf2777274040"   # CS BS Cybersecurity degree_requirement — rank 2
   retrieval_note: "no expected chunks in top-K; not_found: d77f0feecfc6884d, 482e154e99b5dc92; top5: rank1[degree_overvie/web/0.9753] rank2[degree_require/catalog/0.9163] rank3[degree_core_re/catalog/0.8833] rank4[degree_require/catalog/0.7886] rank5[degree_overvie/web/0.7712]"
   expected_source_type: "catalog"
   banner_redirect_expected: false
@@ -318,7 +317,6 @@
     - "Biology courses may be used to fulfill the 11-credit Lab Sciences and Social/Behavioral Sciences requirement"
   expected_chunk_ids:
     - "16d9f6f83799bfca"   # CS BS degree_requirement — rank 1
-    - "6fb64bffef3e6e90"   # CS BS degree_core_requirement — rank 3
   retrieval_note: "found: 16d9f6f83799bfca@rank1(1.3121), 6fb64bffef3e6e90@rank2(1.2506), 118ed2b476025933@rank5(0.7963); top5: rank1[degree_require/catalog/1.3121 EXP] rank2[degree_core_re/catalog/1.2506 EXP] rank3[degree_require/catalog/1.1607] rank4[degree_overvie/web/0.8893] rank5[study_plan/catalog/0.7963 EXP]"
   expected_source_type: "catalog"
   applicable_groups:
@@ -332,8 +330,7 @@
   key_facts:
     - "CS majors may satisfy the statistics requirement with any of: A ST 311 Statistical Applications, STAT 3110 Statistics for Engineers and Scientists, or STAT 4210 Probability: Theory and Applications"
   expected_chunk_ids:
-    - "6fb64bffef3e6e90"   # CS BS degree_core_requirement — authoritative source for shared requirements
-    - "16d9f6f83799bfca"   # CS BS degree_requirement — also contains statistics course options; retrieved at rank 1 in 2026-04-25 eval with judge=0.94
+    - "16d9f6f83799bfca"   # CS BS degree_requirement — contains statistics course options; retrieved at rank 1 in 2026-04-25 eval with judge=0.94
   retrieval_note: "found: 16d9f6f83799bfca@rank1(1.2186); not_found: 6fb64bffef3e6e90; top5: rank1[degree_require/catalog/1.2186 EXP] rank2[study_plan/catalog/1.1450] rank3[study_plan/catalog/1.1423] rank4[study_plan/catalog/0.9088] rank5[study_plan/catalog/0.8968]"
   expected_source_type: "catalog"
   applicable_groups:
@@ -551,7 +548,6 @@
     - "BS CS is ABET-accredited (Computing Accreditation Commission); BS Cybersecurity does not mention ABET accreditation"
   expected_chunk_ids:
     - "16d9f6f83799bfca"   # CS BS degree_requirement — missing from top 5
-    - "6fb64bffef3e6e90"   # CS BS degree_core_requirement — missing from top 5
     - "14f0a41f77e90fb4"   # Cybersecurity BS degree_requirement — missing from top 5
   retrieval_note: "found: 16d9f6f83799bfca@rank2(0.9315), 6fb64bffef3e6e90@rank3(0.8938), 14f0a41f77e90fb4@rank7(0.6891); top5: rank1[degree_overvie/web/0.9817] rank2[degree_require/catalog/0.9315 EXP] rank3[degree_core_re/catalog/0.8938 EXP] rank4[degree_overvie/web/0.8581] rank5[degree_require/catalog/0.8139]"
   expected_source_type: "catalog"
@@ -566,10 +562,7 @@
   key_facts:
     - "BS in Computer Science is the traditional broad degree; ABET-accredited; recommended for single-major CS students and those planning graduate study"
     - "BS in Cybersecurity prepares students for professional security work with a tighter, more directed curriculum"
-    - "CS students can add a Cybersecurity concentration without switching degrees"
-    - "Students planning employment at the bachelor level are advised to add a concentration"
   expected_chunk_ids:
-    - "https://computerscience.nmsu.edu/majors/undergraduate-degrees.html#chunk-1"  # BS vs BA comparison — primary source for this answer
     - "14f0a41f77e90fb4"   # Cybersecurity BS degree_requirement — catalog detail
     - "16d9f6f83799bfca"   # CS BS degree_requirement — catalog detail
   retrieval_note: "found: 16d9f6f83799bfca@rank5(0.7350); not_found: 14f0a41f77e90fb4; top5: rank1[concentration_/catalog/1.1232] rank2[degree_overvie/web/0.8718] rank3[concentration_/catalog/0.7646] rank4[degree_overvie/web/0.7359] rank5[degree_require/catalog/0.7350 EXP]"
@@ -587,7 +580,6 @@
   expected_chunk_ids:
     - "16d9f6f83799bfca"   # CS BS degree_requirement — confirmed rank 1 (final_score 0.9724)
     - "202f3d183e743b5d"   # CS BA degree_requirement — confirmed rank 2 (final_score 0.9367)
-    - "6fb64bffef3e6e90"   # CS BS degree_core_requirement — confirmed rank 3 (final_score 0.9319)
     - "https://computerscience.nmsu.edu/majors/undergraduate-degrees.html#chunk-1"  # web "How to Select Between BS and BA" — dropped from Weaviate rank 1 to final rank 4 (0.8754) after degree_requirement boosts; still useful context
   retrieval_note: "found: 3fd443758d042e53@rank1(1.0044), 202f3d183e743b5d@rank2(0.9722), 16d9f6f83799bfca@rank3(0.9016), chunk-1@rank5(0.8798); not_found: 6fb64bffef3e6e90; top5: rank1[second_languag/catalog/1.0044 EXP] rank2[degree_require/catalog/0.9722 EXP] rank3[degree_require/catalog/0.9016 EXP] rank4[degree_require/catalog/0.8915] rank5[degree_overvie/web/0.8798 EXP]"
   expected_source_type: "catalog"
@@ -607,7 +599,6 @@
   expected_chunk_ids:
     - "16d9f6f83799bfca"   # CS BS degree_requirement — missing from top 5
     - "202f3d183e743b5d"   # CS BA degree_requirement — missing from top 5
-    - "6fb64bffef3e6e90"   # CS BS degree_core_requirement — missing from top 5
   retrieval_note: "found: 202f3d183e743b5d@rank1(1.0562), chunk-1@rank2(1.0264), 16d9f6f83799bfca@rank4(0.9470), 6fb64bffef3e6e90@rank5(0.9157); top5: rank1[degree_require/catalog/1.0562 EXP] rank2[degree_overvie/web/1.0264 EXP] rank3[degree_require/catalog/1.0070] rank4[degree_require/catalog/0.9470 EXP] rank5[degree_core_re/catalog/0.9157 EXP]"
   expected_source_type: "catalog"
   applicable_groups:
@@ -628,8 +619,7 @@
     - "8be931ca2fd6489a"   # "Course Load for Undergraduate Students" — confirmed final rank 5 (0.5983); most directly answers the question; lowest score due to no boost triggers firing
     - "fc4d628e13bcb208"   # "Course Load for Graduate Students" — confirmed final rank 3 (0.8089)
     - "3e04f7a6977ac11f"   # glossary "Full-time" definition — confirmed final rank 1 (0.83)
-    - "80a28b47eeacb905"   # Cybersecurity study_plan — confirmed final rank 2 (0.8245); spurious match but shows per-semester credit layout; 0.28 boost unusually high — investigate
-  retrieval_note: "found: fc4d628e13bcb208@rank1(0.7841), 3e04f7a6977ac11f@rank2(0.7700), 8be931ca2fd6489a@rank4(0.5975), 80a28b47eeacb905@rank5(0.3178); top5: rank1[policy/catalog/0.7841 EXP] rank2[glossary/catalog/0.7700 EXP] rank3[policy/catalog/0.7631] rank4[policy/catalog/0.5975 EXP] rank5[study_plan/catalog/0.3178 EXP]"
+  retrieval_note: "found: fc4d628e13bcb208@rank1(0.7841), 3e04f7a6977ac11f@rank2(0.7700), 8be931ca2fd6489a@rank4(0.5975), 688c3775f528d9d8@rank5(0.3178); top5: rank1[policy/catalog/0.7841 EXP] rank2[glossary/catalog/0.7700 EXP] rank3[policy/catalog/0.7631] rank4[policy/catalog/0.5975 EXP] rank5[study_plan/catalog/0.3178 EXP]"
   expected_source_type: "catalog"
   applicable_groups:
     - "current_undergrad"
@@ -764,6 +754,24 @@
     - "prospective_undergrad"
     - "transfer_student"
     - "prospective_ms"
+  banner_redirect_expected: false
+
+- question_id: "deg_013"
+  category: "degree_requirements"
+  question: "How do the requirements for the BS in Artificial Intelligence differ from the requirements for the BS in Computer Science Artificial Intelligence concentration?"
+  key_facts:
+    - "BS in AI is a standalone degree distinct from the BS in Computer Science; it is rigorously focused on AI disciplines"
+    - "BS in CS AI concentration is one of seven optional tracks within the BS in Computer Science"
+    - "BS in AI requires CSCI 1720, 2210, 2220, 2310, 2410 as departmental core — same as CS BS core"
+    - "Verify additional distinctions from the actual requirement chunks after eval run"
+  expected_chunk_ids:
+    - "https://computerscience.nmsu.edu/majors/bs-in-ai.html#chunk-0"  # BS in AI — single combined chunk (overview + outcomes + requirements)
+    - "15411577b67af7cd"   # CS BS AI concentration degree_requirement — catalog
+  retrieval_note: "TBD after eval run"
+  expected_source_type: "either"
+  applicable_groups:
+    - "prospective_undergrad"
+    - "current_undergrad"
   banner_redirect_expected: false
 
 # ── Financial Aid ─────────────────────────────────────────────────────────────
@@ -1184,7 +1192,7 @@
     - "Suggested first semester (assumes Calculus I placement): ENGL 1110G Composition I, MATH 1511G Calculus I or MATH 1430G Applications of Calculus I, Area IV Social/Behavioral Sciences course, CSCI 1115G Modern Computing in Practice; 14-15 credits total"
     - "Course order may vary depending on math and English placement"
   expected_chunk_ids:
-    - "80a28b47eeacb905"  # Cybersecurity - Bachelor of Science [study_plan] p.607
+    - "688c3775f528d9d8"  # Cybersecurity - Bachelor of Science [study_plan] p.607
   retrieval_note: "no expected chunks in top-K; not_found: 80a28b47eeacb905; top5: rank1[concentration_/catalog/1.2025] rank2[course_descrip/catalog/1.0763] rank3[course_descrip/catalog/0.9399] rank4[course_descrip/catalog/0.9205] rank5[course_descrip/catalog/0.8343]"
   expected_source_type: "catalog"
   applicable_groups:
@@ -1201,12 +1209,12 @@
     - "CSCI 1720 math prerequisite: C- in MATH 1250G or MATH 1430G+; or C- in MATH 1220G with CS Placement Test score 1+; or C- in MATH 1220G and C- in CSCI 1110"
     - "Students not yet math-ready may start with CSCI 1110 (prereq for 1720 alternate path) or CSCI 1115G"
   expected_chunk_ids:
-    - "118ed2b476025933"  # core BS CS study plan — first-year course sequence
+    - "32c5d21372789fa4"  # CS BS general study_plan — first-year course sequence
     - "three-year-course-rotation.html#chunk-1"  # Spring availability of entry-level courses
     - "07590040f97b54a3"  # CSCI 1720 course description with prerequisites
     - "e2dc5f632fd25e2c"  # CSCI 2210 — prereq: C- in CSCI 1720
     - "d8931194a4ebc356"  # CSCI 2230 — prereq: C- in CSCI 1720
-  retrieval_note: "found: 118ed2b476025933@rank4(1.1132); top5: rank1[degree_require/catalog/1.3043] rank2[study_plan/catalog/1.2826] rank3[study_plan/catalog/1.2416] rank4[study_plan/catalog/1.1132 EXP] rank5[study_plan/catalog/1.0572]"
+  retrieval_note: "found: 32c5d21372789fa4@rank4(1.1132); top5: rank1[degree_require/catalog/1.3043] rank2[study_plan/catalog/1.2826] rank3[study_plan/catalog/1.2416] rank4[study_plan/catalog/1.1132 EXP] rank5[study_plan/catalog/1.0572]"
   expected_source_type: "catalog"
   applicable_groups:
     - "prospective_undergrad"
@@ -1239,8 +1247,8 @@
     - "LLM should note the limitation, then offer to compare the concentration requirements as a proxy for what skills/focus each program develops"
     - "Note: 'AI' in query = Artificial Intelligence concentration within BS CS; fixed via acronym expansion"
   expected_chunk_ids:
-    - "482e154e99b5dc92"  # CS Cybersecurity concentration requirements
-    - "2a0530dddd6f6cec"  # Computer Science (Artificial Intelligence) - Bachelor of Science — concentration requirements
+    - "4369bf2777274040"  # CS BS Cybersecurity degree_requirement
+    - "15411577b67af7cd"  # CS BS AI (Artificial Intelligence) degree_requirement
   retrieval_note: "no expected chunks in top-K; not_found: 482e154e99b5dc92, 2a0530dddd6f6cec; top5: rank1[degree_overvie/web/1.0375] rank2[degree_overvie/web/0.8606] rank3[degree_require/catalog/0.8239] rank4[degree_core_re/catalog/0.8094] rank5[degree_require/catalog/0.7061]"
   expected_source_type: "catalog"
   applicable_groups:
