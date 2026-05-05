@@ -670,6 +670,19 @@ def _build_hard_filters(query: str, tokens: set) -> "Filter | None":
         # my VWW requirements?"), do NOT restrict — the policy chunk must be
         # reachable even though "courses" and a topic verb are in the query.
         filters.append(Filter.by_property("chunk_type").equal("course_description"))
+    elif (tokens.intersection(_FACULTY_TERMS)
+          and not tokens.intersection({"degree", "major", "program", "bachelor",
+                                       "master", "phd", "requirement", "requirements"})):
+        # Faculty queries with no degree vocabulary: exclude degree_requirement
+        # and concentration_requirement chunks. These program-description chunks
+        # can outscore faculty chunks on BM25 when they contain phrases like
+        # "Affiliated Faculty" in their text, producing incomplete answers that
+        # omit faculty listed only on the web directory.
+        filters.append(
+            Filter.by_property("chunk_type").contains_none([
+                "degree_requirement", "concentration_requirement",
+            ])
+        )
 
     if not filters:
         return None
