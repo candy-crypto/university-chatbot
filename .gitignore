@@ -28,4 +28,5 @@ Data/
 
 # Eval run outputs — generated, not source
 backend/eval/results/
+backend/eval/department_chunk_export.json
 

@@ -589,7 +589,6 @@
     - "202f3d183e743b5d"   # CS BA degree_requirement — confirmed rank 2 (final_score 0.9367)
     - "6fb64bffef3e6e90"   # CS BS degree_core_requirement — confirmed rank 3 (final_score 0.9319)
     - "https://computerscience.nmsu.edu/majors/undergraduate-degrees.html#chunk-1"  # web "How to Select Between BS and BA" — dropped from Weaviate rank 1 to final rank 4 (0.8754) after degree_requirement boosts; still useful context
-    - "3fd443758d042e53"   # CS BA second_language — confirmed rank 5 (0.8319)
   retrieval_note: "found: 3fd443758d042e53@rank1(1.0044), 202f3d183e743b5d@rank2(0.9722), 16d9f6f83799bfca@rank3(0.9016), chunk-1@rank5(0.8798); not_found: 6fb64bffef3e6e90; top5: rank1[second_languag/catalog/1.0044 EXP] rank2[degree_require/catalog/0.9722 EXP] rank3[degree_require/catalog/0.9016 EXP] rank4[degree_require/catalog/0.8915] rank5[degree_overvie/web/0.8798 EXP]"
   expected_source_type: "catalog"
   applicable_groups:
@@ -609,7 +608,6 @@
     - "16d9f6f83799bfca"   # CS BS degree_requirement — missing from top 5
     - "202f3d183e743b5d"   # CS BA degree_requirement — missing from top 5
     - "6fb64bffef3e6e90"   # CS BS degree_core_requirement — missing from top 5
-    - "https://computerscience.nmsu.edu/majors/undergraduate-degrees.html#chunk-1"  # web "How to Select Between BS and BA" — confirmed rank 1 (0.9602); good advisory context
   retrieval_note: "found: 202f3d183e743b5d@rank1(1.0562), chunk-1@rank2(1.0264), 16d9f6f83799bfca@rank4(0.9470), 6fb64bffef3e6e90@rank5(0.9157); top5: rank1[degree_require/catalog/1.0562 EXP] rank2[degree_overvie/web/1.0264 EXP] rank3[degree_require/catalog/1.0070] rank4[degree_require/catalog/0.9470 EXP] rank5[degree_core_re/catalog/0.9157 EXP]"
   expected_source_type: "catalog"
   applicable_groups:
@@ -905,7 +903,9 @@
     - "Dr. Enrico Pontelli focuses on logic programming (full expertise: Knowledge Representation and Reasoning, Parallel Processing, Programming Languages, Constraint Programming, Logic Programming, Assistive Technologies, Bioinformatics, Multi-Agent Systems)"
     - "Dr. Son Tran focuses on logic programming (full expertise: Knowledge Representation and Reasoning, Planning and Plan Verification, Intelligent Agents, Logic Programming, Commonsense Reasoning)"
     - "Dr. Inna Pivkina focuses on logic programming (full expertise: Computer Science Education, Knowledge Representation and Reasoning, Logic Programming, Data Mining Applications)"
-    - "Pivkina email: inna@nmsu.edu; Pontelli email: epontell@nmsu.edu; Tran email: stran@nmsu.edu"
+    - "Pivkina email: inna@nmsu.edu"
+    - "Pontelli email: epontell@nmsu.edu" 
+    - "Tran email: stran@nmsu.edu"
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html#chunk-21"  # Inna Pivkina (inna@nmsu.edu SH 172)
     - "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html#chunk-22"  # Enrico Pontelli (epontell@nmsu.edu) — now own chunk after per-person ingest

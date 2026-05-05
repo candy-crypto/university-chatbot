@@ -842,6 +842,34 @@ def build_context(chunks: List[Dict[str, Any]]) -> str:
     return "\n---\n".join(parts)
 
 
+def _build_course_reference(chunks: List[Dict[str, Any]]) -> str:
+    """Scan retrieved chunk texts for course codes and resolve them to titles.
+
+    Returns a formatted reference block to prepend to the prompt context,
+    so the LLM can always name a prerequisite or cross-listed course correctly
+    even when that course's own description chunk was not retrieved.
+    """
+    seen_codes: set[str] = set()
+    for chunk in chunks:
+        text = chunk.get("text", "")
+        for code in _COURSE_CODE_RE.findall(text.upper()):
+            seen_codes.add(code)
+
+    if not seen_codes:
+        return ""
+
+    entries = []
+    for code in sorted(seen_codes):
+        course = lookup_course_by_code(code)
+        if course:
+            entries.append(f"- {course['course_code']} — {course['course_title']}")
+
+    if not entries:
+        return ""
+
+    return "## Course Code Reference\n" + "\n".join(entries) + "\n"
+
+
 # ── Availability redirect pre-retrieval shortcut ─────────────────────────────
 
 _BANNER_URL = (
@@ -1222,6 +1250,10 @@ def generate_grounded_answer(question: str, department_id: str) -> Dict[str, Any
     chunks = search_chunks(question, normalized_department_id)
     context = build_context(chunks)
 
+    course_ref = _build_course_reference(chunks)
+    if course_ref:
+        context = course_ref + "\n---\n" + context
+
     _today = date.today()
     _cur_sem, _cur_year = _semester_for_date(_today)
     system_prompt = f"""
@@ -1554,7 +1586,10 @@ in the body of the answer where you give the instruction — do not relegate it 
 - Lead with the answer — put the most useful information first
 - Use plain language; avoid jargon where possible
 - When mentioning a course, always give both the course code and the full title \
-(e.g., "CSCI 4120 Operating Systems I"), not the code alone
+(e.g., "CSCI 4120 Operating Systems I"), not the code alone. \
+Course titles for prerequisite and co-requisite codes are available in the "Course Code Reference" \
+section at the top of the retrieved context — use it to resolve any code that does not appear as \
+a course title elsewhere in the context
 - Do NOT use these phrases: "Great question!", "Certainly!", "Of course!", "I'd be happy to help", \
 "As an AI", "I'm here to help", "Absolutely!"
 - Do not begin your response with a compliment on the question or a promise to assist — just answer
