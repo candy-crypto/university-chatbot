@@ -846,9 +846,12 @@ _BANNER_URL = (
     "termSelection?mode=search"
 )
 
-_AVAILABILITY_SIGNALS = {
-    "offered", "offering", "available", "availability",
+# Seat/registration signals: only these warrant a Banner redirect.
+# "offered", "offering", "available", "availability" are course-OFFERING words —
+# those questions should be answered from the three-year rotation table, not Banner.
+_SEAT_SIGNALS = {
     "open", "seats", "sections", "register", "registration", "enroll", "enrollment",
+    "still get in", "still register", "get a seat", "get into",
 }
 _SEMESTER_SIGNALS = {
     "this fall", "this spring", "this summer", "next fall", "next spring",
@@ -865,17 +868,19 @@ _REQUIREMENT_SIGNALS = {
 
 
 def _is_availability_question(query: str) -> bool:
-    """Return True if the query is about current-semester course availability
-    or open seats — something only Banner can answer in real time.
+    """Return True if the query is about open seats or registration — something
+    only Banner can answer in real time.
 
-    Does NOT fire for requirement questions (e.g. "which gen ed courses are offered
+    Does NOT fire for course-offering questions ("is CSCI 4120 offered next fall?")
+    because those are answered from the three-year rotation table.
+    Does NOT fire for requirement questions ("which gen ed courses are offered
     this fall?") because those need retrieval to identify the courses first.
     """
     q = query.lower()
-    has_availability = bool(set(re.findall(r"[a-z]+", q)).intersection(_AVAILABILITY_SIGNALS))
+    has_seat_signal = bool(set(re.findall(r"[a-z]+", q)).intersection(_SEAT_SIGNALS))
     has_semester = any(sig in q for sig in _SEMESTER_SIGNALS)
     has_requirement = any(sig in q for sig in _REQUIREMENT_SIGNALS)
-    return has_availability and has_semester and not has_requirement
+    return has_seat_signal and has_semester and not has_requirement
 
 
 _AVAILABILITY_ANSWER = (

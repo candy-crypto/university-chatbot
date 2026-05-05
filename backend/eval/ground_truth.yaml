@@ -79,12 +79,11 @@
   key_facts:
     - "Three-year course rotation available at three-year-course-rotation.html lists anticipated offerings"
     - "Fall 2027 anticipated CSCI courses include: 1110, 1115G, 1720/4540, 2210/4545, 2220/4550, 2230/4555, 2310/4560, 2410, 3410, 3710/4575, 3720/5110, 3730/4580, 3790/4590, 4120, 4130, 4140/5140, 4215/5215, 4225/5225, 4240/5240, 4250/5250, 4255/5255, 4310/5310, 4415/5415"
-    - "Verify actual availability and open sections via NMSU's course search once registration opens"
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-1"  # course rotation table — anticipated offerings by semester
   expected_source_type: "web"
-  banner_redirect_expected: true
-  notes: "Partial answer from course rotation page; course search redirect required to confirm seats and schedule"
+  banner_redirect_expected: false
+  notes: "Course offerings (which courses run) → rotation table. Banner redirect applies only to seat/registration availability, not offering schedule."
 
 - question_id: "avail_003"
   category: "course_availability"
