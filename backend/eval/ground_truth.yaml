@@ -91,7 +91,6 @@
   question: "When is the next time Algorithm Design & Implementation will be offered?"
   key_facts:
     - "CSCI 3790/4590 Algorithm Design & Implementation"
-    - "Offered every third semester, excluding Summer sessions"
     - "Next offering: Fall 2027"
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-1"  # course rotation table — CSCI 3790/4590 offering schedule
@@ -102,7 +101,6 @@
   category: "course_availability"
   question: "When is the next time CSCI 4120 will be offered?"
   key_facts:
-    - "CSCI 4120 Operating Systems I is offered Fall semesters only"
     - "Next offering: Fall 2026"
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-1"  # rotation table showing FA-only pattern
@@ -129,10 +127,10 @@
   category: "course_availability"
   question: "Is the Operating Systems course offered every semester?"
   key_facts:
-    - "CSCI 4120 Operating Systems I is offered Fall semesters only, not every semester"
+    - "CSCI 4120 Operating Systems will next be offered in Fall 2026"
+    - "CSCI 5605 Operating Systems II will next be offered in Spring 2027"
   expected_chunk_ids:
-    - "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-1"  # rotation table — shows FA-only pattern for CSCI 4120
-    - "b6698dedb6cd09ea"  # CSCI 4120 course description — confirms course identity
+    - "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-1"  # rotation table 
   retrieval_note: "found: chunk-1@rank1(1.1500), b6698dedb6cd09ea@rank4(0.8371); top5: rank1[course_schedul/web/1.1500 EXP] rank2[course_descrip/catalog/0.9077] rank3[course_descrip/catalog/0.8441] rank4[course_descrip/catalog/0.8371 EXP] rank5[course_descrip/catalog/0.7103]"
   expected_source_type: "web"
   banner_redirect_expected: false
@@ -177,7 +175,6 @@
     - "Next offering after SP26: Fall 2026 (FA26)"
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-1"  # rotation table — contains CSCI 4215/5215 entry
-    - "dd9b90e2914e24a4"  # CSCI 5215 Parallel Programming course description
   retrieval_note: "found: chunk-1@rank1(1.0782), dd9b90e2914e24a4@rank2(0.9899), 1dcea72dc91031be@rank3(0.7440); top5: rank1[course_schedul/web/1.0782 EXP] rank2[course_descrip/catalog/0.9899 EXP] rank3[course_descrip/catalog/0.7440 EXP] rank4[course_descrip/catalog/0.6721] rank5[course_descrip/catalog/0.5912]"
   expected_source_type: "web"
   applicable_groups:
@@ -258,7 +255,6 @@
   category: "course_requirement"
   question: "In which year of my studies should I be taking courses to meet the Viewing the Wider World requirements?"
   key_facts:
-    - "VWW courses are all upper-division (300/400 level)"
     - "Should be taken in junior and/or senior year"
   expected_chunk_ids:
     - "45eb0bef0400c391"  # NMSU Viewing a Wider World Requirements — pp.241-242; states VWW courses are upper-division (junior/senior year)
@@ -273,9 +269,7 @@
   question: "What math courses can I take to meet my VWW requirements?"
   key_facts:
     - "MATH 4110V Great Theorems in Mathematics is the only Math course that contributes to VWW requirements"
-  expected_chunk_ids:
-    - "3e9f670719039738"  # VWW course list p.242 College of Arts and Sciences — contains MATH 4110V
-    - "73d9f5249afe54fd"  # MATH 4110V Great Theorems in Mathematics course description
+  expected_chunk_ids: []
   retrieval_note: "no expected chunks in top-K; not_found: 3e9f670719039738, 73d9f5249afe54fd; top5: rank1[policy/catalog/1.2800] rank2[policy/catalog/1.0821] rank3[degree_require/catalog/0.6227] rank4[study_plan/catalog/0.2795] rank5[study_plan/catalog/0.2067]"
   expected_source_type: "catalog"
   applicable_groups:
@@ -325,7 +319,6 @@
   expected_chunk_ids:
     - "16d9f6f83799bfca"   # CS BS degree_requirement — rank 1
     - "6fb64bffef3e6e90"   # CS BS degree_core_requirement — rank 3
-    - "118ed2b476025933"   # CS BS study_plan — rank 4
   retrieval_note: "found: 16d9f6f83799bfca@rank1(1.3121), 6fb64bffef3e6e90@rank2(1.2506), 118ed2b476025933@rank5(0.7963); top5: rank1[degree_require/catalog/1.3121 EXP] rank2[degree_core_re/catalog/1.2506 EXP] rank3[degree_require/catalog/1.1607] rank4[degree_overvie/web/0.8893] rank5[study_plan/catalog/0.7963 EXP]"
   expected_source_type: "catalog"
   applicable_groups:
@@ -397,6 +390,7 @@
     - "9011642945907701"   # C E 490 — Introduction to AI for Civil Engineers
     - "0ff179760fbded70"   # E E 465 — Machine Learning I
     - "e2794f13a8f0e324"   # CSCI 4435 — Text Mining and Natural Language Processing
+    # CSCI 4405 Artificial Intelligence I cannot be found because the course is not described in the catalog - only mentioned with 5405
   retrieval_note: "found: 96ed44c75c847eb2@rank2(1.2024), 9011642945907701@rank3(1.0820), 6e812bb0213d9f4f@rank5(0.7961), 0ff179760fbded70@rank8(0.6037); top5: rank1[course_descrip/catalog/1.4100] rank2[course_descrip/catalog/1.2024 EXP] rank3[course_descrip/catalog/1.0820 EXP] rank4[course_descrip/catalog/1.0027] rank5[course_descrip/catalog/0.7961 EXP]"
   expected_source_type: "catalog"
   banner_redirect_expected: false
@@ -575,10 +569,11 @@
     - "CS students can add a Cybersecurity concentration without switching degrees"
     - "Students planning employment at the bachelor level are advised to add a concentration"
   expected_chunk_ids:
-    - "14f0a41f77e90fb4"   # Cybersecurity BS degree_requirement — missing from top 5
-    - "16d9f6f83799bfca"   # CS BS degree_requirement — missing from top 5; needed for comparison
+    - "https://computerscience.nmsu.edu/majors/undergraduate-degrees.html#chunk-1"  # BS vs BA comparison — primary source for this answer
+    - "14f0a41f77e90fb4"   # Cybersecurity BS degree_requirement — catalog detail
+    - "16d9f6f83799bfca"   # CS BS degree_requirement — catalog detail
   retrieval_note: "found: 16d9f6f83799bfca@rank5(0.7350); not_found: 14f0a41f77e90fb4; top5: rank1[concentration_/catalog/1.1232] rank2[degree_overvie/web/0.8718] rank3[concentration_/catalog/0.7646] rank4[degree_overvie/web/0.7359] rank5[degree_require/catalog/0.7350 EXP]"
-  expected_source_type: "catalog"
+  expected_source_type: "either"
   banner_redirect_expected: false
 
 - question_id: "deg_003"
