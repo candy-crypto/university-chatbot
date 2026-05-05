@@ -64,7 +64,7 @@ SOURCE_PREFERENCE — The answer draws from the correct source type for the ques
 
 CITATION_QUALITY — Citations are present, correctly formatted, and accurate.
   Catalog chunks → cite catalog year and page range (e.g., "NMSU Academic Catalog 2025-2026, pp. 584-585").
-  Web chunks → cite source URL.
+  Web chunks → cite source URL. A bare URL is the correct and complete citation format for web sources; do not penalize for lack of a title or label alongside the URL.
   3 = All citations correct and complete.
   2 = Citations present but minor formatting issues.
   1 = Citations missing for some sources or noticeably inaccurate.
