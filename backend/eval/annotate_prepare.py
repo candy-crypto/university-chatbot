@@ -2,12 +2,8 @@
 ====================
 Prepare a human-review CSV from the most recent eval run.
 
-Samples questions stratified by judge outcome:
-  - All failures  (passed=False)
-  - All borderline passes  (passed=True, judge_total < BORDERLINE_THRESHOLD)
-  - Up to N clear passes   (passed=True, judge_total >= BORDERLINE_THRESHOLD)
-
-Excludes questions marked unanswerable (listed in EXCLUDE_IDS).
+Includes every question in the eval set (sorted by category then question_id),
+excluding questions marked unanswerable (listed in EXCLUDE_IDS).
 
 Merges eval_scores and eval_answers, adds blank human_pass / human_notes
 columns, and writes backend/eval/results/human_review_{run_id}.csv.
@@ -16,19 +12,17 @@ Usage:
     cd backend
     python eval/annotate_prepare.py                        # uses latest run
     python eval/annotate_prepare.py --run 20260426_034716  # specific run
-    python eval/annotate_prepare.py --clear-passes 10      # cap on clear passes
 """
 
 import argparse
 import csv
-import re
 import sys
 from pathlib import Path
 
 RESULTS_DIR = Path(__file__).parent / "results"
 
 # Questions excluded from human annotation (known unanswerable from sources)
-EXCLUDE_IDS = {"fac_003", "adv_002", "adv_003"}
+EXCLUDE_IDS = set()
 
 # judge_total below this (but still passing) = borderline
 BORDERLINE_THRESHOLD = 0.85
@@ -51,8 +45,6 @@ def load_csv(path: Path) -> list[dict]:
 def main():
     parser = argparse.ArgumentParser(description="Prepare human annotation review sheet.")
     parser.add_argument("--run", metavar="RUN_ID", help="Specific run ID to use.")
-    parser.add_argument("--clear-passes", type=int, default=10,
-                        metavar="N", help="Max number of clear passes to include (default 10).")
     args = parser.parse_args()
 
     run_id = args.run or latest_run_id()
@@ -67,31 +59,21 @@ def main():
     scores  = {r["question_id"]: r for r in load_csv(scores_path)}
     answers = {r["question_id"]: r for r in load_csv(answers_path)}
 
-    failures   = []
-    borderline = []
-    clear      = []
+    sample = sorted(
+        [qid for qid in scores if qid not in EXCLUDE_IDS],
+        key=lambda q: (scores[q].get("category", ""), q),
+    )
 
-    for qid, s in scores.items():
-        if qid in EXCLUDE_IDS:
-            continue
-        passed = s["passed"].strip().lower() == "true"
-        total  = float(s.get("judge_total", 0))
+    failures   = sum(1 for q in sample if scores[q]["passed"].strip().lower() != "true")
+    borderline = sum(1 for q in sample
+                     if scores[q]["passed"].strip().lower() == "true"
+                     and float(scores[q].get("judge_total", 0)) < BORDERLINE_THRESHOLD)
+    clear      = len(sample) - failures - borderline
 
-        if not passed:
-            failures.append(qid)
-        elif total < BORDERLINE_THRESHOLD:
-            borderline.append(qid)
-        else:
-            clear.append(qid)
-
-    # Cap clear passes
-    clear = clear[: args.clear_passes]
-
-    sample = failures + borderline + clear
     print(f"Run       : {run_id}")
-    print(f"Failures  : {len(failures)}")
-    print(f"Borderline: {len(borderline)}")
-    print(f"Clear     : {len(clear)}  (capped at {args.clear_passes})")
+    print(f"Failures  : {failures}")
+    print(f"Borderline: {borderline}")
+    print(f"Clear     : {clear}")
     print(f"Total     : {len(sample)}")
 
     out_path = RESULTS_DIR / f"human_review_{run_id}.csv"
@@ -131,7 +113,7 @@ def main():
     print("  2. For each row, read the question, system_answer, and judge_reasoning.")
     print("  3. Enter TRUE or FALSE in the human_pass column.")
     print("  4. Optionally add notes in human_notes (e.g. 'missing key fact X').")
-    print("  5. Save as CSV and run annotate_analyze.py to compute Cohen's Kappa.")
+    print("  5. Save as CSV and run annotate_analyze.py to compute agreement metrics.")
 
 
 if __name__ == "__main__":

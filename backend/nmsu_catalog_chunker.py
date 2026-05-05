@@ -481,8 +481,10 @@ def chunk_dept_intro(pdf, start: int, end: int, dept_name: str,
     DEPT_CHUNK_TYPES = {
         "Degrees for the Department": "program_index",
         "Minors for the Department":  "minor_index",
-        "Faculty":                    "faculty",
-        "College Faculty":            "faculty",
+        # Faculty roster skipped — per-person web faculty directory chunks are
+        # richer and more specific; catalog faculty chunks crowd them out.
+        "Faculty":                    "_skip",
+        "College Faculty":            "_skip",
         # p.566 graduate program sections — previously absorbed into dept_intro blob
         # Note: apostrophe in "Master's" is U+2019 (curly) as encoded in the PDF.
         "Master\u2019s Accelerated Program (MAP)":                     "grad_program_info",
@@ -508,7 +510,7 @@ def chunk_dept_intro(pdf, start: int, end: int, dept_name: str,
 
     def flush():
         text = "\n".join(cur_lines).strip()
-        if len(text) < 30:
+        if len(text) < 30 or cur_type == "_skip":
             return
         c = CatalogChunk(
             text=text,
