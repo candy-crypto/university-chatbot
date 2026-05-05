@@ -119,13 +119,11 @@ class CatalogChunk:
 #   program_index            "Degrees for the Department" full listing
 #   minor_index              "Minors for the Department" listing + eligibility rules
 #   faculty                  Faculty roster with research interests
-#   degree_core_requirement  Shared requirements (gen-ed, core courses, non-dept)
-#                            for an entire degree family — one chunk used by all
-#                            concentrations; avoids redundant retrieval
-#   concentration_requirement Concentration-specific courses only — small, focused,
-#                            uniquely identifies one concentration
-#   degree_requirement       Full requirements for standalone degrees (BA, MS, PhD,
-#                            and non-concentrated BS degrees)
+#   degree_requirement       Complete self-contained requirements for one degree
+#                            program — used for every degree: standalone degrees
+#                            (Cybersecurity BS, CS MS, CS PhD, etc.) and each CS
+#                            BS/BA concentration (Cybersecurity, AI, etc.) are all
+#                            individual degree_requirement chunks
 #   study_plan               Suggested semester-by-semester roadmap
 #   second_language          Second language requirement paragraph
 #   minor_requirement        Individual minor / certificate requirements
@@ -605,77 +603,6 @@ def chunk_dept_intro(pdf, start: int, end: int, dept_name: str,
 
 
 
-def chunk_cs_bs_core(
-    pdf,
-    start:             int,
-    end:               int,
-    degree_full_title: str,
-    dept_name:         str = "",
-    start_heading:     str = "Computer Science - Bachelor of Science",
-) -> list[CatalogChunk]:
-    """
-    Extract the shared CS BS core requirements as a single
-    degree_core_requirement chunk (pages 584-585).
-
-    Skips content before the CS BS heading (which is the CS BA tail),
-    then collects all content through the end of the page range, stopping
-    if an 18pt concentration heading appears.
-    """
-    degree_type, concentration, degree_level = _parse_degree_meta(degree_full_title)
-    family = _dept_to_family(dept_name)
-    norm   = lambda s: re.sub(r'\s+', ' ',
-                              unicodedata.normalize('NFKC', s.strip().lower()))
-    norm_start = norm(start_heading)
-
-    cur_lines   = []
-    cur_page    = start
-    found_start = False
-    hbuf        = []   # accumulate multi-line 18pt headings to detect start
-
-    for pg in range(start, min(end + 1, len(pdf.pages))):
-        stop_page = False
-        for line in get_page_lines(pdf.pages[pg]):
-            if line["is_header"]:
-                continue
-            if line["size"] >= 18:
-                if not found_start:
-                    # Accumulate to detect our start heading
-                    hbuf.append(line["text"])
-                    combined = ' '.join(hbuf)
-                    if norm(combined) == norm_start:
-                        found_start = True
-                        cur_page    = pg
-                        cur_lines   = [combined]
-                        hbuf        = []
-                    continue
-                else:
-                    # A new concentration heading — stop
-                    stop_page = True
-                    break
-            else:
-                hbuf = []   # reset if non-18pt line interrupts
-                if found_start:
-                    cur_lines.append(line["text"])
-        if stop_page:
-            break
-
-    text = "\n".join(cur_lines).strip()
-    if len(text) < 100:
-        return []
-    return [CatalogChunk(
-        text=text,
-        chunk_type="degree_core_requirement",
-        catalog_page=cur_page,
-        catalog_page_end=end,
-        degree_full_title=_parent_degree_title(degree_full_title),
-        degree_type=degree_type,
-        concentration="general",
-        degree_level=degree_level,
-        dept_name=dept_name,
-        program_family=[family] if family else [],
-        referenced_courses=find_referenced_courses(text),
-    )]
-
 def chunk_degree_section(
     pdf,
     start:             int,
@@ -683,10 +610,13 @@ def chunk_degree_section(
     degree_full_title: str,
     dept_name:         str = "",
     start_heading:     str = "",
-    is_concentration:  bool = False,
 ) -> list[CatalogChunk]:
     """
     Parse one degree program section (requirements + study plan + second language).
+
+    Each degree — including concentrations — is treated as a self-contained
+    degree_requirement chunk covering its full requirements page(s), followed
+    by an optional study_plan chunk.
 
     Handles multi-line headings by buffering consecutive heading lines and
     dispatching the combined text once a non-heading line appears.  This is
@@ -707,21 +637,13 @@ def chunk_degree_section(
     )
     STUDY_PLAN_RE   = re.compile(r'^A Suggested Plan of Study', re.IGNORECASE)
     SECOND_LANG_RE  = re.compile(r'^Second Language Requirement', re.IGNORECASE)
-    # Marks the transition from shared requirements to concentration-specific courses.
-    # The ligature 'fi' -> 'ﬁ' is normalized by NFKC; the regex handles both forms.
-    CONC_SPEC_RE    = re.compile(
-        r'The spe[ck]i.ic requirements for the concentration in',
-        re.IGNORECASE,
-    )
 
     chunks       = []
     cur_lines    = []
     cur_type     = "degree_requirement"
     cur_page     = start
     found_start  = (start_heading == "")
-    in_conc_spec    = False   # True once we pass the concentration-specific trigger
-    post_conc_skip = False   # True after conc chunk done — skip until next heading
-    hbuf           = []   # (text, page) for consecutive heading lines
+    hbuf         = []   # (text, page) for consecutive heading lines
 
     def flush():
         text = "\n".join(cur_lines).strip()
@@ -747,7 +669,7 @@ def chunk_degree_section(
 
     def dispatch_hbuf():
         """Flush the heading buffer.  Returns True if processing should stop."""
-        nonlocal cur_lines, cur_type, cur_page, found_start, hbuf, post_conc_skip
+        nonlocal cur_lines, cur_type, cur_page, found_start, hbuf
         if not hbuf:
             return False
         combined = ' '.join(t for t, _ in hbuf)
@@ -777,7 +699,6 @@ def chunk_degree_section(
                 cur_lines      = [_parent_degree_title(degree_full_title), combined]
                 cur_type       = "study_plan"
                 cur_page       = pg
-                post_conc_skip = False
             return False
         if SECOND_LANG_RE.match(combined):
             flush()
@@ -812,60 +733,21 @@ def chunk_degree_section(
                         return chunks
                 if found_start:
                     txt = line["text"]
-                    # Routing logic for concentration mode:
-                    #   Phase 1 (not in_conc_spec, not post_conc_skip):
-                    #     skip shared req table, wait for CONC_SPEC_RE trigger
-                    #   Phase 2 (in_conc_spec):
-                    #     collect concentration-specific courses until Total Credits
-                    #   Phase 3 (post_conc_skip=True): skip footnotes
-                    #   Phase 4 (post_conc_skip=False, cur_type==study_plan or later):
-                    #     collect normally
-                    if is_concentration and not in_conc_spec and post_conc_skip:
-                        pass   # Phase 3: skip footnotes between conc block and study plan
-                    elif is_concentration and not in_conc_spec and cur_type not in (
-                            "study_plan", "second_language", "concentration_done"):
-                        # Phase 1: skip shared requirements table, watch for trigger
-                        norm_txt = re.sub(r'\s+', ' ',
-                                          unicodedata.normalize('NFKC', txt).strip())
-                        if CONC_SPEC_RE.search(norm_txt):
-                            in_conc_spec = True
-                            cur_type     = "concentration_requirement"
-                            cur_lines    = [_parent_degree_title(degree_full_title), txt]
-                            cur_page     = pg
-                        # else: skip — this is the repeated shared requirements table
-                    elif is_concentration and in_conc_spec:
-                        # Collecting concentration-specific courses.
-                        # Stop at "Total Credits" only while still in concentration_requirement
-                        # (after a study_plan transition, Total Credits is semester subtotals).
-                        if re.match(r'^Total Credits', txt) and cur_type == "concentration_requirement":
-                            cur_lines.append(txt)
-                            flush()
-                            # Done with concentration courses.
-                            # Skip body text until the next heading (study_plan).
-                            in_conc_spec    = False
-                            post_conc_skip  = True
-                            cur_lines       = []
-                            cur_type        = "concentration_done"
-                        else:
-                            cur_lines.append(txt)
+                    # "A Suggested Plan of Study" sometimes prints at body font
+                    # size and is not routed through dispatch_hbuf(). Catch it
+                    # here so the chunk type transitions from degree_requirement
+                    # to study_plan.
+                    if STUDY_PLAN_RE.match(txt) and cur_type != "study_plan":
+                        flush()
+                        cur_lines = [_parent_degree_title(degree_full_title), txt]
+                        cur_type  = "study_plan"
+                        cur_page  = pg
+                    elif STUDY_PLAN_RE.match(txt) and cur_type == "study_plan":
+                        # Second study plan heading (e.g. Bioinformatics two-track)
+                        # — merge into current chunk as dispatch_hbuf() would.
+                        cur_lines.append(txt)
                     else:
-                        if not post_conc_skip:
-                            # "A Suggested Plan of Study" sometimes prints at
-                            # sub-heading font size and is not routed through
-                            # dispatch_hbuf(). Catch it here so the chunk type
-                            # still transitions from degree_requirement to study_plan.
-                            if STUDY_PLAN_RE.match(txt) and cur_type != "study_plan":
-                                flush()
-                                cur_lines      = [_parent_degree_title(degree_full_title), txt]
-                                cur_type       = "study_plan"
-                                cur_page       = pg
-                                post_conc_skip = False
-                            elif STUDY_PLAN_RE.match(txt) and cur_type == "study_plan":
-                                # Second study plan heading (e.g. Bioinformatics two-track)
-                                # — merge into current chunk as dispatch_hbuf() would.
-                                cur_lines.append(txt)
-                            else:
-                                cur_lines.append(txt)
+                        cur_lines.append(txt)
 
     if hbuf:
         dispatch_hbuf()
@@ -1219,40 +1101,35 @@ EXPLICIT_SECTIONS = [
         "dept_name":    "Computer Science",
         "start_heading":"Computer Science - Bachelor of Arts",
     }),
-    # CS BS shared core requirements (pages 584-585) — one chunk for all concentrations
-    (584, 585, "degree_core", {
-        "title":    "Computer Science - Bachelor of Science",
-        "dept_name":"Computer Science",
-    }),
-    # CS BS second language + study plan (skip BA tail via start_heading)
+    # CS BS general (no concentration) — full self-contained requirements + study plan
     (584, 587, "degree", {
         "title":        "Computer Science - Bachelor of Science",
         "dept_name":    "Computer Science",
         "start_heading":"Computer Science - Bachelor of Science",
     }),
-    # CS concentrations (BS)
-    (586, 588, "degree", {"title": "Computer Science (Algorithm Theory) - Bachelor of Science", "is_concentration": True,
+    # CS BS concentrations — each treated as a full self-contained degree_requirement
+    (586, 588, "degree", {"title": "Computer Science (Algorithm Theory) - Bachelor of Science",
                           "dept_name": "Computer Science",
                           "start_heading": "Computer Science (Algorithm Theory) - Bachelor of Science"}),
-    (589, 591, "degree", {"title": "Computer Science (Artificial Intelligence) - Bachelor of Science", "is_concentration": True,
+    (589, 591, "degree", {"title": "Computer Science (Artificial Intelligence) - Bachelor of Science",
                           "dept_name": "Computer Science",
                           "start_heading": "Computer Science (Artificial Intelligence) - Bachelor of Science"}),
-    (591, 593, "degree", {"title": "Computer Science (Big Data and Data Science) - Bachelor of Science", "is_concentration": True,
+    (591, 593, "degree", {"title": "Computer Science (Big Data and Data Science) - Bachelor of Science",
                           "dept_name": "Computer Science",
                           "start_heading": "Computer Science (Big Data and Data Science) - Bachelor of Science"}),
-    (594, 596, "degree", {"title": "Computer Science (Computer Networking) - Bachelor of Science", "is_concentration": True,
+    (594, 596, "degree", {"title": "Computer Science (Computer Networking) - Bachelor of Science",
                           "dept_name": "Computer Science",
                           "start_heading": "Computer Science (Computer Networking) - Bachelor of Science"}),
-    (596, 599, "degree", {"title": "Computer Science (Cybersecurity) - Bachelor of Science", "is_concentration": True,
+    (596, 599, "degree", {"title": "Computer Science (Cybersecurity) - Bachelor of Science",
                           "dept_name": "Computer Science",
                           "start_heading": "Computer Science (Cybersecurity) - Bachelor of Science"}),
-    (599, 601, "degree", {"title": "Computer Science (Human Computer Interaction) - Bachelor of Science", "is_concentration": True,
+    (599, 601, "degree", {"title": "Computer Science (Human Computer Interaction) - Bachelor of Science",
                           "dept_name": "Computer Science",
                           "start_heading": "Computer Science (Human Computer Interaction) - Bachelor of Science"}),
     (601, 604, "degree", {"title": "Computer Science (Secondary Education) - Bachelor of Arts",
                           "dept_name": "Computer Science",
                           "start_heading": "Computer Science (Secondary Education) - Bachelor of Arts"}),
-    (604, 606, "degree", {"title": "Computer Science (Software Development) - Bachelor of Science", "is_concentration": True,
+    (604, 606, "degree", {"title": "Computer Science (Software Development) - Bachelor of Science",
                           "dept_name": "Computer Science",
                           "start_heading": "Computer Science (Software Development) - Bachelor of Science"}),
     (606, 608, "degree", {"title": "Cybersecurity - Bachelor of Science",
@@ -1371,20 +1248,12 @@ def run_pipeline(
                 add(chunk_dept_intro(pdf, start, end, cfg["dept_name"],
                                     start_heading=cfg.get("start_heading", "")))
 
-            elif handler == "degree_core":
-                add(chunk_cs_bs_core(
-                    pdf, start, end,
-                    degree_full_title=cfg["title"],
-                    dept_name=cfg.get("dept_name", ""),
-                ))
-
             elif handler == "degree":
                 add(chunk_degree_section(
                     pdf, start, end,
                     degree_full_title=cfg["title"],
                     dept_name=cfg.get("dept_name", ""),
                     start_heading=cfg.get("start_heading", ""),
-                    is_concentration=cfg.get("is_concentration", False),
                 ))
 
             elif handler == "minor":

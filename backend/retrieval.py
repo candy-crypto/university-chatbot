@@ -450,10 +450,9 @@ def metadata_boost(query: str, chunk: Dict[str, Any]) -> float:
     if chunk.get("chunk_type") == "minor_requirement" and query_tokens.intersection({"minor", "minors"}):
         boost += 0.15
 
-    # Degree/concentration requirement chunks are authoritative for "what is
-    # required" and comparison queries ("difference between X and Y").
-    if (chunk.get("chunk_type") in (
-            "degree_core_requirement", "degree_requirement", "concentration_requirement")
+    # Degree requirement chunks are authoritative for "what is required" and
+    # comparison queries ("difference between X and Y").
+    if (chunk.get("chunk_type") == "degree_requirement"
             and query_tokens.intersection(_REQUIREMENT_TERMS)):
         boost += 0.10
 
@@ -528,21 +527,6 @@ def metadata_boost(query: str, chunk: Dict[str, Any]) -> float:
             if not query_tokens.intersection(concentration_tokens):
                 boost -= 0.20
 
-    # Penalize concentration_requirement chunks when the parent degree is not
-    # mentioned in the query and the query doesn't explicitly say "concentration".
-    # This distinguishes "BS in Cybersecurity" (standalone degree) from
-    # "Computer Science Cybersecurity concentration" — both use the word
-    # "Cybersecurity" so the metadata boost alone cannot differentiate them.
-    # E.g. "specialty BS in Cybersecurity" → parent degree is "Computer Science"
-    # which is not in the query → concentration chunk penalized → standalone
-    # Cybersecurity degree_requirement chunk wins instead.
-    # Exception: if the student explicitly says "concentration", the query is
-    # unambiguously about a concentration track, so no penalty.
-    if chunk.get("chunk_type") == "concentration_requirement":
-        if "concentration" not in query_tokens:
-            parent_degree_tokens = set(tokenize(chunk.get("degree_full_title", "")))
-            if parent_degree_tokens and not query_tokens.intersection(parent_degree_tokens):
-                boost -= 0.15
 
     # Slight preference for catalog content, which tends to be more authoritative.
     if chunk.get("content_source") == "catalog":
@@ -644,22 +628,11 @@ def _build_hard_filters(query: str, tokens: set) -> "Filter | None":
         # and "is course X required?" questions — course_description stays in
         # the pool so specific course lookups within a requirement query work.
         if tokens.intersection(_REQUIREMENT_TERMS):
-            allowed = [
-                "degree_requirement", "degree_core_requirement",
-                "degree_overview", "study_plan", "advising",
-                "course_description", "policy", "grad_program_info",
-            ]
-            # Include concentration chunks only when the query explicitly
-            # names a concentration — either with the word "concentration"
-            # or with parenthetical notation: "BS in CS (Cybersecurity)".
-            # Without this guard, "BS in Cybersecurity" retrieves the CS
-            # Cybersecurity concentration chunk instead of the standalone
-            # Cybersecurity BS degree_requirement chunk.
-            if ("concentration" in tokens or "concentrations" in tokens
-                    or re.search(r'\([^)\d]+\)', query)):
-                allowed.append("concentration_requirement")
             filters.append(
-                Filter.by_property("chunk_type").contains_any(allowed)
+                Filter.by_property("chunk_type").contains_any([
+                    "degree_requirement", "degree_overview", "study_plan",
+                    "advising", "course_description", "policy", "grad_program_info",
+                ])
             )
     elif ("courses" in tokens
           and tokens.intersection(_COURSE_TOPIC_TERMS)
@@ -676,14 +649,10 @@ def _build_hard_filters(query: str, tokens: set) -> "Filter | None":
           and not tokens.intersection({"degree", "major", "program", "bachelor",
                                        "master", "phd", "requirement", "requirements"})):
         # Faculty queries with no degree vocabulary: exclude degree_requirement
-        # and concentration_requirement chunks. These program-description chunks
-        # can outscore faculty chunks on BM25 when they contain phrases like
-        # "Affiliated Faculty" in their text, producing incomplete answers that
-        # omit faculty listed only on the web directory.
+        # chunks. These program-description chunks can outscore faculty chunks
+        # on BM25 when they contain "Affiliated Faculty" text.
         filters.append(
-            Filter.by_property("chunk_type").contains_none([
-                "degree_requirement", "concentration_requirement",
-            ])
+            Filter.by_property("chunk_type").contains_none(["degree_requirement"])
         )
 
     if not filters:
@@ -1292,8 +1261,8 @@ campus of NMSU, the levels of degrees in Computer Science offered are Bachelor o
 Masters of Science (MS), and Doctor of Philosophy (PhD).
 
 A concentration is an optional area of specialization within a BS or BA degree. There are limited concentrations and \
-specific electives and upper-division course requirements for each, which can be found on concentration_requirement chunks. \
-Concentrations are frequently shown in parentheses at the end of the degree name, e.g., B.S. Computer Science \
+specific electives and upper-division course requirements for each, which can be found in each concentration's \
+degree_requirement chunk. Concentrations are frequently shown in parentheses at the end of the degree name, e.g., B.S. Computer Science \
 (Computer Networking). Computer Science is the degree and Computer Networking is the concentration. A student cannot \
 pursue a Concentration without being enrolled in an undergraduate Degree program.
 
@@ -1461,16 +1430,11 @@ NMSU's course search and note that summer schedules are published mid-to-late Sp
 ## Chunk Types
 
 The retrieved context includes a chunk_type field. Use it to retrieve and rank chunks:
-- `degree_core_requirement` — requirements for ALL concentrations of an undergraduate degree family. It outlines \
-the general education requirements, the Viewing a Wider World requirements, the core CS courses, and the additional \
-core math and science courses for the degree. These requirements apply to every concentration, unless explicitly \
-overridden. When a user asks about requirements for a BS or BA in Computer Science with or without identifying a \
-Concentration, this chunk should be retrieved and used.
-- `concentration_requirement` — outlines ONLY the requirements unique to one concentration. It is \
-incomplete on its own; combine it with the corresponding `degree_core_requirement` chunk (BS or BA, depending on \
-the Concentration) to get the full picture. Retrieve and use this chunk only when answering about a Concentration.
-- `degree_requirement` — full requirements for standalone degrees for which there are no Concentrations. It is \
-self-contained. There are no associated concentration_description or degree_core_requirement chunks.
+- `degree_requirement` — complete, self-contained requirements for a degree program. Every degree has exactly \
+one degree_requirement chunk: standalone degrees (CS MS, CS PhD, Cybersecurity BS, etc.) and each CS BS or CS BA \
+concentration (e.g. CS BS Cybersecurity, CS BS AI) are all represented as individual degree_requirement chunks. \
+Each chunk covers the full requirements for that program — general education, core courses, and \
+concentration-specific courses — without needing to be combined with any other chunk.
 - `minor_requirement` — full requirements for non-Computer Science majors who want to get a Computer Science minor. \
 Check the level field to distinguish requirements for undergraduate vs graduate students.
 - `study_plan` — a suggested sequence of enrollment in required courses, year-by-year. Note that these chunks are not \
