@@ -1220,8 +1220,8 @@
   key_facts:
     - "CS department main phone number is 575-646-3723"
   expected_chunk_ids:
-    - "TBD"  # contact-information.html or faculty-staff-directory.html — locate after ingest
-  retrieval_note: "TBD after ingest"
+    - "https://computerscience.nmsu.edu/department/contact-information.html#chunk-0"
+  retrieval_note: "TBD after eval run"
   expected_source_type: "web"
   applicable_groups:
     - "prospective_undergrad"
