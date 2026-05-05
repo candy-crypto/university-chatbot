@@ -771,10 +771,10 @@ def chunk_degree_section(
                 cur_lines.append(combined)
             else:
                 flush()
-                # Include the heading as the first line so the chunk opens with
-                # its own label (e.g. "A Suggested Plan of Study for Students
-                # (with a Computer Science background)").
-                cur_lines      = [combined]
+                # Prepend the degree title so "Cybersecurity" (or whatever the
+                # standalone degree name is) appears in the text and is findable
+                # by BM25 and vector search, not just in metadata.
+                cur_lines      = [_parent_degree_title(degree_full_title), combined]
                 cur_type       = "study_plan"
                 cur_page       = pg
                 post_conc_skip = False
@@ -856,7 +856,7 @@ def chunk_degree_section(
                             # still transitions from degree_requirement to study_plan.
                             if STUDY_PLAN_RE.match(txt) and cur_type != "study_plan":
                                 flush()
-                                cur_lines      = [txt]
+                                cur_lines      = [_parent_degree_title(degree_full_title), txt]
                                 cur_type       = "study_plan"
                                 cur_page       = pg
                                 post_conc_skip = False
