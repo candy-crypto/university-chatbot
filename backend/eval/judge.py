@@ -8,6 +8,7 @@ for human review.
 
 import os
 import json
+from datetime import date
 from typing import Any
 
 from dotenv import load_dotenv
@@ -35,10 +36,7 @@ equivalent — do not penalize an answer for using the catalog name instead of t
 Semester abbreviation convention used in rotation tables:
   SP = Spring, FA = Fall, followed by 2-digit year.
   Examples: SP26 = Spring 2026, FA26 = Fall 2026, SP27 = Spring 2027, FA27 = Fall 2027.
-  Current date context: the evaluation is running in May 2026. SP26 (Spring 2026) is the
-  current/ending semester; FA26 (Fall 2026) is the upcoming semester. A rotation table that
-  lists SP26 is citing a real scheduled offering — do NOT treat it as a hallucination or
-  inconsistency even though Spring 2026 is nearly over.
+{semester_context}
 
 FAITHFULNESS — Every factual claim in the answer traces to the retrieved context.
   3 = All claims are supported by the provided context.
@@ -98,6 +96,34 @@ RESPONSE_QUALITY — Direct, professional, well-organized; no filler or extraneo
   "As an AI", "I'm here to help", "Absolutely!", "Sure!".
 """
 
+# ── Semester context ──────────────────────────────────────────────────────────
+
+def _current_semester_context(today: date | None = None) -> str:
+    """Return a one-paragraph rubric note describing the current and upcoming semester."""
+    d = today or date.today()
+    m, day, y = d.month, d.day, d.year
+    if (m < 5) or (m == 5 and day < 20):
+        current_sem, current_year = "Spring", y
+        next_sem, next_year = "Fall", y
+    elif (m < 8) or (m == 8 and day < 15):
+        current_sem, current_year = "Summer", y
+        next_sem, next_year = "Fall", y
+    else:
+        current_sem, current_year = "Fall", y
+        next_sem, next_year = "Spring", y + 1
+
+    cur_abbr = ("SP" if current_sem == "Spring" else "SU" if current_sem == "Summer" else "FA") + str(current_year % 100).zfill(2)
+    nxt_abbr = ("SP" if next_sem == "Spring" else "FA") + str(next_year % 100).zfill(2)
+
+    return (
+        f"  Current date context: today is {d.isoformat()}. {current_sem} {current_year} "
+        f"({cur_abbr}) is the current semester; {next_sem} {next_year} ({nxt_abbr}) is the "
+        f"upcoming semester. A rotation table that lists {cur_abbr} is citing a real scheduled "
+        f"offering — do NOT treat it as a hallucination or inconsistency even if that semester "
+        f"is nearly over."
+    )
+
+
 # ── Judge prompt builder ───────────────────────────────────────────────────────
 
 def build_judge_prompt(
@@ -108,6 +134,7 @@ def build_judge_prompt(
     banner_redirect_expected: bool,
 ) -> str:
     key_facts_text = "\n".join(f"- {f}" for f in key_facts)
+    rubric = RUBRIC.format(semester_context=_current_semester_context())
 
     banner_note = ""
     if banner_redirect_expected:
@@ -142,7 +169,7 @@ Return a JSON object with integer scores (0-3) and a reasoning string.
 {banner_note}
 
 ## Scoring Rubric
-{RUBRIC}
+{rubric}
 
 ## Required Output Format
 Return ONLY a JSON object with these exact keys:
