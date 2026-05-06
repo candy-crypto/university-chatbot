@@ -452,7 +452,8 @@ def _expand_qa_sections(sections: list) -> list:
 
 def chunk_page(sections: list, chunk_type: str,
                min_len: int = CHUNK_MIN_LEN,
-               max_len: int = CHUNK_MAX_LEN) -> list:
+               max_len: int = CHUNK_MAX_LEN,
+               text_prefix: str = "") -> list:
     """
     Convert structured sections into chunks respecting min/max length guardrails.
 
@@ -490,7 +491,8 @@ def chunk_page(sections: list, chunk_type: str,
                 # Use the person's name (words before the title) as the heading.
                 name_match = re.match(rf'({_FAC_NAME_PAT})\s+(?:{_FAC_TITLE_PAT})', entry)
                 heading = name_match.group(1) if name_match else ""
-                result.append({"heading": heading, "text": entry})
+                text = f"{text_prefix}{entry}" if text_prefix else entry
+                result.append({"heading": heading, "text": text})
         return result
 
     # course_schedule and degree_requirement (web): one coherent document, keep whole if possible.
@@ -739,8 +741,18 @@ def upsert_pages_to_weaviate(
 
         objects = []
 
+        # DA faculty directory: prepend program label so BM25 can match
+        # "data analytics faculty" queries to per-person chunks that otherwise
+        # contain only a name, title, and expertise — no program name.
+        _DA_FAC_URL = "dataanalytics.nmsu.edu/facultydirectory/index.html"
+
         for page in pages:
-            chunks = chunk_page(page["sections"], page["chunk_type"])
+            fac_prefix = (
+                "Data Analytics faculty. Professional M.S. in Computational Data Analytics. "
+                if page["chunk_type"] == "faculty" and _DA_FAC_URL in page.get("url", "")
+                else ""
+            )
+            chunks = chunk_page(page["sections"], page["chunk_type"], text_prefix=fac_prefix)
 
             # Fallback: if section-based chunking yields nothing, use full text
             if not chunks:
