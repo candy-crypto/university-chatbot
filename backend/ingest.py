@@ -748,7 +748,7 @@ def upsert_pages_to_weaviate(
 
         for page in pages:
             fac_prefix = (
-                "Data Analytics faculty. Professional M.S. in Computational Data Analytics. "
+                "Data Analytics faculty. "
                 if page["chunk_type"] == "faculty" and _DA_FAC_URL in page.get("url", "")
                 else ""
             )

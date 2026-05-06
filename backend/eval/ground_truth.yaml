@@ -899,7 +899,7 @@
     - "https://dataanalytics.nmsu.edu/facultydirectory/index.html#chunk-4"  # Huiping Cao
     - "https://dataanalytics.nmsu.edu/facultydirectory/index.html#chunk-5"  # Marshall Taylor
     - "https://dataanalytics.nmsu.edu/facultydirectory/index.html#chunk-6"  # Tuan Le
-  retrieval_note: "DA web directory chunks now prefixed with 'Data Analytics faculty. Professional M.S. in Computational Data Analytics.' for BM25 recall; requires web re-ingest to take effect; f33f72e6185a4b8d (catalog degree_requirement) is a fallback source until then"
+  retrieval_note: "DA web directory chunks now prefixed with 'Data Analytics faculty.' for BM25 recall; requires web re-ingest to take effect; f33f72e6185a4b8d (catalog degree_requirement) is a fallback source until then"
   expected_source_type: "web"
   banner_redirect_expected: false
 
