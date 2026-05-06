@@ -1,3 +1,4 @@
+/* ------ Base of the CSS ------ */
 @import "tailwindcss";
 
 :root {
@@ -14,7 +15,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #212121;    /* This controls the background color */
     --foreground: #ededed;
   }
 }
@@ -23,4 +24,191 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ------ Header Section ------ */
+.header-bar {
+  position: relative;
+  overflow: hidden;
+  background-color:#8C0B42;
+  padding: 12px;
+}
+
+.h1-title {
+  text-align: center;
+  font-size: 20px;
+  color:white;
+  font-weight: 650;
+}
+
+/* ------ Chat Window (Main Container) ------ */
+.chat-window {
+  margin: 1px auto;
+  width: 65%;
+  height: 700px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ------ Message List ------ */
+.chatbox {
+  flex: 1;
+  padding: 15px;
+  list-style: none;
+  overflow-y: auto;
+  gap: 8px;
+}
+
+.chatbox li {
+  margin-bottom: 10px;
+}
+
+/* ------ Message System ------ */
+.message {
+  display: flex;
+  margin-bottom: 10px;
+  animation: fadeIn 0.2s ease-in;
+}
+
+.message.user {
+  justify-content: flex-end;
+}
+
+.message.bot {
+  justify-content: flex-start;
+}
+
+/* ------ Bubbles ------ */
+.bubble {
+  max-width: 85ch;
+  padding: 10px 14px;
+  font-size: 14px;
+  line-height: 1.4;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.468);
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.message.user .bubble {
+  background-color: #801c47;
+  color: white;
+  border-radius: 15px 15px 0 15px;
+  font-size: 16px;
+}
+
+.message.bot .bubble {
+  background-color: #2c2c2c;
+  color: white;
+  border-radius: 15px 15px 15px 0;
+  font-size: 16px;
+}
+
+/* ------ Input Area ------ */
+.chat-input-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  gap: 10px;
+  border-top: 2px solid #333;
+  margin: 10px;
+}
+
+/* ------ Input Field ------ */
+.chat-input {
+  width: 100%;
+  padding: 10px 70px 10px 15px; /* space for button */
+  border: 1.5px solid #ccc;
+  border-radius: 20px;
+
+  resize: none;
+  outline: none;
+  overflow-y: auto;
+
+  background-color: rgb(39, 39, 39);
+  font-size: 16px;
+  color: white;
+  font-weight: 600;
+}
+
+.input-wrapper {
+  position: relative;
+  width: 60%;
+  max-width: 500px;
+}
+
+.chat-disclaimer {
+  text-align: center;
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 1px;
+  margin-bottom: 10px;
+  font-weight: 650;
+}
+
+/* ------ Send Button ------ */
+.send-button {
+  right: 12px;
+  bottom: 22px;
+
+  padding: 6px 15px;
+  border-radius: 10px;
+  border: none;
+
+  background-color: #8C0B42;
+  color: white;
+  cursor: pointer;
+  position: absolute;
+}
+
+/* ------ Sources ------ */
+.sources {
+  margin-top: 8px;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.sources ul {
+  margin: 4px 0 0 15px;
+  padding: 0;
+}
+
+/* ------ Animation ------ */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.typing {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  height: 20px;
+}
+
+.typing span {
+  width: 6px;
+  height: 6px;
+  background: #ccc;
+  border-radius: 50%;
+  display: block;
+  animation: bounce 1.2s infinite ease-in-out;
+}
+
+.typing span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
 }

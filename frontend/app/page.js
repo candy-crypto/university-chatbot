@@ -1,16 +1,30 @@
 "use client";
-
-import { useState } from "react";
-
+import { useState, useRef, useEffect } from "react";
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
 
 export default function Home() {
   const [message, setMessage] = useState("");
   const [result, setResult] = useState(null);
   const [department, setDepartment] = useState("cs");
+  const [loading, setLoading] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth"
+    });
+  }, [messages, loading]);
 
   async function sendMessage() {
+    if (!message.trim()) return;
+    setLoading(true);   // Starts the thinking
+    setResult(null);    // Optional, it clears previous results
+    setMessages((prev) => [...prev, { role: "user", text: message }]);
+    setMessage("");
+    
     try {
+      // Commented actual code to test dummy code to see UI Interactions.
       const res = await fetch(`${API_BASE}/chat`, {
         method: "POST",
         headers: {
@@ -28,7 +42,9 @@ export default function Home() {
       }
 
       const data = await res.json();
+      setMessages((prev) => [...prev, { role: "bot", text: data.answer }]);
       setResult(data);
+
     } catch (err) {
       console.error(err);
       setResult({
@@ -37,87 +53,81 @@ export default function Home() {
         chunks: [],
         prompt_context: "",
       });
+      setMessages((prev) => [
+        ...prev,
+        { role: "bot", text: "Unable to connect to the backend." }
+      ]);
+    } finally {
+      setLoading(false);
     }
+    
   }
 
-  return (
-    <div style={{ padding: "40px", fontFamily: "Arial" }}>
-      <h1>University Chatbot</h1>
+return (
+<div style={{ padding: "20px", fontFamily: "Arial" }}>
 
-      <h3>Select Department</h3>
+  <div className="header-bar">
+    <h1 className="h1-title">New Mexico State University - Computer Science Department Chatbot</h1>
+    <h1 className="h1-title">- UI & Bot Version: 0.5 -</h1>
+  </div>
 
-      <button onClick={() => setDepartment("cs")}>Computer Science</button>
-      <button onClick={() => setDepartment("math")}>Math</button>
-      <button onClick={() => setDepartment("unknown")}>Not Sure</button>
-      <p>Selected department: {department}</p>
+  <br />
 
-      <br /><br />
-
-      <input
-        type="text"
-        placeholder="Ask a question..."
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        style={{ width: "600px" }}
-      />
-
-      <button onClick={sendMessage}>Send</button>
-
-      <br /><br />
-
-      <h3>Response</h3>
-      <div>{result?.answer || ""}</div>
-
-      {result?.sources?.length ? (
-        <>
-          <h3>Sources</h3>
-          <ul>
-            {result.sources.map((source) => (
-              <li key={source}>{source}</li>
-            ))}
-          </ul>
-        </>
-      ) : null}
-
-      {result ? (
-        <>
-          <h3>Retrieved Chunks</h3>
-          <p>These are the chunks retrieved and then passed into the prompt context.</p>
-          <div style={{ display: "grid", gap: "16px" }}>
-            {result.chunks?.map((chunk) => (
-              <div
-                key={chunk.chunk_id}
-                style={{
-                  border: "1px solid #ccc",
-                  borderRadius: "8px",
-                  padding: "16px",
-                  background: "#fafafa",
-                }}
-              >
-                <div><strong>Rank:</strong> {chunk.rank ?? "-"}</div>
-                <div><strong>Heading:</strong> {chunk.heading || "-"}</div>
-                <div><strong>Chunk ID:</strong> {chunk.chunk_id || "-"}</div>
-                <div><strong>Chunk Type:</strong> {chunk.chunk_type || "-"}</div>
-                <div><strong>Content Source:</strong> {chunk.content_source || "-"}</div>
-                <div><strong>Source:</strong> {chunk.source || "-"}</div>
-                <div><strong>Course Code:</strong> {chunk.course_code || "-"}</div>
-                <div><strong>Referenced Courses:</strong> {(chunk.referenced_courses || []).join(", ") || "-"}</div>
-                <div><strong>Hybrid Score:</strong> {chunk.hybrid_score ?? "-"}</div>
-                <div><strong>Metadata Boost:</strong> {chunk.metadata_boost ?? "-"}</div>
-                <div><strong>Final Score:</strong> {chunk.final_score ?? "-"}</div>
-                <div><strong>Text:</strong></div>
-                <pre style={{ whiteSpace: "pre-wrap", overflowX: "auto" }}>{chunk.text || ""}</pre>
-              </div>
-            ))}
+  <div className="chat-window">
+    <ul className="chatbox">
+      {messages.length === 0 && !loading && (
+        <li className="message bot">
+          <div className="bubble">
+            Welcome! Ask me anything about the Computer Science Department!
           </div>
+        </li>
+      )}
 
-          <h3>Prompt Context</h3>
-          <p>This is the exact context block sent to the answer model.</p>
-          <pre style={{ whiteSpace: "pre-wrap", overflowX: "auto", background: "#f4f4f4", padding: "16px", borderRadius: "8px" }}>
-            {result.prompt_context || ""}
-          </pre>
-        </>
-      ) : null}
+      {messages.map((msg, i) => (
+        <li key={i} className={`message ${msg.role}`}>
+          <div className="bubble">
+            <div>{msg.text}</div>
+          </div>
+        </li>
+      ))}
+
+      {loading && (
+        <li className="message bot">
+          <div className="bubble typing">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </li>
+      )}
+      <div ref={messagesEndRef} />
+    </ul>
+
+    <div className="chat-input-container">
+      <div className="input-wrapper">
+        <textarea
+          className = "chat-input"
+          placeholder = "Ask a question..."
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+          }
+                  
+          }}
+        />
+        <button className="send-button" onClick={sendMessage} disabled={loading}>
+          ➤
+        </button>
+      </div>
     </div>
+
+    <div className="chat-disclaimer">
+      AI can make mistakes, use responsibly.
+    </div>
+    </div>
+</div>
   );
 }
