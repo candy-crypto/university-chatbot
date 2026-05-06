@@ -124,9 +124,9 @@
   category: "course_availability"
   question: "Is the Operating Systems course offered every semester?"
   key_facts:
-    - "No, there is no course about Operating Systems that is offered every semester"
-    - "CSCI 4120 Operating Systems will next be offered in Fall 2026"
-    - "CSCI 5605 Operating Systems II will next be offered in Spring 2027"
+    - "No, there is no Operating Systems course offered every semester"
+    - "CSCI 4120 Operating Systems I appears only in fall semesters in the three-year rotation (FA26, FA27)"
+    - "CSCI 5605 Operating Systems II appears in SP26, SP27, and FA28 — not every semester"
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-1"  # rotation table 
   retrieval_note: "found: chunk-1@rank1(1.1500), b6698dedb6cd09ea@rank4(0.8371); top5: rank1[course_schedul/web/1.1500 EXP] rank2[course_descrip/catalog/0.9077] rank3[course_descrip/catalog/0.8441] rank4[course_descrip/catalog/0.8371 EXP] rank5[course_descrip/catalog/0.7103]"

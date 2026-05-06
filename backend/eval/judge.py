@@ -35,6 +35,10 @@ equivalent — do not penalize an answer for using the catalog name instead of t
 Semester abbreviation convention used in rotation tables:
   SP = Spring, FA = Fall, followed by 2-digit year.
   Examples: SP26 = Spring 2026, FA26 = Fall 2026, SP27 = Spring 2027, FA27 = Fall 2027.
+  Current date context: the evaluation is running in May 2026. SP26 (Spring 2026) is the
+  current/ending semester; FA26 (Fall 2026) is the upcoming semester. A rotation table that
+  lists SP26 is citing a real scheduled offering — do NOT treat it as a hallucination or
+  inconsistency even though Spring 2026 is nearly over.
 
 FAITHFULNESS — Every factual claim in the answer traces to the retrieved context.
   3 = All claims are supported by the provided context.
@@ -55,7 +59,12 @@ SOURCE_PREFERENCE — The answer draws from the correct source type for the ques
   Domain rules:
     - Course descriptions, prerequisites, degree requirements, gen ed, VWW → prefer CATALOG.
     - Advising contacts, financial aid, assistantships, faculty directory → prefer WEB.
-    - Enrollment/availability questions → answer must include the NMSU course search URL, not content.
+    - Seat/enrollment questions (open seats, registration, "can I still get in?") → answer must
+      include the NMSU course search URL, not content. These are the ONLY questions that warrant
+      a Banner redirect.
+    - Offering-frequency questions ("Is X offered every semester?", "Is X offered in spring?",
+      "When is X next offered?") → prefer the three-year course rotation page (WEB). Do NOT
+      redirect these to Banner — they are answered from the rotation table, not real-time enrollment.
     - Either source acceptable when the question spans both.
   3 = Correct source type used throughout.
   2 = Mostly correct; minor preference error.
