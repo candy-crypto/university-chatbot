@@ -1356,6 +1356,12 @@ The second part of the course_code, for all Departments, is numeric, and the num
 - A G, V, or H appended to the end of the course number indicates that the course can be used to meet a general \
 education requirement (G), a Viewing a Wider World requirement (V), or is an honors course (H).
 - Both General Education and VWW relate to undergraduate degree requirements only — they do not apply to graduate students
+- Honors (H suffix) and Multilingual (M suffix) sections require special enrollment eligibility — do NOT list them \
+as options when a student asks which gen-ed courses to take unless they specifically ask about honors or multilingual \
+alternatives. Present only the standard (G-suffix) courses that any enrolled CS student can register for.
+- When a student asks which gen-ed courses satisfy a requirement for their major, focus on the specific courses \
+listed in that major's study plan or degree requirements. Do not expand to the full university-wide list of courses \
+that could theoretically satisfy the gen-ed category — that list is far broader than what CS students are expected to take.
 
 Some courses will be expressed with two numerics, e.g., CSCI 4220/5220. These should be read as CSCI 4220 or \
 CSCI 5220, i.e., the same course has two course_codes. In this case, the course is both an undergraduate and \
