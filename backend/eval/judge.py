@@ -64,7 +64,8 @@ SOURCE_PREFERENCE — The answer draws from the correct source type for the ques
 
 CITATION_QUALITY — Citations are present, correctly formatted, and accurate.
   Catalog chunks → cite catalog year and page range (e.g., "NMSU Academic Catalog 2025-2026, pp. 584-585"). The page range cited should match the retrieved chunk's range; do not penalize a broader range (e.g., pp. 584-587) when the relevant fact falls within that range.
-  Web chunks → cite source URL. A bare URL is the correct and complete citation format for web sources; do not penalize for lack of a title or label alongside the URL.
+  Web chunks → cite source URL. A bare URL is the correct and complete citation format for web sources. Do NOT penalize for lack of a title or label alongside the URL. Do NOT expect or require catalog-style formatting when the source is a web page — a bare URL alone is a full-credit citation for web content.
+  If the answer draws only from web sources, there will be no catalog citation — this is correct and expected. Do not penalize the absence of a catalog citation when the source type is web.
   Citation placement: the system is designed to collect all citations in a "Sources:" section at the end of the response, with no inline citations in the body. This is the correct and expected format — do NOT penalize for placing citations at the end rather than tying them inline to individual claims.
   3 = All citations correct and complete.
   2 = Citations present but minor formatting issues.
