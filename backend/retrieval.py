@@ -199,6 +199,9 @@ def tokenize(text: str) -> List[str]:
 # are present for BM25 matching.
 
 _ACRONYM_MAP = {
+    # Compound phrase first so "Generative AI" → "Generative Artificial Intelligence"
+    # appears as a unit at the end of the query, not just "Artificial Intelligence" alone.
+    r"(?i)\bGenerative\s+AI\b": "Generative Artificial Intelligence",
     r"\bAI\b":    "Artificial Intelligence",
     r"\bML\b":    "Machine Learning",
     r"\bHCI\b":   "Human Computer Interaction",
