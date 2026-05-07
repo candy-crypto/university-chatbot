@@ -24,7 +24,14 @@ if not OPENAI_API_KEY:
 
 openai_client = OpenAI(api_key=OPENAI_API_KEY)
 
-# ── Rubric ────────────────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# RUBRIC
+# Six scoring criteria (0–3 each): faithfulness, completeness,
+# source_preference, citation_quality, hallucination, response_quality.
+# Embedded directly as a prompt string so the LLM judge sees the full
+# rubric on every call.  {semester_context} is filled at call time so
+# the judge always knows the current and upcoming semester.
+# ══════════════════════════════════════════════════════════════════════════════
 
 RUBRIC = """
 Score each criterion on a 0–3 integer scale.
@@ -96,7 +103,11 @@ RESPONSE_QUALITY — Direct, professional, well-organized; no filler or extraneo
   "As an AI", "I'm here to help", "Absolutely!", "Sure!".
 """
 
-# ── Semester context ──────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# SEMESTER CONTEXT
+# Computes current and upcoming semester labels from date.today() so the
+# judge does not treat references to the current semester as hallucinations.
+# ══════════════════════════════════════════════════════════════════════════════
 
 def _current_semester_context(today: date | None = None) -> str:
     """Return a one-paragraph rubric note describing the current and upcoming semester."""
@@ -124,7 +135,13 @@ def _current_semester_context(today: date | None = None) -> str:
     )
 
 
-# ── Judge prompt builder ───────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# JUDGE PROMPT BUILDER
+# Assembles the full evaluation prompt from the student question, ground
+# truth key facts, retrieved context, system answer, and the rubric.
+# A banner_redirect_expected flag overrides several rubric criteria when
+# the correct answer is a Banner course-search redirect rather than content.
+# ══════════════════════════════════════════════════════════════════════════════
 
 def build_judge_prompt(
     question: str,
@@ -185,7 +202,13 @@ Return ONLY a JSON object with these exact keys:
 """
 
 
-# ── Judge caller ──────────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# JUDGE CALLER
+# judge_question() calls the LLM judge and returns all six scores plus
+# reasoning.  Never raises — on any failure all scores are set to -1 so
+# the harness can continue without interruption.
+# judge_total() normalises the six scores to a 0.0–1.0 composite.
+# ══════════════════════════════════════════════════════════════════════════════
 
 def judge_question(
     question: str,

@@ -51,7 +51,11 @@ RETRIEVAL_SCORE_THRESHOLD = 0.7
 JUDGE_TOTAL_THRESHOLD = 0.7
 
 
-# ── Ground truth loader ───────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# GROUND TRUTH LOADER
+# Reads ground_truth.yaml and returns the list of evaluation records.
+# Supports optional filtering by question_id or category.
+# ══════════════════════════════════════════════════════════════════════════════
 
 def load_ground_truth(
     question_ids: list[str] | None = None,
@@ -68,7 +72,13 @@ def load_ground_truth(
     return records
 
 
-# ── Deterministic metrics ─────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# DETERMINISTIC RETRIEVAL METRICS
+# Score retrieval quality without an LLM: recall@k (expected chunk IDs found),
+# precision@1 (top-ranked chunk is expected), source_type correctness,
+# banner redirect detection, citation format validation, and the composite
+# retrieval_score used as one of the two passing thresholds.
+# ══════════════════════════════════════════════════════════════════════════════
 
 def compute_recall_at_k(chunks: list[dict], expected_ids: list[str]) -> bool:
     """True if at least one expected chunk_id appears in the top-5 results."""
@@ -151,7 +161,12 @@ def compute_retrieval_score(
     )
 
 
-# ── Deterministic content metrics ─────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# DETERMINISTIC CONTENT METRICS
+# Score answer quality without an LLM: context recall (key fact coverage),
+# filler phrase detection, leads-with-answer check, course entity validation,
+# URL hallucination detection, response length, and Flesch readability.
+# ══════════════════════════════════════════════════════════════════════════════
 
 _FILLER_PATTERNS = re.compile(
     r"\b(great question|certainly[!,]?|of course[!,]?|i'?d be happy to help"
@@ -291,7 +306,14 @@ def compute_readability(answer: str) -> float | None:
     return round(textstat.flesch_reading_ease(answer), 1)
 
 
-# ── Per-question evaluation ───────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# PER-QUESTION EVALUATION
+# evaluate_question() runs the full pipeline for one ground truth record:
+# calls generate_grounded_answer(), computes all deterministic metrics,
+# optionally calls the LLM judge, and returns a combined result dict.
+# A question passes only when both retrieval_score ≥ 0.7 AND
+# judge_total ≥ 0.7 (or the judge is skipped).
+# ══════════════════════════════════════════════════════════════════════════════
 
 def evaluate_question(record: dict, use_judge: bool) -> dict:
     """Run the full pipeline for one ground truth record and return a result dict."""
@@ -450,7 +472,13 @@ def evaluate_question(record: dict, use_judge: bool) -> dict:
     return result
 
 
-# ── Retrieval note auto-generation ────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# RETRIEVAL NOTE AUTO-GENERATION
+# Builds the human-readable retrieval_note string that is written back into
+# ground_truth.yaml when --update-notes is passed.  Records which expected
+# chunk IDs were found at which rank, and summarises the top-K results by
+# chunk type, content source, and score.
+# ══════════════════════════════════════════════════════════════════════════════
 
 def _short_id(cid: str) -> str:
     """Display-friendly short form of a chunk_id."""
@@ -570,7 +598,11 @@ def write_retrieval_notes(notes_by_qid: dict, yaml_path: Path) -> int:
     return written
 
 
-# ── Summary builder ───────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# SUMMARY BUILDER
+# Aggregates per-question results into overall and per-category pass rates,
+# mean scores, and metric averages written to eval_summary_{run_id}.json.
+# ══════════════════════════════════════════════════════════════════════════════
 
 def build_summary(results: list[dict], run_id: str, run_timestamp: str) -> dict:
     total = len(results)
@@ -624,7 +656,11 @@ def build_summary(results: list[dict], run_id: str, run_timestamp: str) -> dict:
     }
 
 
-# ── Stdout summary table ──────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# STDOUT SUMMARY TABLE
+# Prints the pass/fail breakdown and mean scores to the terminal at the
+# end of each run for quick review without opening output files.
+# ══════════════════════════════════════════════════════════════════════════════
 
 def print_summary(summary: dict) -> None:
     print(f"\n{'='*60}")
@@ -657,7 +693,12 @@ def print_summary(summary: dict) -> None:
     print(f"{'='*60}\n")
 
 
-# ── CSV export ────────────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# CSV EXPORT
+# Writes eval_answers_{run_id}.csv (question, answer, passed) and
+# eval_scores_{run_id}.csv (all numeric scores and judge reasoning)
+# to the results/ directory for human review and trend analysis.
+# ══════════════════════════════════════════════════════════════════════════════
 
 _CSV_ANSWERS_FIELDS = [
     "question_id", "category", "question", "passed", "system_answer",
@@ -684,7 +725,9 @@ def _write_csv(results: list, answers_path: Path, scores_path: Path) -> None:
         writer.writerows(results)
 
 
-# ── Entry point ───────────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# ENTRY POINT
+# ══════════════════════════════════════════════════════════════════════════════
 
 def main():
     parser = argparse.ArgumentParser(description="CS chatbot evaluation harness")
