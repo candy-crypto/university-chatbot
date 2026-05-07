@@ -32,7 +32,7 @@ def latest_review_file() -> Path:
 
 
 def load_csv(path: Path) -> list[dict]:
-    with open(path, newline="", encoding="utf-8") as f:
+    with open(path, newline="", encoding="utf-8-sig") as f:
         return list(csv.DictReader(f))
 
 

@@ -7,6 +7,13 @@ This module handles query embedding, Weaviate native hybrid search
 construction for grounded answer generation.
 """
 
+# ══════════════════════════════════════════════════════════════════════════════
+# SECTION 1 — CONFIGURATION & CONSTANTS
+# Environment variables, API clients (OpenAI, Weaviate), tuning parameters
+# (TOP_K, HYBRID_ALPHA), Weaviate return properties, and the query embedding
+# function that converts text to a dense vector for semantic search.
+# ══════════════════════════════════════════════════════════════════════════════
+
 import os
 import re
 from datetime import date
@@ -89,6 +96,16 @@ def embed_text(text: str) -> List[float]:
     return response.data[0].embedding
 
 
+# ══════════════════════════════════════════════════════════════════════════════
+# SECTION 2 — QUERY PRE-PROCESSING
+# Transforms the raw student question before it reaches the retrieval engine:
+#   • Tokenization — lowercases, strips punctuation, removes stopwords
+#   • Acronym expansion — appends full forms (AI → Artificial Intelligence)
+#     so BM25 can match catalog and web headings that use the full term
+#   • Temporal expansion — normalizes relative time references ("this fall",
+#     "next semester") into explicit semester labels (e.g. "Fall 2026")
+# ══════════════════════════════════════════════════════════════════════════════
+
 # ── Token-level constants ─────────────────────────────────────────────────────
 
 # Common English words that carry no domain meaning and cause spurious
@@ -140,8 +157,9 @@ _COURSE_TOPIC_TERMS = frozenset({
     "address", "addresses", "cover", "covers", "covering",
     "about", "related", "focus", "focuses", "teach", "teaches",
     "include", "includes", "involve", "involves", "topics",
-    "difference", "differences", "compare", "comparing",
-    "distinguish", "between", "versus", "vs",
+    "difference", "differences", "different", "differ", "differs",
+    "compare", "comparing", "distinguish", "between", "versus", "vs",
+    "deals",
 })
 _POLICY_QUERY_TERMS = frozenset({
     "vww", "viewing", "wider", "world",
@@ -374,6 +392,18 @@ def expand_temporal_query(query: str, today: date | None = None) -> str:
 
     return q
 
+
+# ══════════════════════════════════════════════════════════════════════════════
+# SECTION 3 — HYBRID RETRIEVAL (BM25 + VECTOR) & RANKING
+# Executes the two-stage retrieval pipeline against Weaviate:
+#   • Hard filters — restrict the candidate set by chunk_type, level, and
+#     degree_type before scoring (applied as Weaviate where-clauses)
+#   • Hybrid search — combines BM25 lexical matching with dense-vector
+#     semantic similarity using Reciprocal Rank Fusion (RRF)
+#   • Metadata boosting — re-ranks results by rewarding course-code matches,
+#     schedule-related vocabulary, and preferred chunk types for the query;
+#     penalizes mismatched source types (catalog vs. web)
+# ══════════════════════════════════════════════════════════════════════════════
 
 def metadata_boost(query: str, chunk: Dict[str, Any]) -> float:
     """Add a small score boost when query terms appear in chunk metadata fields."""
@@ -782,6 +812,14 @@ def search_chunks(query: str, department_id: str, top_k: int = TOP_K) -> List[Di
         client.close()
 
 
+# ══════════════════════════════════════════════════════════════════════════════
+# SECTION 4 — CONTEXT CONSTRUCTION
+# Assembles the top-ranked chunks into a structured context block that is
+# injected into the LLM prompt.  Includes a Course Code Reference section
+# that surfaces prerequisite and co-requisite details even when those chunks
+# were not retrieved directly.
+# ══════════════════════════════════════════════════════════════════════════════
+
 def build_context(chunks: List[Dict[str, Any]]) -> str:
     """Format retrieved chunks into a grounded context string for the prompt."""
     parts = []
@@ -841,6 +879,17 @@ def _build_course_reference(chunks: List[Dict[str, Any]]) -> str:
 
     return "## Course Code Reference\n" + "\n".join(entries) + "\n"
 
+
+# ══════════════════════════════════════════════════════════════════════════════
+# SECTION 5 — PRE-RETRIEVAL SHORTCUTS
+# Fast-path handlers invoked at the start of generate_grounded_answer()
+# before any Weaviate query is issued.  Each shortcut returns a complete
+# response immediately when it fires, bypassing Sections 2–4 entirely:
+#   • Availability redirect — seat/enrollment questions are redirected to
+#     the NMSU Banner course search URL (real-time data, not in the index)
+#   • Course lookup — queries naming a specific course code or exact title
+#     are resolved directly from the SQLite course database
+# ══════════════════════════════════════════════════════════════════════════════
 
 # ── Availability redirect pre-retrieval shortcut ─────────────────────────────
 
@@ -1155,6 +1204,17 @@ def try_course_lookup(query: str) -> Dict[str, Any] | None:
         "prompt_context": "",
     }
 
+
+# ══════════════════════════════════════════════════════════════════════════════
+# SECTION 6 — ANSWER GENERATION
+# Orchestrates the full RAG pipeline and produces the final response:
+#   1. Run pre-retrieval shortcuts (Section 5); return immediately if one fires
+#   2. Pre-process the query (Section 2)
+#   3. Retrieve and rank chunks (Section 3)
+#   4. Build the grounded context block (Section 4)
+#   5. Construct the system prompt with department-specific instructions
+#   6. Call the OpenAI chat model and return the answer with source citations
+# ══════════════════════════════════════════════════════════════════════════════
 
 def generate_grounded_answer(question: str, department_id: str) -> Dict[str, Any]:
     """

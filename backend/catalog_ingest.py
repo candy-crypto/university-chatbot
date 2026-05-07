@@ -1,7 +1,15 @@
-# This file imports external chunkers, maps their chunks to your current stack,
-# embeds with OpenAI and write to DepartmentChunk.
-# Uses the OpenAI + Weaviate stack
-# Catalog flow isolated from the web cralwer
+"""
+catalog_ingest.py — Catalog ingestion pipeline for the university chatbot.
+
+Invokes nmsu_catalog_chunker to parse the PDF catalog, maps the resulting
+CatalogChunk objects to the shared DepartmentChunk Weaviate schema, embeds
+with OpenAI, and batch-inserts into Weaviate.  Runs independently of the
+web crawler (ingest.py); both pipelines write to the same collection.
+
+Usage:
+    cd backend
+    python catalog_ingest.py
+"""
 
 import os
 import re
@@ -40,6 +48,13 @@ from nmsu_catalog_chunker import run_pipeline as run_catalog_pipeline  # noqa: E
 EMBED_BATCH_MAX_INPUTS = int(os.getenv("EMBED_BATCH_MAX_INPUTS", "64"))
 EMBED_BATCH_MAX_EST_TOKENS = int(os.getenv("EMBED_BATCH_MAX_EST_TOKENS", "240000"))
 
+
+# ══════════════════════════════════════════════════════════════════════════════
+# UTILITIES
+# Token estimation for safe batch sizing, OpenAI embedding caller with
+# automatic batching, text normalisation, and small helpers for constructing
+# document IDs, headings, and course-code suffixes used during mapping.
+# ══════════════════════════════════════════════════════════════════════════════
 
 def estimate_tokens(text: str) -> int:
     # Conservative approximation for batching embeddings requests.
@@ -119,6 +134,14 @@ def make_heading(chunk) -> str:
         return chunk.lab_name
     return getattr(chunk, "chunk_type", "catalog")
 
+
+# ══════════════════════════════════════════════════════════════════════════════
+# SCHEMA MAPPING
+# Translates CatalogChunk dataclass fields to the flat DepartmentChunk
+# property dict expected by Weaviate.  Derives level, source citation string,
+# and heading from chunk metadata.  preflight_check() guards against chunks
+# that would exceed the OpenAI embedding token limit before any API calls.
+# ══════════════════════════════════════════════════════════════════════════════
 
 def delete_catalog_chunks(collection, department_id: str, catalog_year: str):
     collection.data.delete_many(
@@ -221,6 +244,13 @@ def preflight_check(mapped: list) -> bool:
     return False
 
 
+# ══════════════════════════════════════════════════════════════════════════════
+# WEAVIATE UPSERT
+# Deletes existing catalog chunks for the configured department and year,
+# maps and embeds all new chunks, populates the SQLite course lookup table
+# from course_description chunks, then batch-inserts into Weaviate.
+# ══════════════════════════════════════════════════════════════════════════════
+
 def upsert_catalog_chunks(catalog_chunks, crawl_version: str):
     client = get_weaviate_client()
     try:
@@ -271,6 +301,10 @@ def upsert_catalog_chunks(catalog_chunks, crawl_version: str):
     finally:
         client.close()
 
+
+# ══════════════════════════════════════════════════════════════════════════════
+# ENTRY POINT
+# ══════════════════════════════════════════════════════════════════════════════
 
 def main():
     init_db()

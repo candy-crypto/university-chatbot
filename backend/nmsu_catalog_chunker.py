@@ -221,6 +221,11 @@ def get_page_lines(page) -> list[dict]:
 # lines_to_text() and all downstream chunkers; deferred.
 # ──────────────────────────────────────────────────────────────────────────────
 
+# ═══════════════════════════════════════════════════════════════════════════════
+# TEXT UTILITIES
+# Flatten extracted lines to plain text and classify individual lines as
+# headings, running headers, or body text.
+# ═══════════════════════════════════════════════════════════════════════════════
 
 def lines_to_text(lines: list[dict], skip_headers: bool = True) -> str:
     """
@@ -277,7 +282,11 @@ def find_referenced_courses(text: str) -> list[str]:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# TOC PARSER
+# TOC & STRUCTURE PARSING
+# Parse the catalog Table of Contents to build a page-range map that drives
+# all downstream chunkers.  Also infers section types (degree, minor, policy,
+# etc.) from TOC entry titles so the pipeline can route pages to the right
+# chunker without manual configuration.
 # ═══════════════════════════════════════════════════════════════════════════════
 
 TOC_ENTRY_RE = re.compile(r'^(.+?)\s*\.{2,}\s*(\d+)\s*$')

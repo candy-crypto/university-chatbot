@@ -47,7 +47,12 @@ COURSE_CODE_RE = re.compile(r'\b([A-Z][A-Z\s]{0,5}\s+\d{3,4}[A-Z]?)\b')
 # question starts.
 _QA_MARKER_RE = re.compile(r'(?<!\w)Q\d+\.')
 
-# ── Faculty entry splitter ────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# FACULTY ENTRY SPLITTER
+# Faculty directory pages concatenate all entries into one text blob.
+# These patterns split the blob into one block per person so that name,
+# office, and expertise queries can match precisely.
+# ══════════════════════════════════════════════════════════════════════════════
 # Faculty directory pages (CS and Data Analytics) concatenate all entries on a
 # page into one large text blob. These patterns split that blob into one block
 # per person so that name/office/expertise queries can match precisely.
@@ -155,20 +160,31 @@ def _split_faculty_entries(text: str) -> list[str]:
     return entries
 
 
-# ── Config ────────────────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# CONFIGURATION
+# Loads the per-department YAML config that controls which URLs to crawl,
+# which chunk types to produce, and how to classify page content.
+# ══════════════════════════════════════════════════════════════════════════════
 
 def load_department_config(path: str) -> dict:
     with open(path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 
-# ── Text utilities ─────────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# TEXT UTILITIES
+# ══════════════════════════════════════════════════════════════════════════════
 
 def normalize_text(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
-# ── URL filtering ──────────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# URL FILTERING
+# Enforces the allowed-domains and allowed-path-prefix rules from the
+# department config, and blocks URLs matching deny patterns (PDFs, login
+# pages, query strings that produce duplicate or irrelevant content).
+# ══════════════════════════════════════════════════════════════════════════════
 
 def is_allowed_url(url: str, config: dict) -> bool:
     parsed = urlparse(url)
@@ -185,7 +201,12 @@ def is_allowed_url(url: str, config: dict) -> bool:
     return True
 
 
-# ── Page extraction ────────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# PAGE EXTRACTION
+# JavaScript DOM walker (run via Playwright) extracts structured sections
+# from each rendered page.  extract_page_data() maps the raw DOM output to
+# the internal page dict consumed by the chunker.
+# ══════════════════════════════════════════════════════════════════════════════
 
 # JavaScript DOM walker used to extract structured sections from a rendered page.
 # Extracted as a module-level constant so it can be re-evaluated after each
@@ -409,7 +430,12 @@ def extract_page_data(page, url: str, config: dict) -> dict:
     }
 
 
-# ── Chunking ───────────────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# CHUNKING
+# Splits extracted page sections into Weaviate-ready chunks bounded by
+# heading boundaries and the CHUNK_MIN_LEN / CHUNK_MAX_LEN guardrails.
+# FAQ pages are pre-processed to split Q/A pairs before chunking.
+# ══════════════════════════════════════════════════════════════════════════════
 
 def _expand_qa_sections(sections: list) -> list:
     """
@@ -571,7 +597,11 @@ def chunk_page(sections: list, chunk_type: str,
     return [c for c in chunks if c.get("text")]
 
 
-# ── Course code extraction ─────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# COURSE CODE EXTRACTION
+# Identifies the primary course code for a chunk and collects all course
+# codes cross-referenced in the text for the referenced_courses field.
+# ══════════════════════════════════════════════════════════════════════════════
 
 def extract_course_code(heading: str, text: str) -> str:
     """Extract the primary course code from the page heading or top of body text."""
@@ -589,7 +619,11 @@ def extract_referenced_courses(text: str) -> list:
     })
 
 
-# ── Embedding ──────────────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# EMBEDDING
+# Batches chunk texts and calls the OpenAI embedding model to produce
+# dense vectors stored alongside each chunk in Weaviate.
+# ══════════════════════════════════════════════════════════════════════════════
 
 def embed_batch(texts: list) -> list:
     response = openai_client.embeddings.create(
@@ -599,7 +633,12 @@ def embed_batch(texts: list) -> list:
     return [item.embedding for item in response.data]
 
 
-# ── Crawl ──────────────────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# CRAWL
+# BFS web crawler driven by Playwright.  Respects the URL filter rules,
+# follows internal links up to max_pages, and returns a list of extracted
+# page dicts ready for chunking and embedding.
+# ══════════════════════════════════════════════════════════════════════════════
 
 def crawl_site(config: dict, max_pages: int = 60) -> list:
     """
@@ -694,7 +733,11 @@ def crawl_site(config: dict, max_pages: int = 60) -> list:
     return pages
 
 
-# ── Weaviate upsert ────────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# WEAVIATE UPSERT
+# Deletes the department's existing web chunks, then batch-inserts the
+# newly embedded chunks.  Also logs the crawl run to the SQLite audit table.
+# ══════════════════════════════════════════════════════════════════════════════
 
 def delete_department_chunks(collection, department_id: str):
     """Remove all existing web chunks for this department before re-ingesting."""
@@ -815,7 +858,9 @@ def upsert_pages_to_weaviate(
         client.close()
 
 
-# ── Entry point ────────────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# ENTRY POINT
+# ══════════════════════════════════════════════════════════════════════════════
 
 def main():
     import argparse
