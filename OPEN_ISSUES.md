@@ -94,6 +94,12 @@ Items marked **[re-ingest needed]** require a pipeline re-run to take effect.
 
 ---
 
+## eval/harness.py
+
+- [ ] **Implement true recall@k** — `compute_recall_at_k()` currently returns a boolean (True if at least one expected chunk appears in top-k), which is properly called hit@k or hit rate. True recall@k should return the proportion of expected chunks retrieved: `len(retrieved ∩ expected) / len(expected)`. Fixing this requires updating `compute_retrieval_score()` to handle a float input instead of a boolean, and re-running the full evaluation to obtain corrected scores.
+
+---
+
 ## db.py / catalog_ingest.py
 
 - [ ] **Honors suffix (`H`) not extracted** — `extract_suffix()` in `catalog_ingest.py` only extracts `G` and `V`; `H` (Honors) courses are not stored in the `suffix` field and cannot be listed via `lookup_courses_by_suffix("H")`. Add `H` to the suffix check and update `_SUFFIX_LABELS` in `retrieval.py` to support honors course queries.

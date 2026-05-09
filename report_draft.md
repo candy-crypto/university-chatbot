@@ -41,7 +41,7 @@ The primary authoritative source for course descriptions, degree requirements, p
 
 A custom catalog chunker (`nmsu_catalog_chunker.py`) parses the PDF and produces structured chunks, each assigned a type: `course_description`, `degree_requirement`, `degree_core_requirement`, `minor_index`, `minor_requirement`, `policy`, and others. All chunks share the same set of fields, and the chunk type determines which fields are populated. Fields not relevant to a given chunk type are left empty.
 
-As a by-product of catalog ingestion, a lightweight SQLite course lookup table is populated with one row per course: course code, title, credit count, and a suffix flag: `G` for General Education courses, `V` for Viewing a Wider World (VWW) courses, and blank otherwise. Support for `H` (Honors) is planned for a future round. The table supports lookups by exact course code, by exact title, or by approximate title using SQLite full-text search — so a student can ask about "Data Structures" and the system resolves it to CSCI 3110 even without knowing the course code. The canonical code and title retrieved from the table are also injected into the LLM's context, ensuring that course references in responses use the correct, consistent identifiers rather than relying on the model to reproduce them accurately. This table is used by the pre-retrieval shortcuts described in Section 4.3.
+As a by-product of catalog ingestion, a lightweight SQLite course lookup table is populated with one row per course: course code, title, credit count, and a suffix flag: `G` for General Education courses, `V` for Viewing a Wider World (VWW) courses, and blank otherwise. Support for `H` (Honors) is planned for a future round. The table supports lookups by exact course code, by exact title, or by approximate title using SQLite full-text search. A student can ask about "Data Structures" and the system resolves it to CSCI 3110 without being told the course code, and vice versa. The canonical code and title retrieved from the table are also injected into the LLM's context, ensuring that course references in responses use the correct, consistent identifiers rather than relying on the model to reproduce them accurately. This table is used by the pre-retrieval shortcuts described in Section 4.3.
 
 ### 3.2 Department Web Pages
 
@@ -80,7 +80,7 @@ Before issuing the Weaviate query, the system applies several transformations to
 - **Acronym expansion.** Common abbreviations are expanded (e.g., "AI" → "artificial intelligence", "ML" → "machine learning", "Generative AI" → "generative artificial intelligence"). The expanded form is appended to the end of the query string, so both the abbreviated and expanded forms participate in retrieval. Because the expansion appears at the end rather than adjacent to the original term, it does not always carry full BM25 weight — a known limitation of this approach.
 - **Synonym and stem mapping.** A curated synonym map adds discipline-specific equivalents (e.g., "neural net" → "neural network", "ethics" → "ethical").
 - **Query classification.** Patterns in the question trigger classification as a banner-redirect query (enrollment/seat questions), an offering-frequency query (rotation table questions), a comparison query, or a course-topic query. Classification controls which chunk types are boosted, how many results are fetched (top-k), and what source type the answer is expected to draw from.
-- **Temporal grounding.** Questions about semester availability require different handling depending on what the student is actually asking. "Is CSCI 4110 offered in the fall?" is an offering-frequency question answered from the static three-year course rotation page; the correct retrieved source is the rotation table, not real-time enrollment data. "Are there seats available this fall?" is a live enrollment question that cannot be answered from any ingested source and is redirected to Banner. The query classifier distinguishes these two cases explicitly, preventing offering-frequency questions from being incorrectly redirected and ensuring rotation-table chunks are retrieved rather than seat-count data that does not exist in the knowledge base.
+- **Temporal grounding.** Questions about semester availability require different handling depending on what the student is actually asking. "Is CSCI 4110 offered in the fall?" is an offering-frequency question answered from the static three-year course rotation page; the correct retrieved source is the rotation table, not real-time registration data. "Are there seats available this fall?" is a live registration question that cannot be answered from any ingested source and is redirected to Banner. The query classifier distinguishes these two cases explicitly, preventing offering-frequency questions from being incorrectly redirected and ensuring rotation-table chunks are retrieved rather than seat-count data that does not exist in the knowledge base.
 
 ### 4.3 Pre-Retrieval Shortcuts
 
@@ -99,15 +99,15 @@ Rather than searching the entire collection for every query, the system applies 
 
 - A **department filter** restricts results to CS department content, isolating the system from other departments' data in the same Weaviate instance.
 - **Chunk-type boosts** elevate chunks whose type matches the inferred query intent (e.g., `course_description` chunks receive a boost for questions about course content; `degree_requirement` chunks are boosted for program-level questions).
-- **Enrollment queries** short-circuit retrieval entirely and return the Banner course search URL without consulting the vector database.
+- **Registration/Seat availability queries** short-circuit retrieval entirely and return the Banner course search URL without consulting the vector database.
 
 ### 4.5 Result Set Size (k)
 
-The number of chunks retrieved — k — is not fixed. The default is 5, which is sufficient for straightforward single-topic queries. Query classification raises k when the answer is expected to require more content: questions about all available concentrations retrieve up to 15 chunks (there are roughly 11 concentration options); questions about minors retrieve up to 12; questions comparing two degree programs retrieve up to 20 so that relevant chunks for both programs have room to surface in the ranked list. Policy and course-topic queries are similarly expanded to 10–15. The reasoning in all cases is the same: a fixed small k risks cutting off relevant content when the answer spans multiple catalog sections or web pages, while an unnecessarily large k adds noise and increases LLM context length without improving accuracy for simple queries.
+The number of chunks retrieved (k) is not fixed. The default is 5, which is sufficient for straightforward single-topic queries. Query classification raises k when the answer is expected to require more content: questions about all available concentrations retrieve up to 15 chunks (there are roughly 11 concentration options); questions about minors retrieve up to 12; questions comparing two degree programs retrieve up to 20 so that relevant chunks for both programs have room to surface in the ranked list. Policy and course-topic queries are similarly expanded to 10–15. The reasoning in all cases is the same: a fixed small k risks cutting off relevant content when the answer spans multiple catalog sections or web pages, while an unnecessarily large k adds noise and increases LLM context length without improving accuracy for simple queries.
 
 ### 4.6 Context Assembly
 
-The top-ranked chunks are assembled into a prompt context block and passed to the LLM along with the user's question. Each chunk carries its source metadata, which the LLM uses to produce citations in its answer. Citations take different forms depending on the source: catalog chunks are cited as "NMSU Academic Catalog 2025–2026, pp. X–Y" (using the page range stored with the chunk); web chunks are cited by URL. All citations are collected into a "Sources:" section at the end of the answer rather than appearing inline, keeping the body of the response readable. A context-recall metric measures how much of the retrieved content overlaps with the expected chunks for each question, complementing the binary recall-at-k metric.
+The top-ranked chunks are assembled into a prompt context block and passed to the LLM along with the user's question. Each chunk carries its source metadata, which the LLM uses to produce citations in its answer. Citations take different forms depending on the source: catalog chunks are cited as "NMSU Academic Catalog 2025–2026, pp. X–Y" (using the page range stored with the chunk); web chunks are cited by URL. All citations are collected into a "Sources:" section at the end of the answer rather than appearing inline, keeping the body of the response readable. A context-recall metric measures how much of the retrieved content overlaps with the expected chunks for each question, complementing the binary recall@k metric.
 
 ---
 
@@ -115,7 +115,7 @@ The top-ranked chunks are assembled into a prompt context block and passed to th
 
 ### 5.1 Ground Truth Dataset
 
-The evaluation dataset comprises 75 questions distributed across 13 categories representing the full range of student advising queries. The table below shows the number of questions per category; category counts are unequal and in several cases small, reflecting the initial scope of the benchmark rather than the relative importance of each topic.
+The evaluation dataset comprises 75 questions distributed across 13 categories representing a range of student advising queries. The table below shows the number of questions per category; category counts are unequal and in several cases small, reflecting the initial scope of the benchmark rather than the relative importance of each topic.
 
 [TABLE: Question counts by category (from eval_combined_report.csv or summary)]
 
@@ -125,12 +125,12 @@ Questions were written to reflect realistic student phrasing, including informal
 
 The evaluation harness computes several metrics that do not require an LLM and are fully reproducible:
 
-- **Recall@k** — whether all expected chunk IDs appear in the top-k retrieved results.
-- **Precision@1** — whether the top-ranked chunk is one of the expected chunks.
-- **Source type correctness** — whether the retrieved chunks come from the expected source type.
-- **Citation format validity** — whether citations in the answer follow the expected format (page range for catalog, URL for web).
-- **Context recall** — the proportion of expected chunk text covered by the retrieved context.
-- **Retrieval score** — a composite of the above metrics, weighted to reflect their relative importance.
+- **Hit@k** (binary: pass/fail) — whether at least one expected chunk appears in the top-k retrieved results. Weighted at 40% in the composite. Note: this metric is sometimes called hit rate; true recall@k — the proportion of all expected chunks retrieved — is a planned improvement.
+- **Precision@1** (binary: pass/fail) — whether the top-ranked chunk is one of the expected chunks. Weighted at 30%.
+- **Source type correctness** (binary: pass/fail) — whether the dominant source type in the top-3 results matches the expected source type (catalog, web, or either). Weighted at 30%.
+- **Retrieval score** (0.0–1.0) — the weighted sum of the three binary metrics above. Because each component is binary, the score can only take the values 0.0, 0.3, 0.4, 0.6, 0.7, or 1.0.
+- **Citation format validity** (binary: pass/fail) — whether at least one citation of the expected type appears in the answer. Tracked separately; not included in the retrieval score composite.
+- **Context recall** (0.0–1.0) — the proportion of ground-truth key facts covered by the answer. Tracked separately; not included in the retrieval score composite.
 
 A question is counted as **passed** if its composite retrieval score meets or exceeds a threshold of 0.7.
 
@@ -255,13 +255,13 @@ Recommended next steps are: (1) streaming response delivery to reduce perceived 
 
 ### Appendix C: Retrieval Score Metric Definitions
 
-| Metric | Description | Weight in Composite |
+| Metric | Range | Weight in Retrieval Score |
 |---|---|---|
-| Recall@k | All expected chunks appear in top-k results | High |
-| Precision@1 | Top-ranked chunk is an expected chunk | Medium |
-| Source type correctness | Retrieved source type matches expected | Medium |
-| Citation format validity | Citations follow expected format | Low |
-| Context recall | Coverage of expected chunk text in retrieved context | Medium |
+| Hit@k (binary recall) | Binary (pass/fail) | 40% |
+| Precision@1 | Binary (pass/fail) | 30% |
+| Source type correctness | Binary (pass/fail) | 30% |
+| Citation format validity | Binary (pass/fail) | Not included — tracked separately |
+| Context recall | 0.0–1.0 | Not included — tracked separately |
 
 ### Appendix D: LLM Judge Rubric Criteria
 
