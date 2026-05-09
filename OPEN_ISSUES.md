@@ -94,6 +94,12 @@ Items marked **[re-ingest needed]** require a pipeline re-run to take effect.
 
 ---
 
+## db.py / catalog_ingest.py
+
+- [ ] **Honors suffix (`H`) not extracted** — `extract_suffix()` in `catalog_ingest.py` only extracts `G` and `V`; `H` (Honors) courses are not stored in the `suffix` field and cannot be listed via `lookup_courses_by_suffix("H")`. Add `H` to the suffix check and update `_SUFFIX_LABELS` in `retrieval.py` to support honors course queries.
+
+---
+
 ## Ground truth review
 
 - [x] **Full review pass completed** — pol_001 through other_001 reviewed and recorded (2026-04-24)
