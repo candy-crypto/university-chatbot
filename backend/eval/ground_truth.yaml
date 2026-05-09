@@ -14,7 +14,7 @@
   expected_chunk_ids:
     - "https://advising.nmsu.edu/#chunk-0"          # full name in page header; retrieval gap — nav boilerplate dilutes ranking
     - "116b9e42d133cddf"                             # catalog p41 — CAASS mentioned in overload policy text
-  retrieval_note: "found: chunk-0@rank2(0.7207); not_found: 116b9e42d133cddf; top5: rank1[advising/web/1.0800] rank2[advising/web/0.7207 EXP] rank3[advising/web/0.5403] rank4[advising/web/0.5257] rank5[course_descrip/catalog/0.5169]"
+  retrieval_note: "found: chunk-0@rank1(1.0292); not_found: 116b9e42d133cddf; top5: rank1[advising/web/1.0292 EXP] rank2[advising/web/0.9934] rank3[course_descrip/catalog/0.5170] rank4[advising/web/0.4797] rank5[advising/web/0.4574]"
   expected_source_type: "web"
   applicable_groups:
     - "prospective_undergrad"
@@ -33,7 +33,7 @@
     - "https://computerscience.nmsu.edu/majors/undergraduate-advising.html#chunk-3"  # undergrad mentor email process
     - "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-5"  # Dr. Song Q5
     - "https://advising.nmsu.edu/#chunk-0"  # contains advising@nmsu.edu for transfer students
-  retrieval_note: "no expected chunks in top-K; not_found: chunk-3, chunk-5, chunk-0; top5: rank1[advising/web/0.8864] rank2[advising/web/0.8082] rank3[glossary/catalog/0.7747] rank4[advising/web/0.6797] rank5[advising/web/0.6604]"
+  retrieval_note: "found: chunk-3@rank2(0.8646), chunk-0@rank12(0.3938); not_found: chunk-5; top5: rank1[advising/web/0.9796] rank2[advising/web/0.8646 EXP] rank3[advising/web/0.7691] rank4[advising/web/0.7464] rank5[glossary/catalog/0.7042]"
   expected_source_type: "web"
   applicable_groups:
     - "current_undergrad"
@@ -56,6 +56,7 @@
     - "74d9e6467356ba33"  # catalog p.565 dept_intro — "CS majors should review programs of study with advisors each semester"
     - "https://computerscience.nmsu.edu/majors/undergraduate-advising.html#chunk-3"  # Who is my CS departmental mentor? — designated advising period April/November
     - "https://computerscience.nmsu.edu/majors/undergraduate-advising.html#chunk-4"  # How do I complete departmental mentoring? — pre-meeting prep (StarAudit, CS Plan)
+  retrieval_note: "no expected chunks in top-K; not_found: 74d9e6467356ba33, chunk-3, chunk-4; top5: rank1[degree_require/catalog/1.1772] rank2[degree_require/catalog/1.1659] rank3[degree_require/catalog/1.1471] rank4[degree_require/catalog/1.1422] rank5[study_plan/catalog/1.0434]"
   expected_source_type: "web"
   applicable_groups:
     - "current_undergrad"
@@ -78,9 +79,10 @@
   question: "What CS courses will be offered next semester?"
   key_facts:
     - "Three-year course rotation available at three-year-course-rotation.html lists anticipated offerings"
-    - "Fall 2027 anticipated CSCI courses include: 1110, 1115G, 1720/4540, 2210/4545, 2220/4550, 2230/4555, 2310/4560, 2410, 3410, 3710/4575, 3720/5110, 3730/4580, 3790/4590, 4120, 4130, 4140/5140, 4215/5215, 4225/5225, 4240/5240, 4250/5250, 4255/5255, 4310/5310, 4415/5415"
+    - "Fall 2026 anticipated CSCI courses include: 1110, 1115G, 1720/4540, 2210/4545, 2220/4550, 2230/4555, 2310/4560, 2410, 3710/4575, 3720/5110, 3730/4580, 4120, 4130, 4140/5140, 4215/5215, 4225/5225, 4240/5240, 4245/5245, 4250/5250, 4255/5255, 4415/5415, 4425/5425, 4980, 5510, 5750, 5820, 5860"
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-1"  # course rotation table — anticipated offerings by semester
+  retrieval_note: "found: chunk-1@rank1(1.2386); top5: rank1[course_schedul/web/1.2386 EXP] rank2[course_schedul/web/1.0614] rank3[general/web/0.4146] rank4[study_plan/web/0.3849] rank5[general/web/0.3819]"
   expected_source_type: "web"
   banner_redirect_expected: false
   notes: "Course offerings (which courses run) → rotation table. Banner redirect applies only to seat/registration availability, not offering schedule."
@@ -93,6 +95,7 @@
     - "Next offering: Fall 2027"
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-1"  # course rotation table — CSCI 3790/4590 offering schedule
+  retrieval_note: "found: chunk-1@rank2(0.9565); top5: rank1[course_descrip/catalog/1.0860] rank2[course_schedul/web/0.9565 EXP] rank3[course_descrip/catalog/0.8414] rank4[course_descrip/catalog/0.7993] rank5[course_descrip/catalog/0.7002]"
   expected_source_type: "web"
   banner_redirect_expected: false
 
@@ -103,7 +106,7 @@
     - "Next offering: Fall 2026"
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-1"  # rotation table showing FA-only pattern
-  retrieval_note: "found: chunk-1@rank1(1.0906), b6698dedb6cd09ea@rank2(0.9692); top5: rank1[course_schedul/web/1.0906 EXP] rank2[course_descrip/catalog/0.9692 EXP] rank3[course_descrip/catalog/0.6951] rank4[course_descrip/catalog/0.6890] rank5[course_descrip/catalog/0.6614]"
+  retrieval_note: "found: chunk-1@rank1(1.0908); top5: rank1[course_schedul/web/1.0908 EXP] rank2[course_descrip/catalog/0.9695] rank3[course_descrip/catalog/0.6922] rank4[course_descrip/catalog/0.6872] rank5[course_descrip/catalog/0.6585]"
   expected_source_type: "web"
   banner_redirect_expected: false
 
@@ -115,7 +118,7 @@
     - "Next offering: Fall 2027"
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-1"  # rotation table — authoritative source for next offering
-  retrieval_note: "found: ae3b5c5184016f32@rank1(1.0550), chunk-1@rank3(0.7353); top5: rank1[course_descrip/catalog/1.0550 EXP] rank2[course_descrip/catalog/0.7531] rank3[course_schedul/web/0.7353 EXP] rank4[course_descrip/catalog/0.7036] rank5[course_descrip/catalog/0.6484]"
+  retrieval_note: "found: chunk-1@rank3(0.7364); top5: rank1[course_descrip/catalog/1.1000] rank2[course_descrip/catalog/0.7697] rank3[course_schedul/web/0.7364 EXP] rank4[course_descrip/catalog/0.7209] rank5[course_descrip/catalog/0.6613]"
   expected_source_type: "web"
   banner_redirect_expected: false
   notes: "Duplicate of avail_003 with different phrasing — useful for retrieval robustness testing; avail_003 uses course code so rotation ranks; avail_005 uses course title only so rotation is missed"
@@ -129,7 +132,7 @@
     - "CSCI 5605 Operating Systems II appears in SP26, SP27, and FA28 — not every semester"
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-1"  # rotation table 
-  retrieval_note: "found: chunk-1@rank1(1.1500), b6698dedb6cd09ea@rank4(0.8371); top5: rank1[course_schedul/web/1.1500 EXP] rank2[course_descrip/catalog/0.9077] rank3[course_descrip/catalog/0.8441] rank4[course_descrip/catalog/0.8371 EXP] rank5[course_descrip/catalog/0.7103]"
+  retrieval_note: "found: chunk-1@rank1(1.1500); top5: rank1[course_schedul/web/1.1500 EXP] rank2[course_descrip/catalog/0.9184] rank3[course_descrip/catalog/0.8555] rank4[course_descrip/catalog/0.8471] rank5[course_descrip/catalog/0.7226]"
   expected_source_type: "web"
   banner_redirect_expected: false
 
@@ -173,7 +176,7 @@
     - "Next offering after SP26: Fall 2026 (FA26)"
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/majors/three-year-course-rotation.html#chunk-1"  # rotation table — contains CSCI 4215/5215 entry
-  retrieval_note: "found: chunk-1@rank1(1.0782), dd9b90e2914e24a4@rank2(0.9899), 1dcea72dc91031be@rank3(0.7440); top5: rank1[course_schedul/web/1.0782 EXP] rank2[course_descrip/catalog/0.9899 EXP] rank3[course_descrip/catalog/0.7440 EXP] rank4[course_descrip/catalog/0.6721] rank5[course_descrip/catalog/0.5912]"
+  retrieval_note: "found: chunk-1@rank1(1.0779); top5: rank1[course_schedul/web/1.0779 EXP] rank2[course_descrip/catalog/0.9917] rank3[course_descrip/catalog/0.7452] rank4[course_descrip/catalog/0.6697] rank5[course_descrip/catalog/0.5910]"
   expected_source_type: "web"
   applicable_groups:
     - "current_undergrad"
@@ -199,7 +202,7 @@
   expected_chunk_ids:
     - "45eb0bef0400c391"  # NMSU Viewing a Wider World Requirements — catalog
     - "3064c5eebfcc27c6"  # Alternatives for Meeting VWW Requirements — catalog
-  retrieval_note: "found: 3064c5eebfcc27c6@rank1(1.2800), 45eb0bef0400c391@rank2(1.1223); top5: rank1[policy/catalog/1.2800 EXP] rank2[policy/catalog/1.1223 EXP] rank3[policy/catalog/0.7821] rank4[degree_require/catalog/0.4913] rank5[policy/catalog/0.4250]"
+  retrieval_note: "found: 3064c5eebfcc27c6@rank1(1.3571); not_found: 45eb0bef0400c391; top5: rank1[policy/catalog/1.3571 EXP] rank2[policy/catalog/1.0665] rank3[policy/catalog/0.9972] rank4[policy/catalog/0.9017] rank5[degree_require/catalog/0.4733]"
   expected_source_type: "catalog"
   applicable_groups:
     - "prospective_undergrad"
@@ -214,7 +217,7 @@
     - "The 'V' suffix indicates VWW, not Gen Ed (Gen Ed courses carry 'G' suffix)"
   expected_chunk_ids:
     - "11d461f88355b84f"  # HIST 308V course description — heading alone (suffix) answers the question
-  retrieval_note: "found: 11d461f88355b84f@rank1(0.9724); top5: rank1[course_descrip/catalog/0.9724 EXP] rank2[policy/catalog/0.8976] rank3[policy/catalog/0.8905] rank4[course_descrip/catalog/0.7298] rank5[course_descrip/catalog/0.6719]"
+  retrieval_note: "found: 11d461f88355b84f@rank3(0.9318); top5: rank1[policy/catalog/0.9917] rank2[policy/catalog/0.9692] rank3[course_descrip/catalog/0.9318 EXP] rank4[course_descrip/catalog/0.7292] rank5[course_descrip/catalog/0.6458]"
   expected_source_type: "catalog"
   applicable_groups:
     - "current_undergrad"
@@ -242,7 +245,7 @@
     - "Students then take an additional course in either Area III or Area IV for 3-4 credits depending on selection (Area III is 4 credits, Area IV is 3 credits)"
   expected_chunk_ids:
     - "0784a4c8b220019d"  # catalog p.238 gen-ed listing — six content areas with course lists; primary source
-  retrieval_note: "found: 0784a4c8b220019d@rank1(1.0019); top5: rank1[policy/catalog/1.0019 EXP] rank2[policy/catalog/0.9644] rank3[glossary/catalog/0.8144] rank4[policy/catalog/0.6205] rank5[glossary/catalog/0.6012]"
+  retrieval_note: "found: 0784a4c8b220019d@rank1(1.0811); top5: rank1[policy/catalog/1.0811 EXP] rank2[policy/catalog/1.0589] rank3[glossary/catalog/0.8001] rank4[policy/catalog/0.5899] rank5[glossary/catalog/0.5630]"
   expected_source_type: "catalog"
   applicable_groups:
     - "prospective_undergrad"
@@ -256,7 +259,7 @@
     - "Should be taken in junior and/or senior year"
   expected_chunk_ids:
     - "45eb0bef0400c391"  # NMSU Viewing a Wider World Requirements — pp.241-242; states VWW courses are upper-division (junior/senior year)
-  retrieval_note: "found: 45eb0bef0400c391@rank2(0.9896); top5: rank1[policy/catalog/1.2800] rank2[policy/catalog/0.9896 EXP] rank3[policy/catalog/0.6838] rank4[policy/catalog/0.6426] rank5[degree_require/catalog/0.6051]"
+  retrieval_note: "no expected chunks in top-K; not_found: 45eb0bef0400c391; top5: rank1[policy/catalog/1.3600] rank2[policy/catalog/1.0171] rank3[policy/catalog/0.8070] rank4[policy/catalog/0.7440] rank5[degree_require/catalog/0.5801]"
   expected_source_type: "catalog"
   applicable_groups:
     - "current_undergrad"
@@ -285,7 +288,7 @@
   expected_chunk_ids:
     - "e5fb437360229239"   # CS BS HCI degree_requirement — rank 1
     - "4369bf2777274040"   # CS BS Cybersecurity degree_requirement — rank 2
-  retrieval_note: "no expected chunks in top-K; not_found: d77f0feecfc6884d, 482e154e99b5dc92; top5: rank1[degree_overvie/web/0.9753] rank2[degree_require/catalog/0.9163] rank3[degree_core_re/catalog/0.8833] rank4[degree_require/catalog/0.7886] rank5[degree_overvie/web/0.7712]"
+  retrieval_note: "found: 4369bf2777274040@rank1(1.0844), e5fb437360229239@rank2(1.0695); top5: rank1[degree_require/catalog/1.0844 EXP] rank2[degree_require/catalog/1.0695 EXP] rank3[degree_overvie/web/0.9871] rank4[degree_require/catalog/0.9299] rank5[degree_require/catalog/0.9227]"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -298,7 +301,7 @@
     - "2eb0733f90bc7c3e"   # Computer Systems - Undergraduate Minor — rank 1
     - "b1a889c06156e3e9"   # Computer Science - Graduate Minor — rank 2
     - "df872e79162198e8"   # Software Development - Undergraduate Minor — rank 3
-  retrieval_note: "found: 2eb0733f90bc7c3e@rank1(1.4300), b1a889c06156e3e9@rank2(1.2784), df872e79162198e8@rank3(1.2503); top5: rank1[minor_requirem/catalog/1.4300 EXP] rank2[minor_requirem/catalog/1.2784 EXP] rank3[minor_requirem/catalog/1.2503 EXP] rank4[minor_requirem/catalog/1.0423] rank5[minor_requirem/catalog/0.9143]"
+  retrieval_note: "found: 2eb0733f90bc7c3e@rank1(1.4300), b1a889c06156e3e9@rank2(1.2805), df872e79162198e8@rank3(1.2506); top5: rank1[minor_requirem/catalog/1.4300 EXP] rank2[minor_requirem/catalog/1.2805 EXP] rank3[minor_requirem/catalog/1.2506 EXP] rank4[minor_requirem/catalog/1.0428] rank5[minor_requirem/catalog/0.9148]"
   expected_source_type: "catalog"
   applicable_groups:
     - "current_undergrad"
@@ -316,7 +319,7 @@
     - "Biology courses may be used to fulfill the 11-credit Lab Sciences and Social/Behavioral Sciences requirement"
   expected_chunk_ids:
     - "16d9f6f83799bfca"   # CS BS degree_requirement — rank 1
-  retrieval_note: "found: 16d9f6f83799bfca@rank1(1.3121), 6fb64bffef3e6e90@rank2(1.2506), 118ed2b476025933@rank5(0.7963); top5: rank1[degree_require/catalog/1.3121 EXP] rank2[degree_core_re/catalog/1.2506 EXP] rank3[degree_require/catalog/1.1607] rank4[degree_overvie/web/0.8893] rank5[study_plan/catalog/0.7963 EXP]"
+  retrieval_note: "found: 16d9f6f83799bfca@rank5(1.3019); top5: rank1[degree_require/catalog/1.3220] rank2[degree_require/catalog/1.3101] rank3[degree_require/catalog/1.3082] rank4[degree_require/catalog/1.3050] rank5[degree_require/catalog/1.3019 EXP]"
   expected_source_type: "catalog"
   applicable_groups:
     - "prospective_undergrad"
@@ -330,7 +333,7 @@
     - "CS majors may satisfy the statistics requirement with any of: A ST 311 Statistical Applications, STAT 3110 Statistics for Engineers and Scientists, or STAT 4210 Probability: Theory and Applications"
   expected_chunk_ids:
     - "16d9f6f83799bfca"   # CS BS degree_requirement — contains statistics course options; retrieved at rank 1 in 2026-04-25 eval with judge=0.94
-  retrieval_note: "found: 16d9f6f83799bfca@rank1(1.2186); not_found: 6fb64bffef3e6e90; top5: rank1[degree_require/catalog/1.2186 EXP] rank2[study_plan/catalog/1.1450] rank3[study_plan/catalog/1.1423] rank4[study_plan/catalog/0.9088] rank5[study_plan/catalog/0.8968]"
+  retrieval_note: "no expected chunks in top-K; not_found: 16d9f6f83799bfca; top5: rank1[degree_require/catalog/1.2554] rank2[study_plan/catalog/1.1536] rank3[study_plan/catalog/1.1243] rank4[study_plan/catalog/0.9250] rank5[study_plan/catalog/0.9032]"
   expected_source_type: "catalog"
   applicable_groups:
     - "current_undergrad"
@@ -345,7 +348,7 @@
     - "Check NMSU's course search for current semester availability of these courses"
   expected_chunk_ids:
     - "0784a4c8b220019d"  # catalog p.238 gen-ed course listing — includes ENGL 1110G and 2210G under Area I: Communications
-  retrieval_note: "no expected chunks in top-K; not_found: 0784a4c8b220019d; top5: rank1[study_plan/catalog/1.1144] rank2[study_plan/catalog/1.1057] rank3[study_plan/catalog/0.8857] rank4[study_plan/catalog/0.8842] rank5[study_plan/catalog/0.8676]; right source is ENGL gen-ed list pp.238-239; is_list does not fire because query says 'which are offered' not 'which courses are offered'"
+  retrieval_note: "found: 0784a4c8b220019d@rank3(1.0698); top5: rank1[degree_require/catalog/1.1256] rank2[policy/catalog/1.0844] rank3[policy/catalog/1.0698 EXP] rank4[study_plan/catalog/1.0215] rank5[study_plan/catalog/0.8050]"
   expected_source_type: "catalog"
   banner_redirect_expected: true
   applicable_groups:
@@ -367,7 +370,7 @@
     - "6e812bb0213d9f4f"   # CSCI 3410 — Introduction to Intelligent Agents Using Science Fiction
     - "96ed44c75c847eb2"   # CSCI 4440 — Generative Artificial Intelligence
     - "4c03a1129821f08a"   # CSCI 5440 — Generative Artificial Intelligence (graduate)
-  retrieval_note: "found: 2dd3ef533673839b@rank1(1.3500); not_found: 6e812bb0213d9f4f, 96ed44c75c847eb2, 4c03a1129821f08a; top5: rank1[course_descrip/catalog/1.3500 EXP] rank2[course_descrip/catalog/0.8575] rank3[course_descrip/catalog/0.8264] rank4[course_descrip/catalog/0.8095] rank5[course_descrip/catalog/0.7835]"
+  retrieval_note: "found: 2dd3ef533673839b@rank1(1.3500), 6e812bb0213d9f4f@rank15(0.5880); not_found: 96ed44c75c847eb2, 4c03a1129821f08a; top5: rank1[course_descrip/catalog/1.3500 EXP] rank2[course_descrip/catalog/0.8580] rank3[course_descrip/catalog/0.8275] rank4[course_descrip/catalog/0.8102] rank5[course_descrip/catalog/0.7862]"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -387,7 +390,7 @@
     - "0ff179760fbded70"   # E E 465 — Machine Learning I
     - "e2794f13a8f0e324"   # CSCI 4435 — Text Mining and Natural Language Processing
     # CSCI 4405 Artificial Intelligence I cannot be found because the course is not described in the catalog - only mentioned with 5405
-  retrieval_note: "found: 96ed44c75c847eb2@rank2(1.2024), 9011642945907701@rank3(1.0820), 6e812bb0213d9f4f@rank5(0.7961), 0ff179760fbded70@rank8(0.6037); top5: rank1[course_descrip/catalog/1.4100] rank2[course_descrip/catalog/1.2024 EXP] rank3[course_descrip/catalog/1.0820 EXP] rank4[course_descrip/catalog/1.0027] rank5[course_descrip/catalog/0.7961 EXP]"
+  retrieval_note: "found: 96ed44c75c847eb2@rank2(1.2089), 9011642945907701@rank3(1.0861), 6e812bb0213d9f4f@rank5(0.7961), 0ff179760fbded70@rank8(0.6034), e2794f13a8f0e324@rank9(0.5983); top5: rank1[course_descrip/catalog/1.4100] rank2[course_descrip/catalog/1.2089 EXP] rank3[course_descrip/catalog/1.0861 EXP] rank4[course_descrip/catalog/1.0070] rank5[course_descrip/catalog/0.7961 EXP]"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -401,7 +404,7 @@
 
   expected_chunk_ids:
     - "bbecc6941f192ada"   # MATH 1521H — correct chunk at rank 2
-  retrieval_note: "found: bbecc6941f192ada@rank1(1.2286); top5: rank1[course_descrip/catalog/1.2286 EXP] rank2[course_descrip/catalog/1.0845] rank3[course_descrip/catalog/0.9842] rank4[course_descrip/catalog/0.7829] rank5[course_descrip/catalog/0.7800]"
+  retrieval_note: "found: bbecc6941f192ada@rank1(1.2339); top5: rank1[course_descrip/catalog/1.2339 EXP] rank2[course_descrip/catalog/1.0823] rank3[course_descrip/catalog/0.9861] rank4[course_descrip/catalog/0.7917] rank5[course_descrip/catalog/0.7900]"
   expected_source_type: "catalog"
   applicable_groups:
     - "current_undergrad"
@@ -418,7 +421,7 @@
     - "d15a83ecc9c69fc0"   # CSCI 2410 Practical Programming — rank 1
     - "eeaf6086e70999b1"   # CSCI 3710 Software Development — rank 3
     - "59c0aab961329a69"   # CSCI 4575 Software Development Transition — rank 2
-  retrieval_note: "found: d15a83ecc9c69fc0@rank1(1.2490), 59c0aab961329a69@rank2(1.0548), eeaf6086e70999b1@rank3(1.0404); top5: rank1[course_descrip/catalog/1.2490 EXP] rank2[course_descrip/catalog/1.0548 EXP] rank3[course_descrip/catalog/1.0404 EXP] rank4[course_descrip/catalog/0.8649] rank5[course_descrip/catalog/0.8591]"
+  retrieval_note: "found: d15a83ecc9c69fc0@rank1(1.2470), 59c0aab961329a69@rank2(1.0549), eeaf6086e70999b1@rank3(1.0404); top5: rank1[course_descrip/catalog/1.2470 EXP] rank2[course_descrip/catalog/1.0549 EXP] rank3[course_descrip/catalog/1.0404 EXP] rank4[course_descrip/catalog/0.8660] rank5[course_descrip/catalog/0.8594]"
   expected_source_type: "catalog"
   applicable_groups:
     - "current_undergrad"
@@ -433,7 +436,7 @@
     - "Reviews related law and management practices"
   expected_chunk_ids:
     - "2646447e27a95400"   # CJUS 412 Introduction to Security Technology — correct chunk, final_score #1 after re-ranking
-  retrieval_note: "found: 2646447e27a95400@rank1(1.1382); top5: rank1[course_descrip/catalog/1.1382 EXP] rank2[course_descrip/catalog/1.0428] rank3[course_descrip/catalog/0.9558] rank4[course_descrip/catalog/0.9477] rank5[course_descrip/catalog/0.9422]"
+  retrieval_note: "found: 2646447e27a95400@rank1(1.1383); top5: rank1[course_descrip/catalog/1.1383 EXP] rank2[course_descrip/catalog/1.0414] rank3[course_descrip/catalog/0.9626] rank4[course_descrip/catalog/0.9545] rank5[course_descrip/catalog/0.9463]"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -447,7 +450,7 @@
   expected_chunk_ids:
     - "07590040f97b54a3"   # CSCI 1720 Computer Science I — rank 1
     - "5070df1ddcf69f22"   # CSCI 1210 Computer Programming Fundamentals — rank 2
-  retrieval_note: "found: 07590040f97b54a3@rank1(1.3500), 5070df1ddcf69f22@rank2(0.9702); top5: rank1[course_descrip/catalog/1.3500 EXP] rank2[course_descrip/catalog/0.9702 EXP] rank3[course_descrip/catalog/0.7565] rank4[course_descrip/catalog/0.7531] rank5[course_descrip/catalog/0.7474]"
+  retrieval_note: "found: 07590040f97b54a3@rank1(1.3500), 5070df1ddcf69f22@rank2(0.9770); top5: rank1[course_descrip/catalog/1.3500 EXP] rank2[course_descrip/catalog/0.9770 EXP] rank3[course_descrip/catalog/0.7534] rank4[course_descrip/catalog/0.7491] rank5[course_descrip/catalog/0.7441]"
   expected_source_type: "catalog"
   applicable_groups:
     - "prospective_undergrad"
@@ -471,7 +474,7 @@
     - "5e1c259e48cc0f3d"   # BCIS 580 Introduction to Cybersecurity (graduate)
     - "eaf2bd640aa16b35"   # E T 439 Advanced Digital Forensics and Incident Response
     - "afe5d029655d74b2"   # E T 539 Advanced Enterprise Security
-  retrieval_note: "found: b47cdb41eb55db41@rank1(1.1912), e1114ca8e2808ded@rank2(1.0459), ec3fff454254af61@rank3(0.9526), 5e1c259e48cc0f3d@rank4(0.9379); top5: rank1[course_descrip/catalog/1.1912 EXP] rank2[course_descrip/catalog/1.0459 EXP] rank3[course_descrip/catalog/0.9526 EXP] rank4[course_descrip/catalog/0.9379 EXP] rank5[course_descrip/catalog/0.7801]"
+  retrieval_note: "found: b47cdb41eb55db41@rank1(1.2084), e1114ca8e2808ded@rank2(1.0770), ec3fff454254af61@rank4(0.9068), 5e1c259e48cc0f3d@rank5(0.8967), afe5d029655d74b2@rank13(0.6083); not_found: eaf2bd640aa16b35; top5: rank1[course_descrip/catalog/1.2084 EXP] rank2[course_descrip/catalog/1.0770 EXP] rank3[course_descrip/catalog/0.9801] rank4[course_descrip/catalog/0.9068 EXP] rank5[course_descrip/catalog/0.8967 EXP]"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -484,7 +487,7 @@
     - "CSCI 4105 Programming Language Structure requires C- or better in CSCI 3730 Compilers and Automata Theory AND C- or better in CSCI 3710 Software Development"
   expected_chunk_ids:
     - "9c4865bbd0fc6235"   # CSCI 4105 Programming Language Structure I — rank 1, correct
-  retrieval_note: "found: 9c4865bbd0fc6235@rank1(1.1000); top5: rank1[course_descrip/catalog/1.1000 EXP] rank2[course_descrip/catalog/0.4997] rank3[course_descrip/catalog/0.4613] rank4[course_descrip/catalog/0.4351] rank5[course_descrip/catalog/0.4059]"
+  retrieval_note: "found: 9c4865bbd0fc6235@rank1(1.1000); top5: rank1[course_descrip/catalog/1.1000 EXP] rank2[course_descrip/catalog/0.4974] rank3[course_descrip/catalog/0.4588] rank4[course_descrip/catalog/0.4325] rank5[course_descrip/catalog/0.4031]"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -495,7 +498,7 @@
     - "CSCI 4110 Computing Ethics and Social Implications of Computing requires C- or better in CSCI 3710 Software Development"
   expected_chunk_ids:
     - "2dd3ef533673839b"   # CSCI 4110 Computing Ethics — rank 1, correct; rank 5 is minor_requirement noise
-  retrieval_note: "found: 2dd3ef533673839b@rank1(1.3500); top5: rank1[course_descrip/catalog/1.3500 EXP] rank2[course_descrip/catalog/0.8720] rank3[course_descrip/catalog/0.8323] rank4[course_descrip/catalog/0.7944] rank5[minor_requirem/catalog/0.7227]"
+  retrieval_note: "found: 2dd3ef533673839b@rank1(1.3500); top5: rank1[course_descrip/catalog/1.3500 EXP] rank2[course_descrip/catalog/0.8323] rank3[course_descrip/catalog/0.8063] rank4[course_descrip/catalog/0.7944] rank5[minor_requirem/catalog/0.7227]"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -506,7 +509,7 @@
     - "CSCI 4130 Linux System Administration has no prerequisites"
   expected_chunk_ids:
     - "7d8174865ca59a05"   # CSCI 4130 Linux System Administration — highest final_score (1.0669), rank 1 after re-sort
-  retrieval_note: "found: 7d8174865ca59a05@rank1(1.0671); top5: rank1[course_descrip/catalog/1.0671 EXP] rank2[course_descrip/catalog/1.0118] rank3[course_descrip/catalog/0.9118] rank4[minor_requirem/catalog/0.8717] rank5[course_descrip/catalog/0.8585]"
+  retrieval_note: "found: 7d8174865ca59a05@rank1(1.0708); top5: rank1[course_descrip/catalog/1.0708 EXP] rank2[course_descrip/catalog/0.9560] rank3[course_descrip/catalog/0.9124] rank4[minor_requirem/catalog/0.8729] rank5[course_descrip/catalog/0.8598]"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -519,7 +522,7 @@
   expected_chunk_ids:
     - "c5fa84003468a908"   # CSCI 3730 Compilers and Automata Theory — rank 4; correct chunk
     - "d99180d421095bf6"   # CSCI 4580 Compilers and Automata Transition
-  retrieval_note: "found: c5fa84003468a908@rank5(0.7619); top5: rank1[policy/catalog/1.0055] rank2[policy/catalog/0.9824] rank3[advising/web/0.9342] rank4[course_descrip/catalog/0.8250] rank5[course_descrip/catalog/0.7619 EXP]"
+  retrieval_note: "found: d99180d421095bf6@rank4(0.8251), c5fa84003468a908@rank5(0.7610); top5: rank1[policy/catalog/1.0030] rank2[policy/catalog/0.9792] rank3[advising/web/0.9285] rank4[course_descrip/catalog/0.8251 EXP] rank5[course_descrip/catalog/0.7610 EXP]"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -530,7 +533,7 @@
     - "CSCI 2410 Practical Programming has no prerequisites"
   expected_chunk_ids:
     - "d15a83ecc9c69fc0"   # CSCI 2410 Practical Programming — rank 1, correct
-  retrieval_note: "found: d15a83ecc9c69fc0@rank1(1.1000); top5: rank1[course_descrip/catalog/1.1000 EXP] rank2[course_descrip/catalog/0.8154] rank3[course_descrip/catalog/0.7679] rank4[course_descrip/catalog/0.7487] rank5[course_descrip/catalog/0.6092]"
+  retrieval_note: "found: d15a83ecc9c69fc0@rank1(1.1000); top5: rank1[course_descrip/catalog/1.1000 EXP] rank2[course_descrip/catalog/0.8111] rank3[course_descrip/catalog/0.7658] rank4[course_descrip/catalog/0.7411] rank5[course_descrip/catalog/0.5993]"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -548,7 +551,7 @@
   expected_chunk_ids:
     - "16d9f6f83799bfca"   # CS BS degree_requirement — missing from top 5
     - "14f0a41f77e90fb4"   # Cybersecurity BS degree_requirement — missing from top 5
-  retrieval_note: "found: 16d9f6f83799bfca@rank2(0.9315), 6fb64bffef3e6e90@rank3(0.8938), 14f0a41f77e90fb4@rank7(0.6891); top5: rank1[degree_overvie/web/0.9817] rank2[degree_require/catalog/0.9315 EXP] rank3[degree_core_re/catalog/0.8938 EXP] rank4[degree_overvie/web/0.8581] rank5[degree_require/catalog/0.8139]"
+  retrieval_note: "found: 16d9f6f83799bfca@rank4(0.9324); not_found: 14f0a41f77e90fb4; top5: rank1[degree_require/catalog/1.0668] rank2[degree_overvie/web/0.9887] rank3[degree_require/catalog/0.9347] rank4[degree_require/catalog/0.9324 EXP] rank5[degree_require/catalog/0.9237]"
   expected_source_type: "catalog"
   applicable_groups:
     - "prospective_undergrad"
@@ -564,7 +567,7 @@
   expected_chunk_ids:
     - "14f0a41f77e90fb4"   # Cybersecurity BS degree_requirement — catalog detail
     - "16d9f6f83799bfca"   # CS BS degree_requirement — catalog detail
-  retrieval_note: "found: 16d9f6f83799bfca@rank5(0.7350); not_found: 14f0a41f77e90fb4; top5: rank1[concentration_/catalog/1.1232] rank2[degree_overvie/web/0.8718] rank3[concentration_/catalog/0.7646] rank4[degree_overvie/web/0.7359] rank5[degree_require/catalog/0.7350 EXP]"
+  retrieval_note: "found: 16d9f6f83799bfca@rank3(0.7849); not_found: 14f0a41f77e90fb4; top5: rank1[degree_require/catalog/0.9395] rank2[degree_overvie/web/0.8907] rank3[degree_require/catalog/0.7849 EXP] rank4[degree_overvie/web/0.7736] rank5[course_descrip/catalog/0.7191]"
   expected_source_type: "either"
   banner_redirect_expected: false
 
@@ -580,7 +583,7 @@
     - "16d9f6f83799bfca"   # CS BS degree_requirement — confirmed rank 1 (final_score 0.9724)
     - "202f3d183e743b5d"   # CS BA degree_requirement — confirmed rank 2 (final_score 0.9367)
     - "https://computerscience.nmsu.edu/majors/undergraduate-degrees.html#chunk-1"  # web "How to Select Between BS and BA" — dropped from Weaviate rank 1 to final rank 4 (0.8754) after degree_requirement boosts; still useful context
-  retrieval_note: "found: 3fd443758d042e53@rank1(1.0044), 202f3d183e743b5d@rank2(0.9722), 16d9f6f83799bfca@rank3(0.9016), chunk-1@rank5(0.8798); not_found: 6fb64bffef3e6e90; top5: rank1[second_languag/catalog/1.0044 EXP] rank2[degree_require/catalog/0.9722 EXP] rank3[degree_require/catalog/0.9016 EXP] rank4[degree_require/catalog/0.8915] rank5[degree_overvie/web/0.8798 EXP]"
+  retrieval_note: "found: 202f3d183e743b5d@rank2(0.9710), chunk-1@rank5(0.8796); not_found: 16d9f6f83799bfca; top5: rank1[second_languag/catalog/1.0041] rank2[degree_require/catalog/0.9710 EXP] rank3[degree_require/catalog/0.9111] rank4[degree_require/catalog/0.9025] rank5[degree_overvie/web/0.8796 EXP]"
   expected_source_type: "catalog"
   applicable_groups:
     - "prospective_undergrad"
@@ -598,7 +601,7 @@
   expected_chunk_ids:
     - "16d9f6f83799bfca"   # CS BS degree_requirement — missing from top 5
     - "202f3d183e743b5d"   # CS BA degree_requirement — missing from top 5
-  retrieval_note: "found: 202f3d183e743b5d@rank1(1.0562), chunk-1@rank2(1.0264), 16d9f6f83799bfca@rank4(0.9470), 6fb64bffef3e6e90@rank5(0.9157); top5: rank1[degree_require/catalog/1.0562 EXP] rank2[degree_overvie/web/1.0264 EXP] rank3[degree_require/catalog/1.0070] rank4[degree_require/catalog/0.9470 EXP] rank5[degree_core_re/catalog/0.9157 EXP]"
+  retrieval_note: "found: 202f3d183e743b5d@rank1(1.0530), 16d9f6f83799bfca@rank6(0.9466); top5: rank1[degree_require/catalog/1.0530 EXP] rank2[degree_require/catalog/1.0317] rank3[degree_overvie/web/1.0175] rank4[degree_require/catalog/0.9711] rank5[degree_require/catalog/0.9562]"
   expected_source_type: "catalog"
   applicable_groups:
     - "prospective_undergrad"
@@ -618,7 +621,7 @@
     - "8be931ca2fd6489a"   # "Course Load for Undergraduate Students" — confirmed final rank 5 (0.5983); most directly answers the question; lowest score due to no boost triggers firing
     - "fc4d628e13bcb208"   # "Course Load for Graduate Students" — confirmed final rank 3 (0.8089)
     - "3e04f7a6977ac11f"   # glossary "Full-time" definition — confirmed final rank 1 (0.83)
-  retrieval_note: "found: fc4d628e13bcb208@rank1(0.7841), 3e04f7a6977ac11f@rank2(0.7700), 8be931ca2fd6489a@rank4(0.5975), 688c3775f528d9d8@rank5(0.3178); top5: rank1[policy/catalog/0.7841 EXP] rank2[glossary/catalog/0.7700 EXP] rank3[policy/catalog/0.7631] rank4[policy/catalog/0.5975 EXP] rank5[study_plan/catalog/0.3178 EXP]"
+  retrieval_note: "found: fc4d628e13bcb208@rank1(0.7814), 3e04f7a6977ac11f@rank2(0.7700), 8be931ca2fd6489a@rank4(0.5938); top5: rank1[policy/catalog/0.7814 EXP] rank2[glossary/catalog/0.7700 EXP] rank3[policy/catalog/0.7515] rank4[policy/catalog/0.5938 EXP] rank5[study_plan/catalog/0.2712]"
   expected_source_type: "catalog"
   applicable_groups:
     - "current_undergrad"
@@ -640,7 +643,7 @@
   expected_chunk_ids:
     - "431b80127273c379"  # Computer Science - Master of Science degree_requirement pp.128-130 — three track descriptions; primary source
     - "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-19"  # Q107. What is the difference between the Master's project and thesis? — supporting
-  retrieval_note: "found: chunk-19@rank1(1.1534); not_found: 431b80127273c379; top5: rank1[advising/web/1.1534 EXP] rank2[advising/web/1.0420] rank3[course_descrip/catalog/1.0163] rank4[course_descrip/catalog/0.9188] rank5[course_descrip/catalog/0.9052]"
+  retrieval_note: "found: chunk-19@rank1(1.1518); not_found: 431b80127273c379; top5: rank1[advising/web/1.1518 EXP] rank2[advising/web/1.0408] rank3[course_descrip/catalog/1.0155] rank4[course_descrip/catalog/0.9146] rank5[course_descrip/catalog/0.9016]"
   expected_source_type: "either"
   applicable_groups:
     - "prospective_ms"
@@ -659,7 +662,7 @@
     - "Must have an advisor to enroll in CSCI 5999 Master's Thesis"
   expected_chunk_ids:
     - "8989b07bb9abc2e5"  # CSCI 5999 Master's Thesis p.1569 — "under supervision of their advisor"; implies advisor required to enroll
-  retrieval_note: "no expected chunks in top-K; not_found: 8989b07bb9abc2e5; top5: rank1[advising/web/1.0910] rank2[advising/web/0.9664] rank3[enrollment/web/0.9180] rank4[enrollment/web/0.8038] rank5[enrollment/web/0.7573]"
+  retrieval_note: "no expected chunks in top-K; not_found: 8989b07bb9abc2e5; top5: rank1[advising/web/1.0979] rank2[advising/web/1.0015] rank3[enrollment/web/0.9202] rank4[enrollment/web/0.8402] rank5[course_descrip/catalog/0.8204]"
   expected_source_type: "catalog"
   applicable_groups:
     - "current_ms_thesis"
@@ -673,7 +676,7 @@
     - "Must have an advisor to enroll in CSCI 5994 Master's Project"
   expected_chunk_ids:
     - "dce5a946d24fd867"  # CSCI 5994 Master's Project p.1569 — "under supervision of their advisor"
-  retrieval_note: "no expected chunks in top-K; not_found: dce5a946d24fd867; top5: rank1[advising/web/0.8175] rank2[advising/web/0.8160] rank3[course_descrip/catalog/0.7943] rank4[glossary/catalog/0.7700] rank5[advising/web/0.5705]"
+  retrieval_note: "found: dce5a946d24fd867@rank8(0.4318); top5: rank1[advising/web/0.9795] rank2[advising/web/0.7914] rank3[course_descrip/catalog/0.7291] rank4[advising/web/0.5773] rank5[glossary/catalog/0.5448]"
   expected_source_type: "catalog"
   applicable_groups:
     - "current_ms_coursework"
@@ -691,7 +694,7 @@
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/grad-students/graduate-degrees.html#chunk-1"  # PhD milestones — "identify thesis advisor within one semester of passing qualifying exams"
     # TBD: catalog p.39 is within the (31-55) policy block — chunk ID unknown; locate after ingest
-  retrieval_note: "no expected chunks in top-K; not_found: chunk-1; top5: rank1[advising/web/0.9908] rank2[course_descrip/catalog/0.9884] rank3[course_descrip/catalog/0.9630] rank4[course_descrip/catalog/0.9031] rank5[policy/catalog/0.8856]"
+  retrieval_note: "found: chunk-1@rank7(0.7474); top5: rank1[policy/catalog/1.1446] rank2[advising/web/0.9526] rank3[course_descrip/catalog/0.8016] rank4[advising/web/0.7904] rank5[advising/web/0.7709]"
   expected_source_type: "either"
   applicable_groups:
     - "current_phd"
@@ -710,7 +713,7 @@
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/grad-students/graduate-degrees.html#chunk-0"  # confirmed rank 1 (1.0474); "links to most recent info on graduate degrees offered"
     - "https://computerscience.nmsu.edu/grad-students/prospective-graduates.html#chunk-0"  # confirmed rank 2 (0.9562); lists approx 85 grad students, relevant overview
-  retrieval_note: "found: chunk-0@rank1(1.0525), chunk-0@rank3(0.9595); top5: rank1[degree_overvie/web/1.0525 EXP] rank2[degree_require/catalog/0.9682] rank3[advising/web/0.9595 EXP] rank4[financial_aid/web/0.8641] rank5[general/web/0.8033]"
+  retrieval_note: "found: chunk-0@rank1(1.0478), chunk-0@rank3(0.9554); top5: rank1[degree_overvie/web/1.0478 EXP] rank2[degree_require/catalog/0.9626] rank3[advising/web/0.9554 EXP] rank4[financial_aid/web/0.8526] rank5[general/web/0.7942]"
   expected_source_type: "web"
   banner_redirect_expected: false
 
@@ -725,7 +728,7 @@
     - "ef83f65275f8cd78"  # minor_index p.567 — intro: undergrad and grad minors; no more than one undergrad minor
     # minor_requirement chunks (bf84d94f, 61024f0d, 2eb0733f, df872e79, b1a889c0, 7efab94f) are per-minor detail —
     # relevant for follow-up questions about specific minor requirements, not needed to answer "what minors exist"
-  retrieval_note: "found: chunk-0@rank7(0.6558), ef83f65275f8cd78@rank8(0.6378); top5: rank1[general/web/0.9548] rank2[minor_requirem/catalog/0.9376] rank3[minor_requirem/catalog/0.9297] rank4[general/web/0.8847] rank5[advising/web/0.7820]"
+  retrieval_note: "found: chunk-0@rank7(0.6684), ef83f65275f8cd78@rank8(0.6479); top5: rank1[general/web/0.9528] rank2[minor_requirem/catalog/0.9370] rank3[minor_requirem/catalog/0.9238] rank4[general/web/0.8765] rank5[advising/web/0.7760]"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -747,7 +750,7 @@
     - "589012c629ca342f"   # "Evaluation of Transfer Credits" p.61 — confirmed rank 3 (0.7716); three levels of credit transfer
     - "418f8dadbbd85a0c"   # "Transfer of Graduate Credits into a Degree Program" p.77 — confirmed rank 4 (0.738)
     - "4898fc0a62ba2318"   # "Transfer of International Credit" p.61 — confirmed rank 5 (0.6809)
-  retrieval_note: "found: 65934b23900617c8@rank1(0.8977), b3168ea6988b92d2@rank2(0.8400), 589012c629ca342f@rank3(0.7569), 418f8dadbbd85a0c@rank4(0.7247); not_found: 4898fc0a62ba2318; top5: rank1[glossary/catalog/0.8977 EXP] rank2[policy/catalog/0.8400 EXP] rank3[policy/catalog/0.7569 EXP] rank4[grad_program_i/catalog/0.7247 EXP] rank5[advising/web/0.6753]"
+  retrieval_note: "found: 65934b23900617c8@rank1(0.9065), b3168ea6988b92d2@rank2(0.8438), 589012c629ca342f@rank3(0.7503), 418f8dadbbd85a0c@rank4(0.7184); not_found: 4898fc0a62ba2318; top5: rank1[glossary/catalog/0.9065 EXP] rank2[policy/catalog/0.8438 EXP] rank3[policy/catalog/0.7503 EXP] rank4[grad_program_i/catalog/0.7184 EXP] rank5[advising/web/0.6619]"
   expected_source_type: "catalog"
   applicable_groups:
     - "prospective_undergrad"
@@ -766,7 +769,7 @@
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/majors/bs-in-ai.html#chunk-0"  # BS in AI — single combined chunk (overview + outcomes + requirements)
     - "15411577b67af7cd"   # CS BS AI concentration degree_requirement — catalog
-  retrieval_note: "TBD after eval run"
+  retrieval_note: "found: 15411577b67af7cd@rank1(1.2774), chunk-0@rank6(1.0674); top5: rank1[degree_require/catalog/1.2774 EXP] rank2[degree_require/catalog/1.1271] rank3[degree_require/catalog/1.1068] rank4[degree_require/catalog/1.0854] rank5[degree_require/catalog/1.0780]"
   expected_source_type: "either"
   applicable_groups:
     - "prospective_undergrad"
@@ -800,7 +803,7 @@
     - "36437aa389dced5d"  # "Funding Opportunities for Graduate Students" p.78 — covers TAs, RAs, fellowships
     - "3bd4805dbe3989f0"  # "Assistantships" p.78 — TA/RA details
     - "https://gradschool.nmsu.edu/scholarships-and-tuition/awards-and-funding.html#chunk-0"  # grad school awards
-  retrieval_note: "found: chunk-0@rank1(1.0800), chunk-0@rank2(1.0780); not_found: 36437aa389dced5d, 3bd4805dbe3989f0, chunk-0; top5: rank1[financial_aid/web/1.0800 EXP] rank2[financial_aid/web/1.0780 EXP] rank3[financial_aid/web/0.7179] rank4[policy/catalog/0.6227] rank5[policy/catalog/0.6219]"
+  retrieval_note: "found: chunk-2@rank1(1.0201), chunk-0@rank2(0.9880), chunk-0@rank3(0.9528); not_found: 36437aa389dced5d, 3bd4805dbe3989f0, chunk-0; top5: rank1[financial_aid/web/1.0201 EXP] rank2[financial_aid/web/0.9880 EXP] rank3[financial_aid/web/0.9528 EXP] rank4[study_plan/catalog/0.6651] rank5[study_plan/catalog/0.6580]"
   expected_source_type: "either"
   applicable_groups:
     - "current_undergrad"
@@ -825,7 +828,7 @@
     - "https://computerscience.nmsu.edu/grad-students/graduate-financial-aid.html#chunk-2"  # "Teaching Assistantships" — confirmed final rank 5 (0.8443); CS-specific timing and process
     - "https://computerscience.nmsu.edu/grad-students/graduate-financial-aid.html#chunk-4"  # "Research Assistantships" — confirmed final rank 3 (0.8659); contact faculty directly
     - "3bd4805dbe3989f0"  # catalog "Assistantships" p.78 — confirmed final rank 4 (0.8447); university-wide policy
-  retrieval_note: "found: 3bd4805dbe3989f0@rank5(0.5946); not_found: chunk-2, chunk-4; top5: rank1[grad_program_i/catalog/1.0379] rank2[advising/web/0.8663] rank3[advising/web/0.8421] rank4[financial_aid/web/0.7625] rank5[financial_aid/catalog/0.5946 EXP]"
+  retrieval_note: "found: 3bd4805dbe3989f0@rank5(0.5998); not_found: chunk-2, chunk-4; top5: rank1[grad_program_i/catalog/1.0445] rank2[advising/web/0.8706] rank3[advising/web/0.8458] rank4[financial_aid/web/0.7625] rank5[financial_aid/catalog/0.5998 EXP]"
   expected_source_type: "web"
   applicable_groups:
     - "prospective_ms"
@@ -847,7 +850,7 @@
     - "https://computerscience.nmsu.edu/grad-students/graduate-financial-aid.html#chunk-2"  # "Teaching Assistantships" — confirmed rank 1 (1.0353); CS-specific hours, duties, stipend
     - "https://tpal.nmsu.edu/degree-programs/assistantships.html#chunk-0"                   # TPAL assistantships page — confirmed in collection after 2026-04-24 web ingest
     - "3bd4805dbe3989f0"  # catalog "Assistantships" p.78 — confirmed rank 5 (0.7793)
-  retrieval_note: "found: chunk-2@rank1(1.0191), 3bd4805dbe3989f0@rank3(0.7788), chunk-0@rank5(0.6140); top5: rank1[financial_aid/web/1.0191 EXP] rank2[grad_program_i/catalog/0.8981] rank3[financial_aid/catalog/0.7788 EXP] rank4[financial_aid/web/0.7593] rank5[financial_aid/web/0.6140 EXP]"
+  retrieval_note: "found: chunk-2@rank1(1.0173), 3bd4805dbe3989f0@rank3(0.7788), chunk-0@rank5(0.6133); top5: rank1[financial_aid/web/1.0173 EXP] rank2[grad_program_i/catalog/0.9013] rank3[financial_aid/catalog/0.7788 EXP] rank4[financial_aid/web/0.7573] rank5[financial_aid/web/0.6133 EXP]"
   expected_source_type: "web"
   applicable_groups:
     - "prospective_ms"
@@ -869,7 +872,7 @@
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/grad-students/graduate-financial-aid.html#chunk-4"  # "Research Assistantships" — confirmed final rank 1 (0.83); CS-specific RA process
     - "https://tpal.nmsu.edu/degree-programs/assistantships.html#chunk-0"                   # TPAL — confirmed in collection after 2026-04-24 web ingest
-  retrieval_note: "found: chunk-4@rank2(0.8300); not_found: chunk-0; top5: rank1[advising/web/0.8598] rank2[financial_aid/web/0.8300 EXP] rank3[advising/web/0.6376] rank4[financial_aid/web/0.6197] rank5[grad_program_i/catalog/0.6152]"
+  retrieval_note: "found: chunk-4@rank2(0.8300); not_found: chunk-0; top5: rank1[advising/web/0.8636] rank2[financial_aid/web/0.8300 EXP] rank3[advising/web/0.6467] rank4[financial_aid/web/0.6206] rank5[advising/web/0.6170]"
   expected_source_type: "web"
   applicable_groups:
     - "prospective_ms"
@@ -899,7 +902,7 @@
     - "https://dataanalytics.nmsu.edu/facultydirectory/index.html#chunk-4"  # Huiping Cao
     - "https://dataanalytics.nmsu.edu/facultydirectory/index.html#chunk-5"  # Marshall Taylor
     - "https://dataanalytics.nmsu.edu/facultydirectory/index.html#chunk-6"  # Tuan Le
-  retrieval_note: "DA web directory chunks now prefixed with 'Data Analytics faculty.' for BM25 recall; requires web re-ingest to take effect; f33f72e6185a4b8d (catalog degree_requirement) is a fallback source until then"
+  retrieval_note: "found: chunk-3@rank1(1.0531), chunk-1@rank2(1.0183), chunk-6@rank3(0.9940), chunk-0@rank4(0.9729), chunk-5@rank5(0.9645), chunk-2@rank6(0.9447), chunk-4@rank7(0.9318); top5: rank1[faculty/web/1.0531 EXP] rank2[faculty/web/1.0183 EXP] rank3[faculty/web/0.9940 EXP] rank4[faculty/web/0.9729 EXP] rank5[faculty/web/0.9645 EXP]"
   expected_source_type: "web"
   banner_redirect_expected: false
 
@@ -917,7 +920,7 @@
     - "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html#chunk-21"  # Inna Pivkina (inna@nmsu.edu SH 172)
     - "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html#chunk-22"  # Enrico Pontelli (epontell@nmsu.edu) — now own chunk after per-person ingest
     - "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html#chunk-26"  # Son Tran (stran@nmsu.edu SH 123, Department Head)
-  retrieval_note: "found: chunk-21@rank1(1.0535), chunk-22@rank3(0.8424); not_found: chunk-26; top5: rank1[faculty/web/1.0535 EXP] rank2[research/web/0.8758] rank3[faculty/web/0.8424 EXP] rank4[faculty/catalog/0.8377] rank5[general/web/0.6004]"
+  retrieval_note: "found: chunk-21@rank1(1.0783), chunk-22@rank3(0.8566), chunk-26@rank4(0.7300); top5: rank1[faculty/web/1.0783 EXP] rank2[research/web/0.8886] rank3[faculty/web/0.8566 EXP] rank4[faculty/web/0.7300 EXP] rank5[faculty/web/0.7247]"
   expected_source_type: "web"
   banner_redirect_expected: false
 
@@ -928,7 +931,7 @@
     - "Dr. Christabel Wayllace's office is Science Hall 173"
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html#chunk-29"  # Christabel Wayllace (cwayllac@nmsu.edu SH 173)
-  retrieval_note: "found: chunk-29@rank1(1.2300); top5: rank1[faculty/web/1.2300 EXP] rank2[faculty/web/0.5686] rank3[faculty/web/0.4616] rank4[faculty/web/0.4327] rank5[course_descrip/catalog/0.3104]"
+  retrieval_note: "found: chunk-29@rank1(1.2300); top5: rank1[faculty/web/1.2300 EXP] rank2[course_descrip/catalog/0.4278] rank3[faculty/web/0.4006] rank4[faculty/web/0.3819] rank5[faculty/web/0.3742]"
   expected_source_type: "web"
   banner_redirect_expected: false
 
@@ -941,7 +944,7 @@
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html#chunk-19"  # Panwar — expertise includes Cryptography, Privacy, Wireless Security
     - "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html#chunk-28"  # Vishwanathan — expertise includes Cryptography, Blockchain, Applied Cryptography
-  retrieval_note: "found: chunk-19@rank5(0.6846); not_found: chunk-28; top5: rank1[course_descrip/catalog/1.0546] rank2[course_descrip/catalog/1.0500] rank3[course_descrip/catalog/1.0077] rank4[research/web/0.7797] rank5[faculty/web/0.6846 EXP]"
+  retrieval_note: "found: chunk-19@rank5(0.6887); not_found: chunk-28; top5: rank1[course_descrip/catalog/1.0557] rank2[course_descrip/catalog/1.0510] rank3[course_descrip/catalog/1.0078] rank4[research/web/0.7809] rank5[faculty/web/0.6887 EXP]"
   expected_source_type: "web"
   banner_redirect_expected: false
 
@@ -953,7 +956,7 @@
     - "Expertise: Knowledge Representation and Reasoning, Planning and Plan Verification, Intelligent Agents, Logic Programming, Commonsense Reasoning"
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/facultydirectory/faculty-staff-directory.html#chunk-26"  # Son Tran — Department Head, full expertise
-  retrieval_note: "no expected chunks in top-K; not_found: ff1a31a3918ec2d7; top5: rank1[general/web/0.8300] rank2[grad_program_i/catalog/0.6506] rank3[general/web/0.6057] rank4[general/web/0.5297] rank5[general/web/0.4293]"
+  retrieval_note: "no expected chunks in top-K; not_found: chunk-26; top5: rank1[general/web/0.8405] rank2[grad_program_i/catalog/0.6651] rank3[faculty/web/0.6370] rank4[general/web/0.6229] rank5[study_plan/catalog/0.5886]"
   expected_source_type: "web"
   banner_redirect_expected: false
 
@@ -968,7 +971,7 @@
   expected_chunk_ids:
     - "509e68e295bb0a3e"  # Removal of Academic Probation (undergrad) — direct answer
     - "64138944f5cf6d00"  # Graduate Academic Probation and Suspension — catalog p.53
-  retrieval_note: "found: 509e68e295bb0a3e@rank1(1.0849); not_found: 64138944f5cf6d00; top5: rank1[policy/catalog/1.0849 EXP] rank2[policy/catalog/1.0778] rank3[policy/catalog/1.0192] rank4[policy/catalog/0.8780] rank5[glossary/catalog/0.7413]"
+  retrieval_note: "found: 509e68e295bb0a3e@rank1(1.0872); not_found: 64138944f5cf6d00; top5: rank1[policy/catalog/1.0872 EXP] rank2[policy/catalog/1.0778] rank3[policy/catalog/1.0224] rank4[policy/catalog/0.8778] rank5[glossary/catalog/0.7393]"
   expected_source_type: "catalog"
   banner_redirect_expected: false
 
@@ -996,7 +999,7 @@
     - "7f41f569d43c744a"  # Application Dates and Deadlines — catalog p.76
     - "59d2177c1209b227"  # Master's Accelerated Program (MAP) — catalog p.76; general MAP eligibility; CS-specific process (p.129) not chunked separately (chunker gap)
     - "https://computerscience.nmsu.edu/grad-students/graduate-degrees.html#chunk-2"  # Master's Degrees — lists available CS graduate programs
-  retrieval_note: "found: 7f41f569d43c744a@rank9(0.6199); not_found: 59d2177c1209b227, chunk-2; top5: rank1[advising/web/1.1713] rank2[advising/web/1.1020] rank3[advising/web/0.9237] rank4[advising/web/0.9231] rank5[advising/web/0.9019]"
+  retrieval_note: "found: 7f41f569d43c744a@rank10(0.6304); not_found: 59d2177c1209b227, chunk-2; top5: rank1[advising/web/1.2249] rank2[advising/web/1.1019] rank3[advising/web/0.9630] rank4[advising/web/0.9361] rank5[advising/web/0.8999]"
   expected_source_type: "either"
   applicable_groups:
     - "prospective_ms"
@@ -1016,7 +1019,7 @@
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-20"  # FAQ Q108 — formatting redirects to SharePoint
     - "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html#chunk-8"  # ProQuest submission deadline + reference to formatting guidance pages
-  retrieval_note: "found: chunk-20@rank1(1.1382), chunk-8@rank2(0.6661); top5: rank1[advising/web/1.1382 EXP] rank2[enrollment/web/0.6661 EXP] rank3[enrollment/web/0.5080] rank4[policy/catalog/0.4919] rank5[enrollment/web/0.4651]"
+  retrieval_note: "found: chunk-20@rank1(1.1432), chunk-8@rank2(0.5338); top5: rank1[advising/web/1.1432 EXP] rank2[enrollment/web/0.5338 EXP] rank3[enrollment/web/0.5221] rank4[policy/catalog/0.4924] rank5[enrollment/web/0.4643]"
   expected_source_type: "web"
   applicable_groups:
     - "current_phd"
@@ -1039,7 +1042,7 @@
   expected_chunk_ids:
     - "62de7b59204f39f8"  # Doctoral Degrees policy — qualifying examination policy
     - "https://computerscience.nmsu.edu/grad-students/graduate-degrees.html#chunk-1"  # PhD milestones — qualifying exam timing in milestones list
-  retrieval_note: "found: chunk-1@rank2(0.5415), 62de7b59204f39f8@rank5(0.4462); top5: rank1[advising/web/1.1600] rank2[degree_overvie/web/0.5415 EXP] rank3[enrollment/web/0.5116] rank4[advising/web/0.4907] rank5[policy/catalog/0.4462 EXP]"
+  retrieval_note: "found: chunk-1@rank2(0.5428), 62de7b59204f39f8@rank5(0.4465); top5: rank1[advising/web/1.1600] rank2[degree_overvie/web/0.5428 EXP] rank3[enrollment/web/0.5115] rank4[advising/web/0.4897] rank5[policy/catalog/0.4465 EXP]"
   expected_source_type: "either"
   applicable_groups:
     - "prospective_phd"
@@ -1057,7 +1060,7 @@
     - "bf860d902acc44ad"  # MAP grad_program_info — MAP process details (retrieved rank 1 in 2026-04-25 eval)
     - "59d2177c1209b227"  # MAP grad_program_info — MAP process details (rank 2)
     - "d6750c5dd2b7274e"  # MAP policy chunk (rank 3)
-  retrieval_note: "found: bf860d902acc44ad@rank1(1.2734), 59d2177c1209b227@rank2(1.1861), d6750c5dd2b7274e@rank3(1.1034), chunk-2@rank8(0.4218); top5: rank1[grad_program_i/catalog/1.2734 EXP] rank2[grad_program_i/catalog/1.1861 EXP] rank3[policy/catalog/1.1034 EXP] rank4[advising/web/0.9326] rank5[glossary/catalog/0.8235]"
+  retrieval_note: "found: bf860d902acc44ad@rank1(1.2730), 59d2177c1209b227@rank2(1.1733), d6750c5dd2b7274e@rank3(1.0935), chunk-2@rank8(0.4271); top5: rank1[grad_program_i/catalog/1.2730 EXP] rank2[grad_program_i/catalog/1.1733 EXP] rank3[policy/catalog/1.0935 EXP] rank4[advising/web/0.9286] rank5[glossary/catalog/0.7900]"
   expected_source_type: "web"
   applicable_groups:
     - "prospective_ms"
@@ -1073,7 +1076,7 @@
   expected_chunk_ids:
     - "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html#chunk-7"  # Summer 2026 part 1 — contains July 6 degree application deadline
     - "https://gradschool.nmsu.edu/current-students/graduate-school-calendar.html#chunk-8"  # Summer 2026 part 2 — July 22 ProQuest deadline
-  retrieval_note: "found: chunk-7@rank5(0.9295), chunk-8@rank9(0.7348); top5: rank1[enrollment/web/1.0863] rank2[policy/catalog/1.0574] rank3[enrollment/web/0.9338] rank4[grad_program_i/catalog/0.9331] rank5[enrollment/web/0.9295 EXP]"
+  retrieval_note: "found: chunk-7@rank4(0.9242); not_found: chunk-8; top5: rank1[enrollment/web/1.0781] rank2[policy/catalog/1.0574] rank3[grad_program_i/catalog/0.9327] rank4[enrollment/web/0.9242 EXP] rank5[enrollment/web/0.9227]"
   expected_source_type: "web"
   applicable_groups:
     - "current_ms_coursework"
@@ -1091,7 +1094,7 @@
   expected_chunk_ids:
     - "59d2177c1209b227"  # MAP grad_program_info — mentions recommendations required, no count
     - "d6750c5dd2b7274e"  # MAP policy — mentions recommendations required, no count
-  retrieval_note: "found: 59d2177c1209b227@rank1(1.1600), d6750c5dd2b7274e@rank3(1.0081); top5: rank1[grad_program_i/catalog/1.1600 EXP] rank2[grad_program_i/catalog/1.1378] rank3[policy/catalog/1.0081 EXP] rank4[advising/web/0.8056] rank5[degree_require/catalog/0.7278]"
+  retrieval_note: "found: 59d2177c1209b227@rank1(1.1600), d6750c5dd2b7274e@rank3(1.0077); top5: rank1[grad_program_i/catalog/1.1600 EXP] rank2[grad_program_i/catalog/1.1383] rank3[policy/catalog/1.0077 EXP] rank4[advising/web/0.8043] rank5[degree_require/catalog/0.7270]"
   expected_source_type: "catalog"
   applicable_groups:
     - "prospective_map"
@@ -1124,6 +1127,7 @@
     - "Login required to access the SharePoint page"
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/grad-students/graduate-student-faq.html#chunk-20"  # FAQ Q108 — redirects to Graduate School SharePoint formatting page
+  retrieval_note: "found: chunk-20@rank1(1.1548); top5: rank1[advising/web/1.1548 EXP] rank2[course_descrip/catalog/0.6821] rank3[course_descrip/catalog/0.6038] rank4[enrollment/web/0.4935] rank5[policy/catalog/0.4885]"
   expected_source_type: "redirect"
   applicable_groups:
     - "current_phd"
@@ -1153,7 +1157,7 @@
     - "b1a889c06156e3e9"  # Computer Science - Graduate Minor
     - "7efab94ffc416388"  # Bioinformatics (with Computer Science) - Graduate Minor (p.230)
     - "ef83f65275f8cd78"  # minor_index — eligibility rules (non-CS majors only, one minor limit)
-  retrieval_note: "found: b1a889c06156e3e9@rank1(1.0723), df872e79162198e8@rank5(0.8539), 2eb0733f90bc7c3e@rank7(0.8421), ef83f65275f8cd78@rank9(0.7939), bf84d94f705af510@rank10(0.7413); not_found: 61024f0564e7f4cb, 7efab94ffc416388; top5: rank1[minor_requirem/catalog/1.0723 EXP] rank2[advising/web/0.9659] rank3[degree_overvie/web/0.9243] rank4[minor_requirem/catalog/0.8933] rank5[minor_requirem/catalog/0.8539 EXP]"
+  retrieval_note: "found: b1a889c06156e3e9@rank1(1.0717), df872e79162198e8@rank5(0.8513), 2eb0733f90bc7c3e@rank6(0.8394), ef83f65275f8cd78@rank9(0.7941), bf84d94f705af510@rank10(0.7387); not_found: 61024f0564e7f4cb, 7efab94ffc416388; top5: rank1[minor_requirem/catalog/1.0717 EXP] rank2[advising/web/0.9399] rank3[degree_overvie/web/0.9148] rank4[minor_requirem/catalog/0.8927] rank5[minor_requirem/catalog/0.8513 EXP]"
   expected_source_type: "either"
   applicable_groups:
     - "current_undergrad"
@@ -1173,7 +1177,7 @@
     - "https://computerscience.nmsu.edu/non-majors/minors.html#chunk-0"  # value-proposition language — best answer to the 'why' question
     - "b1a889c06156e3e9"  # Graduate Minor requirements — what the minor involves
     - "ef83f65275f8cd78"  # minor_index — confirms eligibility (non-CS majors only)
-  retrieval_note: "no expected chunks in top-K; not_found: chunk-0, b1a889c06156e3e9, ef83f65275f8cd78; top5: rank1[degree_overvie/web/1.1359] rank2[advising/web/1.1315] rank3[advising/web/1.1055] rank4[advising/web/0.6544] rank5[advising/web/0.5662]"
+  retrieval_note: "found: b1a889c06156e3e9@rank1(1.2291), chunk-0@rank8(0.8870), ef83f65275f8cd78@rank11(0.8147); top5: rank1[minor_requirem/catalog/1.2291 EXP] rank2[degree_overvie/web/1.1292] rank3[advising/web/1.1037] rank4[advising/web/1.0762] rank5[minor_requirem/catalog/0.9944]"
   expected_source_type: "web"
   applicable_groups:
     - "current_ms_coursework"
@@ -1192,7 +1196,7 @@
     - "Course order may vary depending on math and English placement"
   expected_chunk_ids:
     - "688c3775f528d9d8"  # Cybersecurity - Bachelor of Science [study_plan] p.607
-  retrieval_note: "no expected chunks in top-K; not_found: 80a28b47eeacb905; top5: rank1[concentration_/catalog/1.2025] rank2[course_descrip/catalog/1.0763] rank3[course_descrip/catalog/0.9399] rank4[course_descrip/catalog/0.9205] rank5[course_descrip/catalog/0.8343]"
+  retrieval_note: "found: 688c3775f528d9d8@rank5(0.8208); top5: rank1[course_descrip/catalog/1.1620] rank2[course_descrip/catalog/1.0579] rank3[course_descrip/catalog/0.9602] rank4[degree_require/catalog/0.9057] rank5[study_plan/catalog/0.8208 EXP]"
   expected_source_type: "catalog"
   applicable_groups:
     - "prospective_undergrad"
@@ -1213,7 +1217,7 @@
     - "07590040f97b54a3"  # CSCI 1720 course description with prerequisites
     - "e2dc5f632fd25e2c"  # CSCI 2210 — prereq: C- in CSCI 1720
     - "d8931194a4ebc356"  # CSCI 2230 — prereq: C- in CSCI 1720
-  retrieval_note: "found: 32c5d21372789fa4@rank4(1.1132); top5: rank1[degree_require/catalog/1.3043] rank2[study_plan/catalog/1.2826] rank3[study_plan/catalog/1.2416] rank4[study_plan/catalog/1.1132 EXP] rank5[study_plan/catalog/1.0572]"
+  retrieval_note: "found: 32c5d21372789fa4@rank5(1.0994); not_found: three-year-course-rotation.html#chunk-1, 07590040f97b54a3, e2dc5f632fd25e2c, d8931194a4ebc356; top5: rank1[study_plan/catalog/1.3427] rank2[study_plan/catalog/1.2686] rank3[study_plan/catalog/1.2681] rank4[study_plan/catalog/1.1087] rank5[study_plan/catalog/1.0994 EXP]"
   expected_source_type: "catalog"
   applicable_groups:
     - "prospective_undergrad"
@@ -1228,7 +1232,7 @@
     - "CS department main phone number is 575-646-3723"
   expected_chunk_ids:
     - "https://computerscience.nmsu.edu/department/contact-information.html#chunk-0"
-  retrieval_note: "TBD after eval run"
+  retrieval_note: "found: chunk-0@rank1(0.9762); top5: rank1[general/web/0.9762 EXP] rank2[study_plan/catalog/0.7480] rank3[degree_require/catalog/0.7354] rank4[study_plan/catalog/0.7324] rank5[general/web/0.6335]"
   expected_source_type: "web"
   applicable_groups:
     - "prospective_undergrad"
@@ -1248,7 +1252,7 @@
   expected_chunk_ids:
     - "4369bf2777274040"  # CS BS Cybersecurity degree_requirement
     - "15411577b67af7cd"  # CS BS AI (Artificial Intelligence) degree_requirement
-  retrieval_note: "no expected chunks in top-K; not_found: 482e154e99b5dc92, 2a0530dddd6f6cec; top5: rank1[degree_overvie/web/1.0375] rank2[degree_overvie/web/0.8606] rank3[degree_require/catalog/0.8239] rank4[degree_core_re/catalog/0.8094] rank5[degree_require/catalog/0.7061]"
+  retrieval_note: "found: 15411577b67af7cd@rank3(0.9329), 4369bf2777274040@rank5(0.8883); top5: rank1[degree_overvie/web/1.0698] rank2[degree_require/web/1.0401] rank3[degree_require/catalog/0.9329 EXP] rank4[degree_overvie/web/0.9008] rank5[degree_require/catalog/0.8883 EXP]"
   expected_source_type: "catalog"
   applicable_groups:
     - "prospective_undergrad"

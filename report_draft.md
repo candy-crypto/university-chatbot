@@ -207,15 +207,19 @@ Some retrieval failures reflect genuinely sparse coverage in the source document
 
 As discussed in Section 5.4, the LLM judge's low true negative rate (38%) means it cannot reliably detect failures in an automated pipeline. Several rubric adjustments were made during development — adding domain-specific instructions around citation format, semester abbreviation conventions, and source-type preferences — and these improved consistency. However, further calibration with a larger labeled dataset would be needed before the judge score could be used as a reliable automated regression test.
 
-### 7.5 Benchmark Expansion and Balance
+### 7.5 Retrieval Metric Refinement
+
+The current retrieval score composite uses hit@k — a binary flag that fires as soon as any one expected chunk appears in the top-k results — weighted at 40%. For questions that require only a single chunk, this is a reasonable measure. For questions that require multiple chunks (a degree comparison, a roadmap question, a multi-part policy query), hit@k is too lenient: retrieving 1 of 5 expected chunks earns the same score as retrieving all 5, yet the LLM can only construct a complete answer if most or all of the relevant chunks are present. The 40% weight amplifies this distortion, allowing multi-chunk questions to pass the 0.7 threshold on the strength of hit@k alone even when retrieval coverage is poor. Replacing hit@k with true recall@k — the proportion of expected chunks actually retrieved — would give partial credit proportional to coverage and make the composite score more diagnostic for complex queries. This change would require re-running the full evaluation to obtain corrected scores.
+
+### 7.6 Benchmark Expansion and Balance
 
 The current evaluation set of 75 questions is sufficient to guide development but not to support reliable category-level performance analysis. Question counts per category range from 2 to 11, making percentage-based comparisons across categories misleading. A larger benchmark — with a minimum of 10–15 questions per category and proportional representation of the question types students ask most frequently — would allow meaningful measurement of where the system is weakest and would provide a more stable regression baseline as the system evolves.
 
-### 7.6 Multi-Department Extensibility
+### 7.7 Multi-Department Extensibility
 
 The system's architecture is designed for a single department but not fundamentally limited to one. The knowledge base schema includes a `department_id` field that filters retrieval to a specific department's content. Extending the system to a second department would require: (1) running the ingestion pipeline against that department's catalog sections and web pages, (2) configuring department-specific chunking parameters if the catalog structure differs, and (3) writing a department-specific system prompt. Retrieval logic would require minimal changes — primarily verifying that department-specific terminology is captured in the acronym and synonym maps. The bulk of the extension effort lies in ingestion configuration and data coverage verification. On the front end, the department selector already passes a department identifier to the backend with every request; adding a new department would require only populating the selector dynamically and updating the page title and welcome message to reflect the selected department.
 
-### 7.7 Response Quality
+### 7.8 Response Quality
 
 The evaluation confirms that the system reliably avoids common LLM failure modes (filler phrases, excessive preamble, evasive non-answers) when the retrieval is successful. When retrieval fails to surface the correct content, the LLM's response degrades gracefully — it tends to provide related but incomplete information rather than fabricating specific course numbers or requirements. This behavior is attributable to the system prompt's emphasis on grounding and to the retrieval layer's tendency to return related content even when the exact match is missing.
 
