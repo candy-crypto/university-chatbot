@@ -45,7 +45,7 @@ A custom catalog chunker (`nmsu_catalog_chunker.py`) parses the PDF and produces
 
 The department website supplements the catalog with additional information and, in some areas, duplicates it. Information available only on the web includes the three-year course offering rotation, advising contacts, financial aid and assistantship details, and current-semester announcements. The web is also the sole source for the information about the Bachelor of Science in Artificial Intelligence, which was introduced after the current catalog went to press. A focused web crawler (`ingest.py`) retrieves specific pages selected from various domains, including Advising, Computer Science, and Data Analytics. It extracts the main content, and produces web chunks with URL-based IDs.
 
-The crawler applies a faculty-entry splitter that segments multi-faculty directory pages into per-person chunks, enabling retrieval of the individual's specific details. Chunk IDs for web content are derived from the page URL and a sequential chunk index, making them stable so long as the page URL and content order do not change.
+The crawler applies a faculty-entry splitter that segments multi-faculty directory pages into per-person chunks, enabling retrieval of an individual's specific details.
 
 ### 3.3 Chunking Design Choices
 
