@@ -74,14 +74,19 @@ def load_ground_truth(
 
 # ══════════════════════════════════════════════════════════════════════════════
 # DETERMINISTIC RETRIEVAL METRICS
-# Score retrieval quality without an LLM: recall@k (expected chunk IDs found),
-# precision@1 (top-ranked chunk is expected), source_type correctness,
-# banner redirect detection, citation format validation, and the composite
-# retrieval_score used as one of the two passing thresholds.
+# Score retrieval quality without an LLM: hit@k (True if any expected chunk ID
+# appears in the top-k results — binary, not a proportion), precision@1
+# (top-ranked chunk is expected), source_type correctness, banner redirect
+# detection, citation format validation, and the composite retrieval_score
+# used as one of the two passing thresholds.
 # ══════════════════════════════════════════════════════════════════════════════
 
-def compute_recall_at_k(chunks: list[dict], expected_ids: list[str]) -> bool:
-    """True if at least one expected chunk_id appears in the top-5 results."""
+def compute_hit_at_k(chunks: list[dict], expected_ids: list[str]) -> bool:
+    """Hit@k: True if at least one expected chunk_id appears in the top-k results.
+
+    This is a binary hit rate, not true recall@k (which would return the
+    proportion of expected chunks retrieved). See OPEN_ISSUES.md — eval/harness.py.
+    """
     if not expected_ids:
         return False
     retrieved_ids = {c.get("chunk_id") for c in chunks}
@@ -149,13 +154,13 @@ def compute_citation_format_valid(chunks: list[dict], answer: str) -> bool:
 
 
 def compute_retrieval_score(
-    recall_at_k: bool,
+    hit_at_k: bool,
     precision_at_1: bool,
     source_type_correct: bool,
 ) -> float:
     """Weighted retrieval score: hit×0.4 + top1×0.3 + source_correct×0.3."""
     return (
-        (0.4 if recall_at_k else 0.0) +
+        (0.4 if hit_at_k else 0.0) +
         (0.3 if precision_at_1 else 0.0) +
         (0.3 if source_type_correct else 0.0)
     )
@@ -337,7 +342,7 @@ def evaluate_question(record: dict, use_judge: bool) -> dict:
         "system_sources": None,
         "retrieved_chunks": None,
         # deterministic retrieval metrics
-        "recall_at_k":  None,
+        "hit_at_k":  None,
         "precision_at_1":     None,
         "source_type_correct": None,
         "banner_redirect_triggered": None,
@@ -400,14 +405,14 @@ def evaluate_question(record: dict, use_judge: bool) -> dict:
     ]
 
     # ── Deterministic metrics ─────────────────────────────────────────────────
-    recall_at_k = compute_recall_at_k(chunks, expected_ids)
+    hit_at_k = compute_hit_at_k(chunks, expected_ids)
     precision_at_1 = compute_precision_at_1(chunks, expected_ids)
     source_type_correct = compute_source_type_correct(chunks, expected_source_type)
     banner_triggered = compute_banner_redirect_triggered(answer)
     citation_valid = compute_citation_format_valid(chunks, answer)
-    ret_score = compute_retrieval_score(recall_at_k, precision_at_1, source_type_correct)
+    ret_score = compute_retrieval_score(hit_at_k, precision_at_1, source_type_correct)
 
-    result["recall_at_k"] = recall_at_k
+    result["hit_at_k"] = hit_at_k
     result["precision_at_1"] = precision_at_1
     result["source_type_correct"] = source_type_correct
     result["banner_redirect_triggered"] = banner_triggered if banner_redirect_expected else None
@@ -707,7 +712,7 @@ _CSV_ANSWERS_FIELDS = [
 _CSV_SCORES_FIELDS = [
     "question_id", "category", "passed",
     "retrieval_score", "judge_total",
-    "recall_at_k", "precision_at_1", "source_type_correct",
+    "hit_at_k", "precision_at_1", "source_type_correct",
     "faithfulness", "completeness", "source_preference", "citation_quality",
     "hallucination", "response_quality",
     "latency_ms", "judge_reasoning",
