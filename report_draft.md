@@ -9,21 +9,21 @@ Draft — May 2026
 
 University students routinely need information about course offerings, degree requirements, prerequisites, financial aid, and faculty — information that is documented in official sources but can be time-consuming to locate. This project explores whether a retrieval-augmented generation (RAG) chatbot can serve as a reliable first point of contact for such questions, drawing answers directly from the NMSU Academic Catalog and the Department of Computer Science website. The goal is an assistant that responds accurately, cites its sources, and recognizes the boundaries of what it can and cannot answer from static documents.
 
-This report describes the design, implementation, and evaluation of that prototype. The system ingests two primary sources, the NMSU Academic Catalog (PDF) and department web pages, stores them as semantically searchable chunks in a vector database, and uses a large language model (LLM) to compose answers grounded in the retrieved text. A systematic evaluation across 75 representative questions demonstrates the system's strengths and identifies the categories where further work is warranted.
+This report describes the design, implementation, and evaluation of that prototype. The system ingests two primary sources, the NMSU Academic Catalog (PDF) and department web pages, stores them as semantically searchable chunks in a vector database, and uses a large language model (LLM) to compose answers grounded in the retrieved text. A systematic evaluation across 75 representative questions demonstrates the system's strengths and identifies where further work is warranted.
 
 ---
 
 ## 2. System Architecture
 
-The chatbot follows a standard RAG pattern: a user question triggers retrieval of relevant text passages from a pre-indexed knowledge base, and the passages are passed as context to an LLM that generates the answer. All factual content in the answer is expected to trace to the retrieved context, not to the model's internal weights.
+The chatbot follows a standard RAG pattern: a user question triggers retrieval of relevant text passages from a pre-indexed knowledge base, and the passages are passed as context to an LLM that generates the answer. The system is designed to answer only from what it retrieves — not from general knowledge the model may have acquired during training.
 
 The major components are:
 
-**Knowledge base.** Text chunks are stored in Weaviate, an open-source vector database that supports hybrid search (combined semantic vector similarity and BM25 keyword matching). Each chunk carries metadata — source type (catalog vs. web), chunk type (course description, degree requirement, faculty entry, etc.), catalog page range, URL, and department identifier — that enables precise filtering and source attribution.
+**Knowledge base.** Text chunks are stored in Weaviate, an open-source vector database that supports hybrid search (combined semantic vector similarity and BM25 keyword matching). Each chunk carries metadata, including source type (catalog vs. web), chunk type (course description, degree requirement, faculty entry, etc.), catalog page range or URL, and department identifier — that enables precise filtering and source attribution.
 
-**Ingestion pipeline.** Two parallel pipelines populate the knowledge base: a catalog pipeline that parses the NMSU Academic Catalog PDF and a web crawler that scrapes department pages. Both pipelines normalize, chunk, embed, and upsert their output into Weaviate. Embeddings are produced using OpenAI's `text-embedding-3-small` model.
+**Ingestion pipeline.** Two parallel pipelines populate the knowledge base: a catalog pipeline that parses the 2025-2026 NMSU Academic Catalog PDF and a web crawler that scrapes department pages. Both pipelines normalize, chunk, embed, and upsert their output into Weaviate. Embeddings are produced using OpenAI's `text-embedding-3-small` model.
 
-**Retrieval layer.** At query time, the system pre-processes the question (acronym expansion, synonym mapping, query classification) and issues a hybrid Weaviate query with department and, where appropriate, chunk-type filters. Retrieved chunks are ranked by a composite score, and the top-k passages are assembled into the prompt context.
+**Retrieval layer.** At query time, the system pre-processes the question (acronym expansion, synonym mapping, query classification) and issues a hybrid Weaviate query. Where the query signals a specific audience or content type, hard filters narrow the candidate pool before scoring: a level filter restricts results to undergraduate, graduate, or non-major content as appropriate, and a chunk-type filter limits candidates to the most relevant content categories (e.g., course descriptions, degree requirements, or minor information). Retrieved chunks are ranked by a composite score, and the top-k passages are assembled into the prompt context.
 
 **Answer generation.** An LLM (accessed via the OpenAI API) receives a system prompt, the assembled context, and the user question. The system prompt instructs the model to answer from context only, to cite sources, and to redirect real-time enrollment queries to the NMSU course search tool rather than attempting to answer from static data.
 
