@@ -98,6 +98,8 @@ Items marked **[re-ingest needed]** require a pipeline re-run to take effect.
 
 - [ ] **Honors suffix (`H`) not extracted** — `extract_suffix()` in `catalog_ingest.py` only extracts `G` and `V`; `H` (Honors) courses are not stored in the `suffix` field and cannot be listed via `lookup_courses_by_suffix("H")`. Add `H` to the suffix check and update `_SUFFIX_LABELS` in `retrieval.py` to support honors course queries.
 
+- [ ] **`has_prerequisites` field — reconsider design before acting** — currently a boolean set to `True` if the word "Prerequisite" appears in the course description text; stored in Weaviate but never used in any filter, boost, or retrieval logic. Before implementing anything, consider: (1) whether the more useful form is a `prerequisites` text field storing the actual prerequisite string rather than a boolean flag; (2) whether this belongs on the SQLite course lookup table (enabling direct prerequisite lookups without Weaviate) rather than or in addition to the chunk; (3) what query types would actually use it and whether the current retrieval approach already handles prerequisite questions adequately via chunk text. Needs design discussion before any code changes.
+
 ---
 
 ## Ground truth review
