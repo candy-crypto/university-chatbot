@@ -233,7 +233,15 @@ The system's architecture is designed for a single department but not fundamenta
 
 - **Front-end update.** Adding the new department to the selector and updating the welcome message is a small change. If the department selector is eventually populated dynamically from the backend, no front-end code change would be required at all.
 
-### 7.8 Response Quality
+### 7.8 Multi-Turn Conversation Support
+
+The current system treats each question as independent: no conversation history is passed to the retrieval or generation step. This means follow-up questions — "What about the MS instead?", "Where is her office?" — cannot refer back to what was just discussed, and the system will either misinterpret them or ask the student to restate the question in full. Adding multi-turn support would require maintaining a conversation history in the front end, passing relevant prior turns to the backend with each request, and incorporating prior context into the retrieval step. The last point is non-trivial: a follow-up like "What are its prerequisites?" is ambiguous without knowing which course was just discussed, so the retrieval query must be resolved against the conversation history before hitting Weaviate. The generation step is simpler — the LLM already handles context well — but the growing context window as conversations lengthen requires a truncation or summarization strategy.
+
+### 7.9 Hybrid Search Balance
+
+The hybrid search alpha — which controls the weight given to semantic vector similarity versus BM25 keyword matching — is currently fixed at 0.75 (75% vector, 25% BM25). This value was set as a reasonable default and has not been systematically varied. The optimal balance likely differs by query type: exact course code lookups ("Is CSCI 4700 a G course?") benefit from higher BM25 weight, while conceptual or thematic queries ("courses that cover machine learning") benefit from higher vector weight. A structured experiment varying alpha across query categories, or implementing a query-adaptive alpha that shifts the balance based on whether the query contains exact identifiers, could improve retrieval precision without any changes to the underlying index or chunking.
+
+### 7.10 Response Quality
 
 The evaluation confirms that the system reliably avoids common LLM failure modes (filler phrases, excessive preamble, evasive non-answers) when the retrieval is successful. When retrieval fails to surface the correct content, the LLM's response degrades. It tends to provide related but incomplete information rather than fabricating specific course numbers or requirements. This behavior is attributable to the system prompt's emphasis on grounding and to the retrieval layer's tendency to return related content even when the exact match is missing.
 
