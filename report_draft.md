@@ -75,7 +75,7 @@ Weaviate's hybrid search combines a dense vector similarity score (cosine simila
 
 Before issuing the Weaviate query, the system applies several transformations to the raw question:
 
-- **Acronym expansion.** Common abbreviations are expanded inline (e.g., "AI" → "artificial intelligence", "ML" → "machine learning", "Generative AI" → "generative artificial intelligence"). Expansions are appended to the original terms so that both the abbreviated and expanded forms participate in retrieval.
+- **Acronym expansion.** Common abbreviations are expanded (e.g., "AI" → "artificial intelligence", "ML" → "machine learning", "Generative AI" → "generative artificial intelligence"). The expanded form is appended to the end of the query string, so both the abbreviated and expanded forms participate in retrieval. Because the expansion appears at the end rather than adjacent to the original term, it does not always carry full BM25 weight — a known limitation of this approach.
 - **Synonym and stem mapping.** A curated synonym map adds discipline-specific equivalents (e.g., "neural net" → "neural network", "ethics" → "ethical").
 - **Query classification.** Patterns in the question trigger classification as a banner-redirect query (enrollment/seat questions), an offering-frequency query (rotation table questions), a comparison query, or a course-topic query. Classification controls which chunk types are boosted, how many results are fetched (top-k), and what source type the answer is expected to draw from.
 - **Temporal grounding.** Questions about semester availability require different handling depending on what the student is actually asking. "Is CSCI 4110 offered in the fall?" is an offering-frequency question answered from the static three-year course rotation page; the correct retrieved source is the rotation table, not real-time enrollment data. "Are there seats available this fall?" is a live enrollment question that cannot be answered from any ingested source and is redirected to Banner. The query classifier distinguishes these two cases explicitly, preventing offering-frequency questions from being incorrectly redirected and ensuring rotation-table chunks are retrieved rather than seat-count data that does not exist in the knowledge base.
@@ -215,6 +215,18 @@ This prototype demonstrates that a retrieval-augmented chatbot can answer the la
 The most significant engineering challenges were in the ingestion layer — particularly designing a catalog chunker that reliably segments a complex PDF into semantically coherent, correctly attributed pieces — and in the retrieval layer, where query classification, synonym expansion, and chunk-type boosting required iterative tuning against the evaluation dataset. The evaluation framework itself, including the LLM-as-judge rubric and human annotation pipeline, proved essential for detecting subtle failures that aggregate metrics would miss.
 
 Recommended next steps are: (1) streaming response delivery to reduce perceived latency, (2) a re-ranking pass that diversifies retrieved source types for multi-source queries, (3) annual re-ingestion against updated catalog and web content, and (4) expansion of the crawl scope to cover additional department resources. With these improvements, the system would be well-positioned for a limited pilot deployment with real students.
+
+---
+
+## Acknowledgments
+
+**AI-assisted development tools.** Portions of this project were implemented with the assistance of AI coding tools. Design decisions, evaluation criteria, ground-truth authorship, and analytical conclusions are the authors'.
+
+*Barbara Reed* used Claude Code (Anthropic) throughout the development of the ingestion pipeline, retrieval system, and evaluation framework. In the ingestion layer, Claude Code implemented the catalog PDF chunker — including detection and separate processing of the two-column course description layout — and the web crawler's faculty-entry splitter, rotation table serializer, and heading-prepending logic, iterating on each as edge cases emerged from test runs. In the retrieval layer, Claude Code implemented the hybrid Weaviate search, query pre-processing pipeline (acronym expansion, synonym mapping, query classification), dynamic result-set sizing, hard filters, and chunk-type boosting, with each component tuned against evaluation results through repeated cycles of test, diagnose, and adjust. In the evaluation framework, Claude Code built the harness, the LLM-as-judge prompt and rubric (revised multiple times to address calibration issues identified through human annotation), the annotation analysis tools, and the combined results CSV used in this report. Throughout, Claude Code explained trade-offs, flagged edge cases, and surfaced implementation details that informed design decisions — but the direction, priorities, and judgment calls were the author's.
+
+*Candy [Last Name]* — [Description of Codex use in frontend development — please fill in.]
+
+*Luis [Last Name]* — [Description of AI tool use, if applicable — please fill in.]
 
 ---
 
