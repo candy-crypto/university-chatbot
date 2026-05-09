@@ -41,6 +41,8 @@ The primary authoritative source for course descriptions, degree requirements, p
 
 A custom catalog chunker (`nmsu_catalog_chunker.py`) parses the PDF and produces structured chunks, each assigned a type: `course_description`, `degree_requirement`, `degree_core_requirement`, `minor_index`, `minor_requirement`, `policy`, and others. All chunks share the same set of fields, and the chunk type determines which fields are populated. Fields not relevant to a given chunk type are left empty.
 
+As a by-product of catalog ingestion, a lightweight SQLite course lookup table is populated with one row per course: course code, title, credit count, and a suffix flag — `G` for General Education courses, `V` for Viewing a Wider World (VWW) courses, and blank otherwise. This table supports fast, exact lookups without going through the vector database and is used by the pre-retrieval shortcuts described in Section 4.3.
+
 ### 3.2 Department Web Pages
 
 The department website supplements the catalog with additional information and, in some areas, duplicates it. Information available only on the web includes the three-year course offering rotation, advising contacts, financial aid and assistantship details, and current-semester announcements. The web is also the sole source for the information about the Bachelor of Science in Artificial Intelligence, which was introduced after the current catalog went to press. A focused web crawler (`ingest.py`) retrieves specific pages selected from various domains, including Advising, Computer Science, and Data Analytics. It extracts the main content, and produces web chunks with URL-based IDs.
@@ -80,7 +82,18 @@ Before issuing the Weaviate query, the system applies several transformations to
 - **Query classification.** Patterns in the question trigger classification as a banner-redirect query (enrollment/seat questions), an offering-frequency query (rotation table questions), a comparison query, or a course-topic query. Classification controls which chunk types are boosted, how many results are fetched (top-k), and what source type the answer is expected to draw from.
 - **Temporal grounding.** Questions about semester availability require different handling depending on what the student is actually asking. "Is CSCI 4110 offered in the fall?" is an offering-frequency question answered from the static three-year course rotation page; the correct retrieved source is the rotation table, not real-time enrollment data. "Are there seats available this fall?" is a live enrollment question that cannot be answered from any ingested source and is redirected to Banner. The query classifier distinguishes these two cases explicitly, preventing offering-frequency questions from being incorrectly redirected and ensuring rotation-table chunks are retrieved rather than seat-count data that does not exist in the knowledge base.
 
-### 4.3 Chunk-Type Filtering and Boosting
+### 4.3 Pre-Retrieval Shortcuts
+
+Before issuing any Weaviate query, the system checks whether the question can be answered directly from the course lookup table. Several question types fall into this category:
+
+- **Gen Ed status.** "Does CSCI 1115G count for General Education?" is answered by looking up the course code in the lookup table and checking its suffix — `G` confirms it is a General Education course, no chunk retrieval needed.
+- **VWW status.** The same mechanism applies to Viewing a Wider World questions: the `V` suffix answers the question definitively.
+- **Listing Gen Ed or VWW courses.** "What courses satisfy my VWW requirement?" is answered by querying the lookup table for all courses with a `V` suffix, optionally filtered by department keyword if the student names a subject area.
+- **Credit hours.** "How many credits is CSCI 3110?" is answered directly from the credit count stored in the lookup table.
+
+These shortcuts avoid the latency and noise of vector search for questions that are fully answered by structured catalog data. They also sidestep a common RAG failure mode: when the correct answer is a simple fact (a suffix or a number), retrieval can return related but imprecise content that misleads the LLM.
+
+### 4.4 Chunk-Type Filtering and Boosting
 
 Rather than searching the entire collection for every query, the system applies Weaviate filters and post-retrieval boosts:
 
@@ -88,11 +101,11 @@ Rather than searching the entire collection for every query, the system applies 
 - **Chunk-type boosts** elevate chunks whose type matches the inferred query intent (e.g., `course_description` chunks receive a boost for questions about course content; `degree_requirement` chunks are boosted for program-level questions).
 - **Enrollment queries** short-circuit retrieval entirely and return the Banner course search URL without consulting the vector database.
 
-### 4.4 Result Set Size (k)
+### 4.5 Result Set Size (k)
 
 The number of chunks retrieved — k — is not fixed. The default is 5, which is sufficient for straightforward single-topic queries. Query classification raises k when the answer is expected to require more content: questions about all available concentrations retrieve up to 15 chunks (there are roughly 11 concentration options); questions about minors retrieve up to 12; questions comparing two degree programs retrieve up to 20 so that relevant chunks for both programs have room to surface in the ranked list. Policy and course-topic queries are similarly expanded to 10–15. The reasoning in all cases is the same: a fixed small k risks cutting off relevant content when the answer spans multiple catalog sections or web pages, while an unnecessarily large k adds noise and increases LLM context length without improving accuracy for simple queries.
 
-### 4.5 Context Assembly
+### 4.6 Context Assembly
 
 The top-ranked chunks are assembled into a prompt context block and passed to the LLM along with the user's question. Each chunk carries its source metadata, which the LLM uses to produce citations in its answer. Citations take different forms depending on the source: catalog chunks are cited as "NMSU Academic Catalog 2025–2026, pp. X–Y" (using the page range stored with the chunk); web chunks are cited by URL. All citations are collected into a "Sources:" section at the end of the answer rather than appearing inline, keeping the body of the response readable. A context-recall metric measures how much of the retrieved content overlaps with the expected chunks for each question, complementing the binary recall-at-k metric.
 
