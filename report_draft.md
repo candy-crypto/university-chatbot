@@ -147,7 +147,7 @@ The resulting kappa of 0.18 (slight agreement by conventional benchmarks) requir
 
 ### 6.1 Overall Performance
 
-The evaluation was conducted on the system state after a full re-ingest incorporating all chunking improvements described in Section 3.
+The evaluation was conducted on the system state after a full re-ingest incorporating all chunking improvements described in Section 3. Retrieval scores improved over multiple development cycles as chunking strategies, query classification, and judge calibration were refined; the figures reported here reflect the final system state. Earlier evaluation snapshots from the development period are available in the accompanying presentation.
 
 [TABLE: Overall pass rates — retrieval score, judge total, human pass — across all 75 questions]
 
