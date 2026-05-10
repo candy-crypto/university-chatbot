@@ -1,75 +1,103 @@
 # University Chatbot
 
-A full-stack university department chatbot that crawls department websites, stores chunked content in Weaviate, and answers student questions with retrieval-augmented generation (RAG).
+A full-stack New Mexico State University department chatbot that answers student questions with retrieval-augmented generation. The app combines crawled department web pages, NMSU catalog chunks, PostgreSQL course lookups, Weaviate hybrid search, and OpenAI answer generation.
 
-The project currently includes:
+The current project is centered on the NMSU Computer Science department (`cs`) and includes a Next.js chat UI, a FastAPI backend, web and catalog ingestion scripts, retrieval debugging output, and evaluation tooling.
 
-- A `Next.js` frontend for asking questions
-- A `FastAPI` backend for chat requests
-- A `Playwright`-based ingestion pipeline for crawling department pages
-- `Weaviate` for vector storage and retrieval
-- `PostgreSQL` for crawl and chat logging
-- `OpenAI` for embeddings and grounded answer generation
+## Current Features
+
+- Next.js frontend with department selection, answer display, sources, retrieved chunks, and prompt context.
+- FastAPI backend with `GET /health` and `POST /chat`.
+- Unified Weaviate `DepartmentChunk` collection for both web and catalog content.
+- Playwright web crawler for department pages configured by YAML.
+- PDF catalog ingestion flow for 2025-2026 NMSU catalog chunks.
+- PostgreSQL tables for crawl runs, chat logs, and course lookup records.
+- Direct course lookup shortcuts for credits, General Education, and Viewing a Wider World questions.
+- Redirect handling for real-time course availability questions that must be answered through Banner.
+- Retrieval evaluation CSV export for every chat request.
+- Evaluation harness with deterministic retrieval metrics and optional LLM-as-judge scoring.
+- `MOCK_OPENAI=true` mode for testing the API and UI without OpenAI calls.
 
 ## Project Structure
 
 ```text
 university-chatbot/
 |- backend/
-|  |- app.py
-|  |- router.py
-|  |- retrieval.py
-|  |- ingest.py
-|  |- db.py
-|  |- weaviate_client.py
+|  |- app.py                         # FastAPI app setup
+|  |- router.py                      # API routes
+|  |- retrieval.py                   # RAG, shortcuts, metadata boosts, prompt building
+|  |- ingest.py                      # Department website crawler and web chunk ingestion
+|  |- catalog_ingest.py              # Catalog PDF chunk ingestion
+|  |- nmsu_catalog_chunker.py        # Catalog parsing pipeline
+|  |- nmsu_course_chunker.py         # Course-specific catalog chunking helpers
+|  |- evaluation_export.py           # Per-chat retrieval CSV export
+|  |- db.py                          # PostgreSQL setup and lookup helpers
+|  |- weaviate_client.py             # Local/cloud Weaviate connection and schema setup
 |  |- requirements.txt
-|  `- configs/departments/cs.yaml
+|  |- .env.example
+|  |- configs/departments/cs.yaml
+|  |- eval/                          # Evaluation harness, judge, ground truth, exports
+|  `- evaluation/retrieval_eval.csv  # Generated chat evaluation log
 |- frontend/
-|  |- app/page.js
+|  |- app/page.js                    # Chat UI
+|  |- app/globals.css                # Chat UI styling
 |  |- package.json
 |  `- .env.local
+|- scripts/                          # Project presentation helper scripts
+|- output/                           # Generated presentation artifacts
 |- docker-compose.yml
+|- EVALUATION_PLAN.md
 `- README.md
 ```
 
 ## How It Works
 
-1. `backend/ingest.py` crawls a department website using Playwright.
-2. Page text is cleaned, chunked, embedded with OpenAI, and stored in Weaviate.
-3. The frontend sends a question to `POST /chat`.
-4. The backend retrieves relevant chunks from Weaviate using hybrid ranking.
-5. OpenAI generates an answer constrained to the retrieved context.
+1. `backend/ingest.py` crawls configured department web pages and stores web chunks in Weaviate.
+2. `backend/catalog_ingest.py` parses the NMSU catalog PDF, stores catalog chunks in Weaviate, and populates the PostgreSQL `courses` lookup table.
+3. The frontend sends a question and department ID to `POST /chat`.
+4. The backend first checks shortcut paths for current-semester availability, course credits, General Education, and Viewing a Wider World questions.
+5. If no shortcut applies, the backend embeds the question, runs Weaviate hybrid search, applies local metadata boosts, builds grounded prompt context, and asks OpenAI for an answer.
+6. The response includes the answer, sources, retrieved chunks, prompt context, and the path to the appended evaluation CSV.
 
 ## Tech Stack
 
-- Frontend: Next.js 16, React 19
-- Backend: FastAPI, Uvicorn
-- AI: OpenAI Responses API + OpenAI embeddings
-- Vector DB: Weaviate
-- Relational DB: PostgreSQL
+- Frontend: Next.js 16, React 19, Tailwind CSS tooling
+- Backend: FastAPI, Uvicorn, Pydantic
+- AI: OpenAI Responses API and OpenAI embeddings
+- Vector database: Weaviate
+- Relational database: PostgreSQL
 - Crawling: Playwright
-- Config: YAML + `.env`
+- Catalog parsing: pdfplumber plus local chunking scripts
+- Evaluation: CSV export, YAML ground truth, deterministic metrics, optional LLM judge
 
 ## Prerequisites
 
 - Node.js 18+
 - Python 3.11+
 - Docker Desktop
-- An OpenAI API key
+- An OpenAI API key for real ingestion and real answers
+
+For web ingestion, install Playwright browsers after installing backend dependencies:
+
+```bash
+python -m playwright install chromium
+```
 
 ## Environment Setup
 
-### 1. Backend environment
+### Backend
 
-Copy `backend/.env.example` to `backend/.env` and fill in your values.
-
-Example:
+Copy `backend/.env.example` to `backend/.env` and update the values.
 
 ```env
 OPENAI_API_KEY=your_key_here
+MOCK_OPENAI=false
+
 OPENAI_CHAT_MODEL=gpt-5-mini
+JUDGE_MODEL=gpt-5.4
 OPENAI_EMBED_MODEL=text-embedding-3-small
 TOP_K=5
+HYBRID_ALPHA=0.75
 
 DATABASE_URL=postgresql://uniChatBotPostgres:uniChatBotPassword@localhost:5432/university_chatbot
 
@@ -79,19 +107,26 @@ WEAVIATE_HTTP_PORT=8080
 WEAVIATE_GRPC_HOST=localhost
 WEAVIATE_GRPC_PORT=50051
 WEAVIATE_COLLECTION=DepartmentChunk
+
+CATALOG_PDF_PATH=../25-26 New Mexico State University - Las Cruces.pdf
+CATALOG_YEAR=2025-2026
+CATALOG_DEPARTMENT_ID=cs
+CATALOG_SCRIPTS_DIR=.
 ```
 
-### 2. Frontend environment
+Set `WEAVIATE_MODE=cloud` and provide `WEAVIATE_URL` plus `WEAVIATE_API_KEY` if using Weaviate Cloud.
 
-Set `frontend/.env.local`:
+### Frontend
+
+Create `frontend/.env.local`:
 
 ```env
 NEXT_PUBLIC_API_BASE=http://localhost:8000
 ```
 
-## Running the Project
+## Running Locally
 
-### 1. Start infrastructure
+### 1. Start Weaviate and PostgreSQL
 
 From the project root:
 
@@ -101,10 +136,11 @@ docker compose up -d
 
 This starts:
 
-- Weaviate on `http://localhost:8080`
+- Weaviate REST on `http://localhost:8080`
+- Weaviate gRPC on `localhost:50051`
 - PostgreSQL on `localhost:5432`
 
-### 2. Start the backend
+### 2. Install backend dependencies
 
 From `backend/`:
 
@@ -112,22 +148,44 @@ From `backend/`:
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
+python -m playwright install chromium
+```
+
+### 3. Start the backend
+
+From `backend/`:
+
+```bash
 uvicorn app:app --reload --host 0.0.0.0 --port 8000
 ```
 
-Backend endpoints:
+Useful endpoints:
 
-- `GET /health` returns API status
-- `POST /chat` accepts:
+- `GET /health`
+- `POST /chat`
+
+Example `POST /chat` body:
 
 ```json
 {
-  "message": "What courses are offered?",
+  "message": "Does CSCI 1115G count as general education?",
   "department_id": "cs"
 }
 ```
 
-### 3. Start the frontend
+Example response shape:
+
+```json
+{
+  "answer": "...",
+  "sources": ["..."],
+  "chunks": [],
+  "prompt_context": "...",
+  "evaluation_csv": "backend/evaluation/retrieval_eval.csv"
+}
+```
+
+### 4. Start the frontend
 
 From `frontend/`:
 
@@ -136,92 +194,152 @@ npm install
 npm run dev
 ```
 
-Then open `http://localhost:3000`.
+Open `http://localhost:3000`.
 
-## Ingesting Department Content
+## Mock Mode
 
-Before the chatbot can answer grounded questions, crawl and index a department site:
+To test the API and frontend without using OpenAI tokens, set this in `backend/.env`:
+
+```env
+MOCK_OPENAI=true
+```
+
+In mock mode, `/chat` returns a deterministic answer, a mock source, a mock retrieved chunk, and prompt context. It skips OpenAI embedding and response-generation calls.
+
+## Ingesting Content
+
+The chatbot needs indexed content before real RAG answers work.
+
+### Web Department Ingestion
+
+From `backend/`:
 
 ```bash
-cd backend
 python ingest.py
 ```
 
-The current ingestion entry point loads:
+This uses `backend/configs/departments/cs.yaml`, crawls the configured CS department pages, embeds chunks, deletes previous `content_source=web` chunks for the department, and writes fresh web chunks into Weaviate.
 
-- `backend/configs/departments/cs.yaml`
+### Catalog PDF Ingestion
 
-That means the project is currently configured for the Computer Science department by default. The frontend shows `cs`, `math`, and `unknown`, but only `cs` has a department crawler config in the repository right now.
+From `backend/`:
 
-## Department Config
+```bash
+python catalog_ingest.py
+```
 
-Department crawling rules live in YAML files under `backend/configs/departments/`.
+This parses the configured catalog PDF, maps catalog chunks into the unified Weaviate schema, deletes previous catalog chunks for the configured department and catalog year, inserts fresh catalog chunks, and upserts course records into PostgreSQL for direct course lookup.
 
-The existing `cs.yaml` defines:
+Make sure `CATALOG_PDF_PATH` points to the local NMSU catalog PDF. The repository currently includes:
 
-- Department ID
-- Root URL
-- Allowed domains
-- Allowed path prefixes
-- URL deny patterns
+```text
+25-26 New Mexico State University - Las Cruces.pdf
+```
 
-To support another department, add a new YAML config and update ingestion flow as needed.
+## Retrieval Behavior
 
-## Database Notes
+`backend/retrieval.py` uses several layers:
 
-PostgreSQL tables are created automatically on backend startup:
+- Direct Banner redirect for real-time availability, registration, seat, and current-semester offering questions.
+- PostgreSQL course lookup for course credits, General Education suffixes, Viewing a Wider World suffixes, and lists of G/V courses.
+- OpenAI query embeddings for semantic retrieval.
+- Weaviate native hybrid search with BM25 plus vector ranking.
+- Local metadata boosts for headings, course codes, degree metadata, chunk types, policy topics, course levels, and catalog authority.
+- Grounded answer generation from retrieved context only.
 
-- `chat_logs`
-- `crawl_runs`
+The frontend intentionally displays retrieved chunks and prompt context to make retrieval debugging easier.
 
-These are used to record chatbot interactions and ingestion runs.
+## Evaluation
 
-## Retrieval Notes
+Every `/chat` request appends rows to:
 
-The retrieval pipeline in `backend/retrieval.py` uses:
+```text
+backend/evaluation/retrieval_eval.csv
+```
 
-- OpenAI embeddings for semantic search
-- Weaviate vector retrieval
-- Local BM25-style lexical scoring
-- Reciprocal rank fusion and metadata boosts
+Each row captures the question, answer, sources, prompt context, retrieved chunk metadata, scores, and chunk text.
 
-The final answer is generated only from retrieved context to reduce hallucinations.
+To run the evaluation harness:
 
-## Current Limitations
+```bash
+cd backend
+python eval/harness.py
+```
 
-- The default ingestion script is hardcoded to `configs/departments/cs.yaml`
-- The frontend currently displays only the answer text and not returned sources
-- Chat logging is implemented in `db.py`, but the active `/chat` route does not currently call `log_chat`
-- CORS is currently open to all origins in the backend
+Useful options:
 
-## Future Improvements
+```bash
+python eval/harness.py --no-judge
+python eval/harness.py --category financial_aid
+python eval/harness.py --questions adv_001 adv_002
+```
 
-- Add department configs for more programs
-- Let users choose from dynamically loaded departments
-- Display source URLs in the frontend
-- Persist chat logs for every request
-- Add tests for retrieval and ingestion
-- Add authentication and admin tools for re-crawling content
+Harness outputs are written to `backend/eval/results/` as JSONL result files and JSON summaries.
+
+Additional export/import helpers live under `backend/eval/` for chunk IDs, collection exports, and department chunk snapshots.
+
+## Database Tables
+
+The backend initializes these PostgreSQL tables on startup:
+
+- `courses`: catalog course lookup records used by direct course shortcuts.
+- `chat_logs`: schema for chat history logging.
+- `crawl_runs`: ingestion run metadata.
+
+Current `/chat` responses are exported to the evaluation CSV. The route imports `log_chat`, but chat log insertion is not currently called.
+
+## Department Configuration
+
+Department crawling rules live under:
+
+```text
+backend/configs/departments/
+```
+
+The current checked-in department config is `cs.yaml`. It defines the department ID, root URL, seed URLs, allowed domains, allowed path prefixes, denied URL patterns, page types, levels, degree types, and campus metadata.
+
+The frontend currently offers `cs`, `math`, and `unknown` buttons, but only `cs` has an ingestion config and indexed workflow in this repository.
 
 ## Useful Commands
 
 ```bash
-# Start local services
+# Start local infrastructure
 docker compose up -d
 
 # Run backend
 cd backend
-uvicorn app:app --reload
+uvicorn app:app --reload --host 0.0.0.0 --port 8000
 
-# Run ingestion
+# Run web ingestion
 cd backend
 python ingest.py
+
+# Run catalog ingestion
+cd backend
+python catalog_ingest.py
+
+# Run retrieval evaluation without judge
+cd backend
+python eval/harness.py --no-judge
 
 # Run frontend
 cd frontend
 npm run dev
+
+# Build frontend
+cd frontend
+npm run build
 ```
+
+## Current Limitations
+
+- The main ingestion scripts are currently configured for the CS department.
+- The frontend department picker includes options that do not yet have matching department configs.
+- CORS is currently open to all origins in the backend.
+- `chat_logs` exists, but the active `/chat` route writes evaluation CSV rows instead of inserting chat log records.
+- Real-time registration and seat availability are intentionally redirected to Banner instead of answered from indexed content.
+- Generated artifacts under `output/` and runtime logs may be local development artifacts rather than deployment inputs.
 
 ## License
 
-Add your preferred license here if this project will be shared or deployed publicly.
+Add a license before sharing or deploying this project publicly.
