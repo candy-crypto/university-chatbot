@@ -267,37 +267,4 @@ Recommended next steps are: (1) streaming response delivery to reduce perceived 
 
 ---
 
-## Appendices
-
-### Appendix A: Evaluation Question Set
-
-[TABLE: Full question list with IDs, categories, and questions — from eval_combined_report.csv]
-
-### Appendix B: Per-Question Evaluation Results
-
-[TABLE: eval_combined_report.csv — all 20 columns — or a subset selected for the report]
-
-### Appendix C: Retrieval Score Metric Definitions
-
-| Metric | Range | Weight in Retrieval Score |
-|---|---|---|
-| Hit@k (binary recall) | Binary (pass/fail) | 40% |
-| Precision@1 | Binary (pass/fail) | 30% |
-| Source type correctness | Binary (pass/fail) | 30% |
-| Citation format validity | Binary (pass/fail) | Not included — tracked separately |
-| Context recall | 0.0–1.0 | Not included — tracked separately |
-
-### Appendix D: LLM Judge Rubric Criteria
-
-| Criterion | Scale | Description |
-|---|---|---|
-| Faithfulness | 0–3 | Every claim traces to retrieved context |
-| Completeness | 0–3 | Key facts from ground truth are covered |
-| Source preference | 0–3 | Correct source type used (catalog vs. web vs. Banner redirect) |
-| Citation quality | 0–3 | Citations present, correctly formatted, and accurate |
-| Hallucination (inverted) | 0–3 | No invented specifics; higher = fewer hallucinations |
-| Response quality | 0–3 | Direct, professional, no filler phrases |
-
----
-
-*Draft prepared May 2026. All evaluation figures are from run bb9ebc (May 8, 2026) supplemented by run 9c0d25 (May 9, 2026) for seven questions; human annotation from run 6815e2 review.*
+*Draft prepared May 2026. All evaluation figures are from evaluation runs completed May 5, 2026; human annotation from run 6815e2 review.*
