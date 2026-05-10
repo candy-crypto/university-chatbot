@@ -205,7 +205,9 @@ Some retrieval failures reflect genuinely sparse coverage in the source document
 
 ### 7.4 Judge Calibration
 
-As discussed in Section 5.4, the LLM judge's low true negative rate (38%) means it cannot reliably detect failures in an automated pipeline. Several rubric adjustments were made during development to improve consistency, like adding domain-specific instructions around citation format, semester abbreviation conventions, and source-type preferences. However, further calibration with a larger labeled dataset would be needed before the judge score could be used as a reliable automated regression test.
+As discussed in Section 5.4, the LLM judge's low true negative rate (38%) means it cannot reliably detect failures in an automated pipeline. Several rubric adjustments were made during development to improve consistency, including domain-specific instructions around citation format, semester abbreviation conventions, and source-type preferences. However, the judge's leniency bias likely reflects a model-level tendency to confirm passes rather than a gap in rubric content.
+
+One low-risk experiment worth running is adding a system-role message to the judge call. Currently the rubric, question, ground truth, retrieved context, and answer are all assembled into a single user message with no system framing. A short system prompt — establishing the model's role as a rigorous evaluator and instructing it to actively look for failures rather than confirm plausible passes — could reduce leniency without changing the rubric itself. The experiment would involve re-running the judge on the known human-annotated failures and measuring whether the true negative rate improves. Further calibration with a larger labeled dataset would be needed before the judge score could serve as a reliable automated regression gate.
 
 ### 7.5 Retrieval Metric Refinement
 
