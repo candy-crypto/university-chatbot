@@ -261,9 +261,11 @@ Recommended next steps are: (1) streaming response delivery to reduce perceived 
 
 ## Acknowledgments
 
+The initial development of the university chatbot project, including the overall project structure, system architecture, and foundational codebase, was supported with the assistance of ChatGPT 5.4 OpenAI. Guidance was provided for designing the frontend and backend workflow, retrieval-augmented generation (RAG) pipeline, database integration, website crawling and ingestion process, vector search implementation, and deployment planning. The generated materials served as a foundational starting point and were later reviewed, modified, expanded, and customized throughout the development process to meet the specific requirements and goals of the project.
+
 **AI-assisted development.** All scripts in the catalog ingestion and evaluation were drafted and refined using Claude Code (Anthropic). Claude Code also supported the refinement of retrieval and webpage ingestion scripts. The author directed the work through an iterative dialogue: specifying requirements, reviewing outputs, checking logic, identifying errors and edge cases, and determining when a component was ready to move forward. This guidance required understanding the data well enough to write the ground-truth benchmark, recognize when retrieval was misbehaving, correct factual errors in generated documentation, and make judgment calls about design trade-offs — for example, choosing between chunking strategies, deciding which retrieval failures warranted a code fix versus a ground-truth correction, and calibrating the LLM judge rubric through human annotation. Claude Code generated and revised code in response to that direction but did not determine priorities, scope, or analytical conclusions.
 
-*Candy * — [Description of Codex use in frontend development — please fill in.]
+The team also used Codex (under ChatGPT 5.4) in developing this project, including assistance with the code implementation, project structure, and debugging process. The guidance helped organize the application into a clearer and more maintainable structure, improve the logic and functionality of the code, and identify and resolve errors throughout development. This support contributed significantly to the completion and refinement of the project.
 
 *Luis * — [Description of AI tool use, if applicable — please fill in.]
 

@@ -67,7 +67,6 @@ Example:
 
 ```env
 OPENAI_API_KEY=your_key_here
-MOCK_OPENAI=false
 OPENAI_CHAT_MODEL=gpt-5-mini
 OPENAI_EMBED_MODEL=text-embedding-3-small
 TOP_K=5
@@ -127,15 +126,6 @@ Backend endpoints:
   "department_id": "cs"
 }
 ```
-
-To test the chat flow without using OpenAI tokens, set this in `backend/.env`:
-
-```env
-MOCK_OPENAI=true
-```
-
-In mock mode, `POST /chat` returns a deterministic fake answer and skips both the
-OpenAI embedding request and the OpenAI response-generation request.
 
 ### 3. Start the frontend
 
