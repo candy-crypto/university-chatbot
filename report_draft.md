@@ -41,6 +41,10 @@ The primary authoritative source for course descriptions, degree requirements, p
 
 A custom catalog chunker (`nmsu_catalog_chunker.py`) parses the PDF and produces structured chunks, each assigned a type: `course_description`, `degree_requirement`, `minor_index`, `minor_requirement`, `policy`, and others. All chunks share the same set of fields, and the chunk type determines which fields are populated. Fields not relevant to a given chunk type are left empty.
 
+The combined knowledge base contains 6,108 chunks across 19 chunk types, drawn from both the catalog (5,906 chunks, 97%) and department web pages (202 chunks, 3%). Course descriptions alone account for 5,435 chunks — 89% of the total — reflecting the catalog's density of individual course entries. The table below shows the full distribution by chunk type and source.
+
+[TABLE: Chunk counts by type and source (catalog / web / total) — 19 rows + total row]
+
 As a by-product of catalog ingestion, a PostgreSQL course lookup table is populated with one row per course: course code, title, credit count, and a suffix flag: `G` for General Education courses, `V` for Viewing a Wider World (VWW) courses, and blank otherwise. Support for `H` (Honors) is planned for a future round. The table supports lookups by exact course code, by exact title, or by approximate title using full-text search. A student can ask about "Data Structures" and the system resolves it to CSCI 3110 without being told the course code, and vice versa. The canonical code and title retrieved from the table are also injected into the LLM's context, ensuring that course references in responses use the correct, consistent identifiers rather than relying on the model to reproduce them accurately. This table is used by the pre-retrieval shortcuts described in Section 4.3.
 
 ### 3.2 Department Web Pages
