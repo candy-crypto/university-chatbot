@@ -133,7 +133,7 @@ The evaluation harness computes several metrics that do not require an LLM and a
 - **Precision@1** (binary: pass/fail) — whether the top-ranked chunk is one of the expected chunks. Weighted at 30%.
 - **Source type correctness** (binary: pass/fail) — whether the dominant source type in the top-3 results matches the expected source type (catalog, web, or either). Weighted at 30%.
 - **Retrieval score** (0.0–1.0) — the weighted sum of the three binary metrics above. Because each component is binary, the score can only take the values 0.0, 0.3, 0.4, 0.6, 0.7, or 1.0.
-- **Citation format validity** (binary: pass/fail) — whether at least one citation of the expected type appears in the answer. Tracked separately; not included in the retrieval score composite.
+- **Citation format validity** (binary: pass/fail) — whether the answer includes a citation in the format appropriate for the sources that were actually retrieved: a catalog page reference (e.g., "NMSU Academic Catalog 2025–2026, pp. X–Y") if catalog chunks were retrieved, and a URL if web chunks were retrieved. When both source types were retrieved, both citation formats must be present. Tracked separately; not included in the retrieval score composite.
 - **Context recall** (0.0–1.0) — the proportion of ground-truth key facts covered by the answer. Tracked separately; not included in the retrieval score composite.
 
 A question is counted as **passed** if its composite retrieval score meets or exceeds 0.7 AND its judge composite score meets or exceeds 0.7. Questions with no expected chunk IDs (unanswerable questions) pass on judge score alone; Banner-redirect questions pass if the redirect URL is present and the judge score meets the threshold.
