@@ -93,8 +93,8 @@ Copy `backend/.env.example` to `backend/.env` and update the values.
 OPENAI_API_KEY=your_key_here
 MOCK_OPENAI=false
 
-OPENAI_CHAT_MODEL=gpt-5-mini
-JUDGE_MODEL=gpt-5.4
+OPENAI_CHAT_MODEL=gpt-5.5
+JUDGE_MODEL=gpt-5.4-mini
 OPENAI_EMBED_MODEL=text-embedding-3-small
 TOP_K=5
 HYBRID_ALPHA=0.75
@@ -146,6 +146,9 @@ From `backend/`:
 
 ```bash
 python -m venv .venv
+# macOS / Linux:
+source .venv/bin/activate
+# Windows:
 .venv\Scripts\activate
 pip install -r requirements.txt
 python -m playwright install chromium
@@ -236,6 +239,18 @@ Make sure `CATALOG_PDF_PATH` points to the local NMSU catalog PDF. The repositor
 25-26 New Mexico State University - Las Cruces.pdf
 ```
 
+### Annual Re-ingestion
+
+The catalog and department web pages change each academic year. To update the knowledge base:
+
+1. Obtain the new NMSU Academic Catalog PDF and place it in the project root.
+2. Update `CATALOG_PDF_PATH` and `CATALOG_YEAR` in `backend/.env` to point to the new PDF and year.
+3. Re-run catalog ingestion: `python catalog_ingest.py` — this deletes previous catalog chunks for the department and year and inserts fresh ones.
+4. Re-run web ingestion: `python ingest.py` — this deletes previous web chunks for the department and replaces them.
+5. After re-ingestion, run the evaluation harness with `--update-notes` to refresh retrieval notes in `ground_truth.yaml` and verify that pass rates have not regressed.
+
+Note that expected chunk IDs in `ground_truth.yaml` are derived from catalog page ranges and web URLs. If the new catalog reorganizes pages or the website restructures URLs, some expected chunk IDs may need to be updated before evaluation results are meaningful.
+
 ## Retrieval Behavior
 
 `backend/retrieval.py` uses several layers:
@@ -269,12 +284,21 @@ python eval/harness.py
 Useful options:
 
 ```bash
-python eval/harness.py --no-judge
-python eval/harness.py --category financial_aid
-python eval/harness.py --questions adv_001 adv_002
+python eval/harness.py --no-judge                        # skip LLM judge (faster, deterministic metrics only)
+python eval/harness.py --category financial_aid          # run one category
+python eval/harness.py --questions adv_001 adv_002       # run specific questions
+python eval/harness.py --update-notes                    # refresh retrieval_note fields in ground_truth.yaml
 ```
 
-Harness outputs are written to `backend/eval/results/` as JSONL result files and JSON summaries.
+Harness outputs are written to `backend/eval/results/` as JSONL result files, CSV score exports, and JSON summaries.
+
+The evaluation question set and ground truth are defined in:
+
+```text
+backend/eval/ground_truth.yaml
+```
+
+Each entry specifies a question ID, category, question text, expected chunk IDs, expected source type, and key facts used for scoring. Edit this file to add, remove, or correct evaluation questions.
 
 Additional export/import helpers live under `backend/eval/` for chunk IDs, collection exports, and department chunk snapshots.
 
